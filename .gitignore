@@ -30,8 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — настоящие ключи в репозиторий не попадают.
+# .env.example это только список названий переменных, без значений.
 .env*
+!.env.example
 
 # vercel
 .vercel

@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BOW WOW COLLAR — интернет-магазин
 
-## Getting Started
+Магазин кожаной амуниции ручной работы: каталог, конфигуратор изделия,
+корзина, оформление заказа и оплата.
 
-First, run the development server:
+Стек: Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · zod.
+
+## Запуск
+
+Node.js установлен в `~/.local/node` и прописан в `~/.zshrc`.
+Откройте новый терминал, чтобы путь подхватился.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd bowwow && npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Сайт поднимется на http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # проверка типов и валидация каталога
+npm run lint    # линтер
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Где что править
 
-## Learn More
+| Что менять | Файл |
+|---|---|
+| Товары, цены, размеры, описания | `src/content/products.ts` |
+| Цвета кожи и фурнитуры | `src/content/leather.ts` |
+| Контакты, соцсети, реквизиты, меню | `src/content/site.ts` |
+| Способы и стоимость доставки | `src/content/delivery.ts` |
+| Категории и формулировки замеров | `src/content/categories.ts` |
+| Палитра и типографика сайта | `src/app/globals.css` (блок `@theme`) |
 
-To learn more about Next.js, take a look at the following resources:
+Каталог проверяется схемой при сборке: опечатка в цене, несуществующий
+цвет кожи или дублирующийся slug ломают `npm run build`, а не витрину.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Фотографии товаров
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Положите файлы в `public/images/products/` и впишите пути в поле `images`
+нужного товара. Пока массив пустой, показывается заглушка — силуэт
+категории в цвете из поля `placeholder`.
 
-## Deploy on Vercel
+### Обработка съёмки и перекраска изделия
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Скрипт `scripts/process-photos.mjs` готовит кадры к публикации:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+node scripts/process-photos.mjs "$PWD/public/images/products" /путь/к/исходникам
+```
+
+Он умеет три вещи, режим выбирается внизу скрипта:
+
+| Функция | Для каких кадров |
+|---|---|
+| `processOnBlue` | студийный голубой фон — вырезает предмет и переносит на замшу |
+| `processOnGrey` | серый бетон — то же самое, но фон отделяется по насыщенности |
+| `processOnSuede` | кадр уже на замше — фон остаётся, обесцвечивается только кожа |
+
+Фон-подложка у всех карточек общий: кусок замши с фотографии красного
+ошейника, размытый и растянутый (`makeBackdrop`). Так разные съёмки
+выглядят одной серией.
+
+Перекрашиваемая область сохраняется рядом файлом `*-tint.png`. В карточке
+товара её связывает со слотом кожи поле `tint`:
+
+```ts
+tint: { slot: "lining", masks: ["/images/products/collar-lined-front-tint.png", …] }
+```
+
+Сайт накладывает выбранный цвет на область маски режимом multiply, поэтому
+на фото сохраняются текстура кожи, строчка и светотень. Число и порядок
+масок должны совпадать с `images`, иначе сборка не пройдёт; пустая строка
+означает «этот кадр не перекрашивается».
+
+Требования к съёмке: фон должен отличаться от кожи по оттенку или по
+насыщенности. Голубой фон и мятный подклад разделяются отлично, серый
+бетон и цветная кожа тоже. Мех, шерсть и пёстрые поверхности автоматически
+не отделяются — такие кадры нужно либо снимать заново, либо обводить вручную.
+
+## Переменные окружения
+
+Скопируйте `.env.example` в `.env.local` и заполните. Без них сайт
+работает, но заказы не переживают перезапуск сервера и не приходят
+уведомления.
+
+- `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` — хранилище заказов
+- `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` — уведомление о заказе мастеру
+- `RESEND_API_KEY` / `ORDER_EMAIL_FROM` — письмо клиенту
+- `PAYMENT_PROVIDER` — `manual` (без онлайн-оплаты) или `bepaid`
+- `BEPAID_SHOP_ID` / `BEPAID_SECRET_KEY` — данные из личного кабинета bePaid
+- `NEXT_PUBLIC_SITE_URL` — публичный адрес сайта для ссылок возврата с оплаты
+
+## Как устроен заказ
+
+1. Клиент собирает изделие в конфигураторе — корзина живёт в браузере.
+2. При оформлении на сервер уходят только товар, конфигурация и количество.
+   Цена пересчитывается на сервере тем же кодом (`src/lib/price.ts`),
+   поэтому подменить сумму на клиенте нельзя.
+3. Заказ сохраняется, мастеру уходит сообщение в Telegram, клиенту — письмо.
+4. Если включён bePaid и в заказе нет позиций по индивидуальным замерам,
+   клиент уходит на платёжную страницу. Вебхук `/api/payments/bepaid/webhook`
+   подтверждает оплату отдельным запросом к API bePaid и переводит заказ
+   в статус `paid`.
+
+Заказы по индивидуальным замерам оплату не запускают: сумма предварительная,
+её сначала подтверждает мастер.
+
+## Что осталось сделать перед запуском
+
+Поиск по проекту слова `ЗАПОЛНИТЬ` покажет все места. Коротко:
+
+- обхваты шеи в сантиметрах для размеров ошейников и вес для размера Large шлейки;
+- доплата за индивидуальные замеры (сейчас 0);
+- реальные сроки изготовления;
+- контакты, ссылка на Instagram, реквизиты ИП/УНП;
+- стоимость доставки;
+- тексты оферты и политики обработки персональных данных;
+- фотографии товаров;
+- договор с bePaid и регистрация магазина в Торговом реестре РБ.
