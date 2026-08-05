@@ -8,8 +8,8 @@ import { usePrefersReducedMotion } from "@/lib/use-media-query";
  * Первый экран: сцена, которой управляет прокрутка.
  *
  * Видео не играет само — его кадр привязан к положению страницы.
- * Блок высотой 500vh делится на пять зон: пауза, движение, пауза,
- * движение, пауза. Текст показывается только на паузах.
+ * Блок делится на пять зон: пауза, движение, пауза, движение, пауза.
+ * Текст показывается только на паузах.
  *
  * Последний кадр первого ролика совпадает с первым кадром второго,
  * поэтому подмена ролика на середине пути незаметна.
@@ -80,8 +80,14 @@ const ramp = (v: number, a: number, b: number) =>
  * к ней с ограничением скорости — поэтому «пролистать» ролик рывком
  * нельзя, он всё равно отыграет свои секунды.
  */
-const SPEED = 1.6; // во столько раз быстрее реального времени ролика
-const PAUSE_SPEED = 0.5; // доли прокрутки в секунду на паузах между сценами
+const SPEED = 3; // во столько раз быстрее реального времени ролика
+const PAUSE_SPEED = 1.2; // доли прокрутки в секунду на паузах между сценами
+
+/**
+ * Длина прокрутки всей сцены. Пять экранов оказались слишком длинными —
+ * до каталога приходилось долго крутить, поэтому оставлено три.
+ */
+const SCENE_HEIGHT = "300vh";
 
 /**
  * Кадр по горизонтали на узком экране. Ролик снят в 4:3, на телефоне
@@ -104,6 +110,16 @@ export function ScrollHero() {
     const v1 = video1Ref.current;
     const v2 = video2Ref.current;
     if (!wrap || !v1 || !v2) return;
+
+    // Второй ролик тянем только после первого: иначе они делят канал
+    // пополам и видимый экран ждёт лишнее. Он нужен лишь с середины сцены.
+    const loadSecond = () => {
+      if (v2.preload === "auto") return;
+      v2.preload = "auto";
+      v2.load();
+    };
+    if (v1.readyState >= 3) loadSecond();
+    else v1.addEventListener("canplaythrough", loadSecond, { once: true });
 
     let raf = 0;
     /** Где сцена находится сейчас. Тянется к прокрутке, но не мгновенно. */
@@ -180,7 +196,10 @@ export function ScrollHero() {
     };
 
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      v1.removeEventListener("canplaythrough", loadSecond);
+    };
   }, [reducedMotion]);
 
   const fontVars = `${literata.variable} ${manrope.variable} ${mono.variable}`;
@@ -279,7 +298,7 @@ export function ScrollHero() {
     <div
       ref={wrapRef}
       className={`relative ${fontVars}`}
-      style={{ height: "500vh", background: palette.bg }}
+      style={{ height: SCENE_HEIGHT, background: palette.bg }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* poster рисуется до того, как подгрузится сам ролик — первый
@@ -299,7 +318,7 @@ export function ScrollHero() {
           poster="/videos/hero-2-poster.jpg"
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           className={`absolute inset-0 h-full w-full object-cover opacity-0 ${MOBILE_FRAMING}`}
         />
 
