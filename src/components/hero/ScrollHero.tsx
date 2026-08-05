@@ -80,12 +80,13 @@ const ramp = (v: number, a: number, b: number) =>
  * к ней с ограничением скорости — поэтому «пролистать» ролик рывком
  * нельзя, он всё равно отыграет свои секунды.
  */
-const SPEED = 3; // во столько раз быстрее реального времени ролика
-const PAUSE_SPEED = 1.2; // доли прокрутки в секунду на паузах между сценами
+const SPEED = 1.6; // во столько раз быстрее реального времени ролика
+const PAUSE_SPEED = 0.5; // доли прокрутки в секунду на паузах между сценами
 
 /**
- * Длина прокрутки всей сцены. Пять экранов оказались слишком длинными —
- * до каталога приходилось долго крутить, поэтому оставлено три.
+ * Длина прокрутки всей сцены. Страница всё равно не уедет вперёд сцены
+ * (см. clampScroll), поэтому пяти экранов не нужно — темп задаёт время,
+ * а не высота блока.
  */
 const SCENE_HEIGHT = "300vh";
 
@@ -94,7 +95,20 @@ const SCENE_HEIGHT = "300vh";
  * от него остаётся вертикальная полоса: 50% обрезали бы ошейник слева,
  * поэтому окно кадра сдвинуто и собака стоит правее.
  */
-const MOBILE_FRAMING = "object-[38%_center] md:object-center";
+const MOBILE_FRAMING =
+  "object-[38%_center] md:object-center bg-[position:38%_center] md:bg-center";
+
+/**
+ * Постер лежит ещё и фоном самого <video>. Атрибут poster исчезает, как
+ * только отрисован первый кадр, и если следующий кадр ещё не скачался,
+ * на его месте виден фон страницы — тот самый коричневый экран. Фоновая
+ * картинка держится всё время и закрывает эти провалы.
+ */
+const posterBackdrop = (src: string) => ({
+  backgroundImage: `url(${src})`,
+  backgroundSize: "cover",
+  backgroundRepeat: "no-repeat",
+});
 
 export function ScrollHero() {
   const reducedMotion = usePrefersReducedMotion();
@@ -111,12 +125,22 @@ export function ScrollHero() {
     const v2 = video2Ref.current;
     if (!wrap || !v1 || !v2) return;
 
+    // iOS сам данные ролика не тянет: пока не запустишь воспроизведение,
+    // в буфере пусто и перемотка показывает пустой кадр. Короткий
+    // «завод» play → pause заставляет браузер начать загрузку.
+    const kick = (video: HTMLVideoElement) => {
+      const started = video.play();
+      if (started) started.then(() => video.pause()).catch(() => {});
+    };
+    kick(v1);
+
     // Второй ролик тянем только после первого: иначе они делят канал
     // пополам и видимый экран ждёт лишнее. Он нужен лишь с середины сцены.
     const loadSecond = () => {
       if (v2.preload === "auto") return;
       v2.preload = "auto";
       v2.load();
+      kick(v2);
     };
     if (v1.readyState >= 3) loadSecond();
     else v1.addEventListener("canplaythrough", loadSecond, { once: true });
@@ -124,6 +148,10 @@ export function ScrollHero() {
     let raf = 0;
     /** Где сцена находится сейчас. Тянется к прокрутке, но не мгновенно. */
     let shown = -1;
+    /** Куда её просят: рывок прокрутки двигает цель, но не саму сцену. */
+    let desired = 0;
+    /** Куда мы сами прижали страницу; -1 — не держим. */
+    let forcedY = -1;
     let prevTime = 0;
 
     /** Перемотка без очереди запросов: пока идёт поиск кадра, новый не шлём. */
@@ -147,7 +175,8 @@ export function ScrollHero() {
     const tick = (now: number) => {
       const rect = wrap.getBoundingClientRect();
       const scrollable = wrap.offsetHeight - window.innerHeight;
-      const target = Math.min(1, Math.max(0, -rect.top / scrollable));
+      const wrapTop = rect.top + window.scrollY;
+      const raw = Math.min(1, Math.max(0, -rect.top / scrollable));
 
       const d1 = v1.duration || 0;
       const d2 = v2.duration || 0;
@@ -155,16 +184,39 @@ export function ScrollHero() {
       // Первый кадр — встаём сразу туда, где страница уже стоит,
       // иначе после перезагрузки посередине сцена поползёт с начала.
       if (shown < 0) {
-        shown = target;
+        shown = raw;
+        desired = raw;
         prevTime = now;
+      }
+
+      // Цель помнит, куда просили, даже когда страницу держим на месте.
+      // Читаем её только если страницу двигал человек: наш собственный
+      // прижим иначе выглядел бы как прокрутка вверх и сцена бы встала.
+      const movedByUser =
+        forcedY < 0 || Math.abs(window.scrollY - forcedY) > 2;
+      if (movedByUser) {
+        if (raw < shown - 0.002) desired = raw; // листают вверх
+        else if (raw > desired) desired = raw; // просят дальше
       }
 
       // Шаг ограничен по величине: рывок колеса цель двигает, скорость — нет.
       const dt = Math.min(0.05, (now - prevTime) / 1000);
       prevTime = now;
-      const diff = target - shown;
+      const diff = desired - shown;
       const step = speedLimit(shown, d1, d2) * dt;
       shown += Math.abs(diff) <= step ? diff : Math.sign(diff) * step;
+
+      // Пока сцена догоняет цель, страница едет вместе с ней и ни на пиксель
+      // вперёд: пролистать первый экран, не досмотрев его, нельзя. Просто
+      // упереть страницу не выйдет — сцена уходила бы вперёд, и её отставание
+      // читалось бы как прокрутка вверх. Вверх пускаем свободно: над первым
+      // экраном всё равно только шапка.
+      forcedY = -1;
+      if (desired > shown + 0.0005 && shown < 0.999) {
+        const pinned = wrapTop + scrollable * shown;
+        if (Math.abs(window.scrollY - pinned) > 1) window.scrollTo(0, pinned);
+        forcedY = window.scrollY;
+      }
 
       // Зоны 1–2: первый ролик. Зоны 4–5: второй.
       if (shown < 0.4) {
@@ -310,6 +362,7 @@ export function ScrollHero() {
           muted
           playsInline
           preload="auto"
+          style={posterBackdrop("/videos/hero-1-poster.jpg")}
           className={`absolute inset-0 h-full w-full object-cover ${MOBILE_FRAMING}`}
         />
         <video
@@ -319,6 +372,7 @@ export function ScrollHero() {
           muted
           playsInline
           preload="metadata"
+          style={posterBackdrop("/videos/hero-2-poster.jpg")}
           className={`absolute inset-0 h-full w-full object-cover opacity-0 ${MOBILE_FRAMING}`}
         />
 
