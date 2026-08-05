@@ -74,6 +74,22 @@ const stops = [
 const ramp = (v: number, a: number, b: number) =>
   Math.min(1, Math.max(0, (v - a) / (b - a)));
 
+/**
+ * Сцена идёт с постоянной скоростью и не зависит от того, как резко
+ * крутят колесо. Прокрутка задаёт только цель, а кадр подтягивается
+ * к ней с ограничением скорости — поэтому «пролистать» ролик рывком
+ * нельзя, он всё равно отыграет свои секунды.
+ */
+const SPEED = 1.6; // во столько раз быстрее реального времени ролика
+const PAUSE_SPEED = 0.5; // доли прокрутки в секунду на паузах между сценами
+
+/**
+ * Кадр по горизонтали на узком экране. Ролик снят в 4:3, на телефоне
+ * от него остаётся вертикальная полоса: 50% обрезали бы ошейник слева,
+ * поэтому окно кадра сдвинуто и собака стоит правее.
+ */
+const MOBILE_FRAMING = "object-[38%_center] md:object-center";
+
 export function ScrollHero() {
   const reducedMotion = usePrefersReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -90,6 +106,9 @@ export function ScrollHero() {
     if (!wrap || !v1 || !v2) return;
 
     let raf = 0;
+    /** Где сцена находится сейчас. Тянется к прокрутке, но не мгновенно. */
+    let shown = -1;
+    let prevTime = 0;
 
     /** Перемотка без очереди запросов: пока идёт поиск кадра, новый не шлём. */
     const seek = (video: HTMLVideoElement, time: number) => {
@@ -98,31 +117,56 @@ export function ScrollHero() {
       video.currentTime = time;
     };
 
-    const tick = () => {
+    /**
+     * Предел скорости в текущей точке сцены. В зонах движения он привязан
+     * к длине ролика: двадцать процентов прокрутки = его длительность.
+     * Паузы кадром не заняты, их проходим быстрее, иначе сцена вязнет.
+     */
+    const speedLimit = (p: number, d1: number, d2: number) => {
+      if (p > 0.18 && p < 0.42) return (0.2 / (d1 || 3)) * SPEED;
+      if (p > 0.58 && p < 0.82) return (0.2 / (d2 || 5)) * SPEED;
+      return PAUSE_SPEED;
+    };
+
+    const tick = (now: number) => {
       const rect = wrap.getBoundingClientRect();
       const scrollable = wrap.offsetHeight - window.innerHeight;
-      const progress = Math.min(1, Math.max(0, -rect.top / scrollable));
+      const target = Math.min(1, Math.max(0, -rect.top / scrollable));
 
       const d1 = v1.duration || 0;
       const d2 = v2.duration || 0;
 
+      // Первый кадр — встаём сразу туда, где страница уже стоит,
+      // иначе после перезагрузки посередине сцена поползёт с начала.
+      if (shown < 0) {
+        shown = target;
+        prevTime = now;
+      }
+
+      // Шаг ограничен по величине: рывок колеса цель двигает, скорость — нет.
+      const dt = Math.min(0.05, (now - prevTime) / 1000);
+      prevTime = now;
+      const diff = target - shown;
+      const step = speedLimit(shown, d1, d2) * dt;
+      shown += Math.abs(diff) <= step ? diff : Math.sign(diff) * step;
+
       // Зоны 1–2: первый ролик. Зоны 4–5: второй.
-      if (progress < 0.4) {
-        seek(v1, d1 * ramp(progress, 0.2, 0.4));
+      if (shown < 0.4) {
+        seek(v1, d1 * ramp(shown, 0.2, 0.4));
       } else {
-        seek(v2, d2 * ramp(progress, 0.6, 0.8));
+        seek(v2, d2 * ramp(shown, 0.6, 0.8));
       }
 
       // Подмена ролика ровно на стыке одинаковых кадров
-      const showSecond = progress >= 0.4;
+      const showSecond = shown >= 0.4;
       v1.style.opacity = showSecond ? "0" : "1";
       v2.style.opacity = showSecond ? "1" : "0";
 
       // Текст виден только на паузах и гаснет до начала движения
       const visibility = [
-        1 - ramp(progress, 0.15, 0.19),
-        ramp(progress, 0.41, 0.45) * (1 - ramp(progress, 0.55, 0.59)),
-        ramp(progress, 0.81, 0.85),
+        1 - ramp(shown, 0.15, 0.19),
+        ramp(shown, 0.41, 0.45) * (1 - ramp(shown, 0.55, 0.59)),
+        ramp(shown, 0.81, 0.85),
       ];
       visibility.forEach((value, i) => {
         const node = textRefs.current[i];
@@ -204,10 +248,13 @@ export function ScrollHero() {
           <section key={stop.eyebrow} className="relative h-[80vh] overflow-hidden">
             <video
               src={i === 0 ? "/videos/hero-1.mp4" : "/videos/hero-2.mp4"}
+              poster={
+                i === 0 ? "/videos/hero-1-poster.jpg" : "/videos/hero-2-poster.jpg"
+              }
               muted
               playsInline
               preload="metadata"
-              className="h-full w-full object-cover"
+              className={`h-full w-full object-cover ${MOBILE_FRAMING}`}
               onLoadedMetadata={(e) => {
                 const el = e.currentTarget;
                 el.currentTime = i === 0 ? 0 : i === 1 ? 0 : el.duration || 0;
@@ -235,21 +282,25 @@ export function ScrollHero() {
       style={{ height: "500vh", background: palette.bg }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
+        {/* poster рисуется до того, как подгрузится сам ролик — первый
+            экран виден сразу, а не тёмным прямоугольником */}
         <video
           ref={video1Ref}
           src="/videos/hero-1.mp4"
+          poster="/videos/hero-1-poster.jpg"
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full object-cover ${MOBILE_FRAMING}`}
         />
         <video
           ref={video2Ref}
           src="/videos/hero-2.mp4"
+          poster="/videos/hero-2-poster.jpg"
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 h-full w-full object-cover opacity-0"
+          className={`absolute inset-0 h-full w-full object-cover opacity-0 ${MOBILE_FRAMING}`}
         />
 
         {/* Градиент под текстом — только ради читаемости, без плашек */}
