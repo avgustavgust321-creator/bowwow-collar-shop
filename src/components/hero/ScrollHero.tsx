@@ -172,6 +172,70 @@ export function ScrollHero() {
       return PAUSE_SPEED;
     };
 
+    /**
+     * Одно движение прокрутки = один переход между остановками сцены.
+     * Раньше цель тянулась за прокруткой непрерывно, и чтобы пройти блок,
+     * приходилось много раз подряд листать.
+     */
+    const anchors = [0, 0.5, 1];
+    let lastInput = 0;
+    /** В текущем движении шаг уже сделан — добавка от инерции не считается. */
+    let gestureUsed = false;
+    let touchY: number | null = null;
+
+    /** Просим сцену дойти до следующей остановки. */
+    const advance = () => {
+      if (Math.abs(desired - shown) > 0.005) return; // предыдущий переход не закончен
+
+      // Берём остановку после ближайшей, а не первую большую: если сцена
+      // встала чуть-чуть не доехав, шаг «вперёд» не должен превращаться
+      // в микродвижение до той же самой остановки.
+      let nearest = 0;
+      anchors.forEach((a, i) => {
+        if (Math.abs(a - shown) < Math.abs(anchors[nearest] - shown)) nearest = i;
+      });
+      const next = anchors[nearest + 1];
+      if (next === undefined) return; // остановки кончились, дальше страница свободна
+
+      // Работаем, только пока первый экран виден. Сравнивать scrollY с
+      // началом блока нельзя: вверху страницы блок начинается ниже — под
+      // шапкой, — и самый верх сцены так не считался бы активным.
+      const rect = wrap.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+
+      desired = next;
+      gestureUsed = true;
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      const now = performance.now();
+      if (now - lastInput > 120) gestureUsed = false; // началось новое движение
+      lastInput = now;
+      if (e.deltaY > 0 && !gestureUsed) advance();
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      gestureUsed = false;
+      touchY = e.touches[0]?.clientY ?? null;
+      lastInput = performance.now();
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      lastInput = performance.now();
+      const y = e.touches[0]?.clientY;
+      if (y === undefined) return;
+      if (touchY === null) {
+        touchY = y;
+        return;
+      }
+      // палец идёт вверх — значит листают вниз
+      if (touchY - y > 8 && !gestureUsed) advance();
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+
     const tick = (now: number) => {
       const rect = wrap.getBoundingClientRect();
       const scrollable = wrap.offsetHeight - window.innerHeight;
@@ -195,8 +259,16 @@ export function ScrollHero() {
       const movedByUser =
         forcedY < 0 || Math.abs(window.scrollY - forcedY) > 2;
       if (movedByUser) {
-        if (raw < shown - 0.002) desired = raw; // листают вверх
-        else if (raw > desired) desired = raw; // просят дальше
+        // Порог в один процент сцены — это полтора десятка пикселей.
+        // Меньший запас съедал бы отставание страницы в один пиксель и
+        // сцена не доезжала бы до остановки.
+        if (raw < shown - 0.01) {
+          desired = raw; // листают вверх — отпускаем свободно
+        } else if (raw > shown + 0.02 && now - lastInput > 250) {
+          // Страницу увели вперёд сцены не колесом и не пальцем: тянули
+          // ползунок, нажали End, вернулись по ссылке. Догоняем шагами.
+          advance();
+        }
       }
 
       // Шаг ограничен по величине: рывок колеса цель двигает, скорость — нет.
@@ -251,6 +323,9 @@ export function ScrollHero() {
     return () => {
       cancelAnimationFrame(raf);
       v1.removeEventListener("canplaythrough", loadSecond);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
     };
   }, [reducedMotion]);
 
