@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollHero } from "@/components/hero/ScrollHero";
+import { Community } from "@/components/home/Community";
 import { LeatherDeck } from "@/components/home/LeatherDeck";
 import { Reveal } from "@/components/ui/Reveal";
 import { site } from "@/content/site";
@@ -19,7 +20,8 @@ import { formatPrice, priceFrom, products } from "@/lib/catalog";
 
 /** Проверяемые факты из каталога, а не общие слова про качество. */
 const facts = [
-  "12 цветов кожи",
+  "итальянская кожа 3,5 мм",
+  "12 цветов",
   "размеры по сетке или по вашим замерам",
   "латунь или серебро",
   "гравировка до 14 знаков",
@@ -168,14 +170,12 @@ export default function HomePage() {
             Кожа и литая латунь
           </h2>
           <p className="mt-4 text-cream-muted">
-            Натуральная кожа, подклад вторым цветом, ручная строчка по краю.
-            Фурнитура — литая латунь или серебро, не покрытие: она темнеет от
-            времени, но не облезает.
+            Итальянская кожа: основная — 3,5 мм, подклад — от 2 до 2,4 мм.
+            Такая толщина держит форму и не складывается вдвое под нагрузкой.
           </p>
           <p className="mt-4 text-cream-muted">
-            {/* ЗАПОЛНИТЬ: толщина кожи в мм и откуда она — это тот факт,
-                который в этой категории спрашивают первым */}
-            ЗАПОЛНИТЬ: толщина кожи и поставщик.
+            Фурнитура — литая латунь или серебро, не покрытие: она темнеет от
+            времени, но не облезает. Строчка по краю — вручную.
           </p>
         </div>
       </section>
@@ -230,6 +230,8 @@ export default function HomePage() {
           ))}
         </ol>
       </section>
+
+      <Community />
 
       {/* НА СОБАКЕ — портрет во всю высоту рядом с зелёной панелью */}
       <section className="grid md:grid-cols-2">
