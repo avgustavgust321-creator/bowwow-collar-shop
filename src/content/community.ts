@@ -8,15 +8,11 @@
  * но если у снимка есть свой пост, укажите ссылку в поле href: так человек
  * попадёт сразу на него, а не будет искать нужное фото в ленте.
  *
- * ЗАПОЛНИТЬ: ссылки на посты уже настоящие и стоят в нужном порядке,
- * а сами снимки пока из съёмки мастерской — их нужно заменить кадрами
- * из этих же постов. Файлы кладите в public/images/community/ и меняйте
- * только поле src, порядок и ссылки трогать не нужно.
- *
  * Почему не тянем картинку прямо из поста: наружу инстаграм отдаёт свой
  * квадратный кроп 640×640, а не оригинал. Проверено — от вертикального
  * кадра остаётся середина, и рядом с остальными фотографиями сайта такая
- * картинка выглядит мыльной.
+ * картинка выглядит мыльной. Поэтому снимки лежат у нас, а ссылка ведёт
+ * на пост.
  */
 
 export type CommunityPhoto = {
@@ -25,43 +21,38 @@ export type CommunityPhoto = {
   alt: string;
   /** Ссылка на конкретный пост; если не указана, ведём в профиль. */
   href?: string;
-  /** Вертикальные кадры занимают в мозаике две строки. */
-  tall?: boolean;
 };
 
 export const communityPhotos: CommunityPhoto[] = [
   {
-    // ЗАМЕНИТЬ на фотографию из этого поста
-    src: "/images/photos/shot-9.jpg",
-    alt: "Далматин в кожаном ошейнике",
+    src: "/images/community/doberman.jpg",
+    alt: "Доберман в розовом кожаном ошейнике сидит в траве",
     href: "https://www.instagram.com/p/DZSf4a5jQ9F/",
-    tall: true,
   },
   {
-    src: "/images/photos/shot-3.jpg",
-    alt: "Ошейник с латунной пряжкой",
+    src: "/images/community/detali.jpg",
+    alt: "Латунные карабины, поводок и шлейка крупным планом, белая собака в ошейнике",
     href: "https://www.instagram.com/p/DYKiYwKNYr0/",
   },
   {
-    src: "/images/photos/shot-7.jpg",
-    alt: "Собака в широком ошейнике на прогулке",
+    src: "/images/community/jack-rassel.jpg",
+    alt: "Розовый ошейник с латунной пряжкой и биркой на джек-рассел-терьере",
     href: "https://www.instagram.com/p/DSmfLzOjYlG/",
-    tall: true,
   },
   {
     // Пост опубликован со страницы заказчицы, а не бренда
-    src: "/images/photos/walk-dalmatian.jpg",
-    alt: "Далматин на поводке",
+    src: "/images/community/u-vody.jpg",
+    alt: "Собака на руках у хозяйки на берегу, бирюзовый ошейник",
     href: "https://www.instagram.com/p/DQjv5jNiCAZ/",
   },
   {
-    src: "/images/photos/shot-4.jpg",
-    alt: "Кожаный ошейник крупным планом",
+    src: "/images/community/na-trave.jpg",
+    alt: "Белая собака лежит на траве рядом с бежевым поводком",
     href: "https://www.instagram.com/p/DQRgiV6Dc0s/",
   },
   {
-    src: "/images/photos/shot-5.jpg",
-    alt: "Ошейник и поводок в комплекте",
+    src: "/images/community/spaniel.jpg",
+    alt: "Спаниель в красном ошейнике рядом с хозяином",
     href: "https://www.instagram.com/p/DPZBAwCDToz/",
   },
 ];

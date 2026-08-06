@@ -29,9 +29,13 @@ function InstagramMark({ className }: { className?: string }) {
 /**
  * Блок «В инстаграме»: фотографии собак, каждая — ссылка в инстаграм.
  *
- * Сетка нарочно неровная: вертикальные кадры занимают две строки, часть
- * снимков сдвинута вниз. Ровная сетка одинаковых квадратов читалась бы
- * как галерея из шаблона, а здесь нужен вид ленты, собранной руками.
+ * Все снимки из инстаграма вертикальные, поэтому неровность даёт не разная
+ * высота плиток, а ступенька: средняя колонка опущена. Ровная сетка
+ * одинаковых плиток читалась бы как галерея из шаблона.
+ *
+ * Три колонки, а не четыре: шесть кадров ложатся двумя полными рядами,
+ * и каждый снимок остаётся крупным — в мелкой плитке строчка и пряжка,
+ * ради которых эти фотографии и сняты, перестают читаться.
  *
  * Подписи под фотографиями нет намеренно: пока нет настоящих отзывов от
  * заказчиков, любой текст под чужой собакой был бы выдуманным.
@@ -55,14 +59,15 @@ export function Community() {
         </a>
       </div>
 
-      <ul className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+      <ul className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5">
         {communityPhotos.map((photo, i) => (
           <li
             key={photo.src}
             className={cn(
-              photo.tall && "row-span-2",
-              // лёгкая ступенька: каждый второй кадр опущен
-              i % 2 === 1 && "mt-6 md:mt-10",
+              // Ступенька: на телефоне опущен каждый второй кадр,
+              // на широком экране — вся средняя колонка.
+              i % 2 === 1 && "mt-6 md:mt-0",
+              i % 3 === 1 && "md:mt-12",
             )}
           >
             <a
@@ -70,19 +75,14 @@ export function Community() {
               target="_blank"
               rel="noreferrer"
               aria-label={`${photo.alt} — открыть инстаграм ${site.contacts.instagramHandle}`}
-              className="group relative block h-full overflow-hidden"
+              className="group relative block overflow-hidden"
             >
-              <div
-                className={cn(
-                  "relative h-full w-full",
-                  photo.tall ? "aspect-[3/4]" : "aspect-[4/3]",
-                )}
-              >
+              <div className="relative aspect-[3/4] w-full">
                 <Image
                   src={photo.src}
                   alt=""
                   fill
-                  sizes="(min-width: 768px) 25vw, 50vw"
+                  sizes="(min-width: 768px) 33vw, 50vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                 />
               </div>
