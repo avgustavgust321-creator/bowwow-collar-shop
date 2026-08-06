@@ -57,7 +57,7 @@ export default function HomePage() {
 
       {/* ЧТО ШЬЁМ */}
       <section className="px-5 py-20 md:px-10">
-        <p className="label text-brass">Ассортимент</p>
+        <p className="label text-forest">Ассортимент</p>
         <h2 className="display mt-5 text-4xl md:text-5xl">Что мы шьём</h2>
 
         <div className="mt-12 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
@@ -65,9 +65,9 @@ export default function HomePage() {
             <Reveal key={category.id} delay={i * 60} className="h-full">
               <Link
                 href={`/catalog?category=${category.id}`}
-                className="group block h-full bg-night p-7 transition-colors hover:bg-forest"
+                className="group block h-full bg-cream p-7 transition-colors hover:bg-shell"
               >
-                <h3 className="display text-2xl transition-colors group-hover:text-brass">
+                <h3 className="display text-2xl transition-colors group-hover:text-forest">
                   {category.title}
                 </h3>
                 <p className="mt-3 text-sm text-muted">
@@ -85,7 +85,7 @@ export default function HomePage() {
           <h2 className="display text-4xl md:text-5xl">Избранное</h2>
           <Link
             href="/catalog"
-            className="label border-b border-brass pb-1 transition-colors hover:border-emerald hover:text-emerald"
+            className="label border-b border-gold pb-1 transition-colors hover:border-forest hover:text-forest"
           >
             Весь каталог
           </Link>
@@ -101,8 +101,8 @@ export default function HomePage() {
       </section>
 
       {/* ПАЛИТРА — настоящее зерно кожи, не заливка */}
-      <section className="border-t border-line bg-forest px-5 py-20 md:px-10">
-        <p className="label text-brass">Палитра</p>
+      <section className="border-t border-line bg-shell px-5 py-20 md:px-10">
+        <p className="label text-forest">Палитра</p>
         <h2 className="display mt-5 max-w-2xl text-4xl md:text-5xl">
           Двенадцать оттенков, у каждого своё имя
         </h2>
@@ -119,21 +119,21 @@ export default function HomePage() {
 
       {/* КАК ЭТО РАБОТАЕТ — нумерация оправдана: это последовательность */}
       <section className="px-5 py-20 md:px-10">
-        <p className="label text-brass">Порядок работы</p>
+        <p className="label text-forest">Порядок работы</p>
         <h2 className="display mt-5 text-4xl md:text-5xl">Как это работает</h2>
 
         <ol className="mt-12 grid gap-px bg-line md:grid-cols-3">
           {steps.map((step, i) => (
             <Reveal key={step.title} delay={i * 80} className="contents">
-              <li className="bg-night p-7">
-                <span className="label text-brass">
+              <li className="bg-cream p-7">
+                <span className="label text-forest">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="display mt-4 text-2xl">{step.title}</h3>
                 <p className="mt-3 text-sm text-muted">{step.text}</p>
                 <Link
                   href={step.href}
-                  className="label mt-6 inline-block border-b border-line pb-1 transition-colors hover:border-brass hover:text-brass"
+                  className="label mt-6 inline-block border-b border-line pb-1 transition-colors hover:border-gold hover:text-forest"
                 >
                   {step.link}
                 </Link>
@@ -148,7 +148,7 @@ export default function HomePage() {
           </h2>
           <Link
             href="/catalog"
-            className="label mt-8 inline-flex min-h-11 items-center bg-brass px-8 text-night transition-colors hover:bg-brass-light"
+            className="label mt-8 inline-flex min-h-11 items-center bg-forest px-8 text-cream transition-colors hover:bg-forest-lift"
           >
             Смотреть каталог
           </Link>
@@ -156,7 +156,7 @@ export default function HomePage() {
             href={site.contacts.instagram}
             target="_blank"
             rel="noreferrer"
-            className="label mt-6 text-muted transition-colors hover:text-emerald"
+            className="label mt-6 text-muted transition-colors hover:text-forest"
           >
             или напишите нам — {site.contacts.instagramHandle}
           </a>

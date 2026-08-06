@@ -18,7 +18,7 @@ export default function MaterialPreview() {
   const featured = products.filter((p) => p.images.length > 0).slice(0, 3);
 
   return (
-    <div className="bg-paper">
+    <div className="bg-ink">
       <VariantSwitch />
 
       {/* ГЕРОЙ: во весь экран — товар, а не плашка с текстом */}
@@ -43,25 +43,25 @@ export default function MaterialPreview() {
 
         <div className="relative flex min-h-[86vh] flex-col justify-end px-5 pb-14 md:px-10">
           <p className="hand text-3xl text-bubblegum">Минск, шьём с 2019</p>
-          <h1 className="display mt-2 max-w-4xl text-5xl text-paper md:text-7xl">
+          <h1 className="display mt-2 max-w-4xl text-5xl text-ink md:text-7xl">
             Кожа, латунь
             <br />
             и ваши замеры
           </h1>
-          <p className="mt-5 max-w-lg text-lg text-paper/85">
+          <p className="mt-5 max-w-lg text-lg text-ink/85">
             Ошейники, шлейки и поводки ручной работы. Двенадцать цветов кожи,
             латунная фурнитура, размеры по вашей собаке.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/catalog"
-              className="display rounded-full bg-paper px-8 py-4 text-xl text-forest transition-colors hover:bg-bubblegum"
+              className="display rounded-full bg-ink px-8 py-4 text-xl text-shell transition-colors hover:bg-bubblegum"
             >
               Выбрать ошейник
             </Link>
             <Link
               href="/sizing"
-              className="display rounded-full border-2 border-paper/70 px-8 py-4 text-xl text-paper transition-colors hover:bg-paper/10"
+              className="display rounded-full border-2 border-ink/70 px-8 py-4 text-xl text-ink transition-colors hover:bg-ink/10"
             >
               Как замерить
             </Link>
@@ -108,7 +108,7 @@ export default function MaterialPreview() {
       </section>
 
       {/* ПАЛИТРА: настоящее зерно кожи вместо плоских кружков */}
-      <section className="bg-forest px-5 py-16 text-paper md:px-10">
+      <section className="bg-shell px-5 py-16 text-ink md:px-10">
         <p className="hand text-3xl text-bubblegum">у каждого цвета своё имя</p>
         <h2 className="display mt-2 max-w-3xl text-4xl md:text-6xl">
           Двенадцать цветов кожи
@@ -121,7 +121,7 @@ export default function MaterialPreview() {
                 color={color}
                 className="aspect-square w-full shadow-[0_10px_26px_-12px_rgba(0,0,0,0.7)]"
               />
-              <p className="hand mt-2 text-center text-xl text-paper/85">
+              <p className="hand mt-2 text-center text-xl text-ink/85">
                 {color.name}
               </p>
             </div>

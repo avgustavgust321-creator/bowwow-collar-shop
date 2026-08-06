@@ -45,7 +45,7 @@ export default async function OrderPage({
   return (
     <section className="px-5 py-16 md:px-8">
       <div className="mx-auto max-w-2xl">
-        <p className="label text-brass">Спасибо за заказ</p>
+        <p className="label text-forest">Спасибо за заказ</p>
         <h1 className="display mt-3 text-4xl md:text-6xl">Заказ {order.id}</h1>
         <p className="mt-4 text-muted">
           {statusText[order.status]}. Мы напишем вам на{" "}
@@ -54,13 +54,13 @@ export default async function OrderPage({
         </p>
 
         {notice && (
-          <p className="mt-6 border-l-2 border-brass bg-forest px-4 py-3 text-sm">
+          <p className="mt-6 border-l-2 border-gold bg-shell px-4 py-3 text-sm">
             {notice}
           </p>
         )}
 
         {order.approximate && (
-          <p className="mt-6 border-l-2 border-brass bg-forest px-4 py-3 text-sm">
+          <p className="mt-6 border-l-2 border-gold bg-shell px-4 py-3 text-sm">
             В заказе есть позиции по индивидуальным замерам. Мастер проверит
             размеры и подтвердит окончательную стоимость до начала работы.
           </p>
@@ -115,7 +115,7 @@ export default async function OrderPage({
         <div className="mt-10 flex flex-wrap gap-4">
           <Link
             href="/catalog"
-            className="display rounded-full bg-brass px-8 py-4 text-night transition-colors hover:bg-brass-light"
+            className="display rounded-full bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"
           >
             Вернуться в каталог
           </Link>
@@ -123,7 +123,7 @@ export default async function OrderPage({
             href={site.contacts.instagram}
             target="_blank"
             rel="noreferrer"
-            className="display rounded-full border border-line px-8 py-4 transition-colors hover:border-brass hover:text-brass"
+            className="display rounded-full border border-line px-8 py-4 transition-colors hover:border-gold hover:text-forest"
           >
             Написать нам
           </a>

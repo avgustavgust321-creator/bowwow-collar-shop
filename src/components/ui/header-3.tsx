@@ -68,13 +68,15 @@ export function Header() {
   // Закрываем меню при переходе: портал живёт вне дерева страницы
   const closeMenu = () => setOpen(false);
 
+  // Шапка всегда кремовая, а не прозрачная до прокрутки: раньше она
+  // проявлялась только при прокрутке, и на главной светлый логотип
+  // оказывался на светлой плашке — то есть исчезал.
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b border-transparent transition-colors",
+        "sticky top-0 z-50 w-full border-b border-border bg-background/92 backdrop-blur-lg transition-colors",
         {
-          "border-border bg-background/85 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60":
-            scrolled || open,
+          "supports-[backdrop-filter]:bg-background/75": !scrolled && !open,
         },
       )}
     >
@@ -86,7 +88,7 @@ export function Header() {
             onClick={closeMenu}
             className="rounded-xs p-1 hover:bg-accent"
           >
-            <Logo variant="light" className="h-5" />
+            <Logo className="h-5" />
           </Link>
 
           <NavigationMenu className="hidden md:flex">
@@ -138,7 +140,7 @@ export function Header() {
                               href={item.href}
                               className="flex flex-row items-center gap-x-2 rounded-xs p-2 hover:bg-accent"
                             >
-                              <item.icon className="size-4 text-brass" />
+                              <item.icon className="size-4 text-forest" />
                               <span className="text-sm">{item.title}</span>
                             </Link>
                           </NavigationMenuLink>
@@ -188,17 +190,17 @@ export function Header() {
         className="flex flex-col justify-between gap-2 overflow-y-auto"
       >
         <div className="flex w-full flex-col gap-y-1">
-          <span className="label mt-2 text-brass">Каталог</span>
+          <span className="label mt-2 text-forest">Каталог</span>
           {catalogLinks.map((link) => (
             <ListItem key={link.title} {...link} onClick={closeMenu} plain />
           ))}
 
-          <span className="label mt-5 text-brass">Помощь</span>
+          <span className="label mt-5 text-forest">Помощь</span>
           {helpLinks.map((link) => (
             <ListItem key={link.title} {...link} onClick={closeMenu} plain />
           ))}
 
-          <span className="label mt-5 text-brass">Бренд</span>
+          <span className="label mt-5 text-forest">Бренд</span>
           {aboutLinks.map((link) => (
             <ListItem key={link.title} {...link} onClick={closeMenu} plain />
           ))}
@@ -290,7 +292,7 @@ function ListItem({
       )}
     >
       <div className="flex aspect-square size-11 items-center justify-center rounded-xs border border-border bg-background/40">
-        <Icon className="size-5 text-brass" />
+        <Icon className="size-5 text-forest" />
       </div>
       <div className="flex flex-col items-start justify-center">
         <span className="text-sm font-medium">{title}</span>

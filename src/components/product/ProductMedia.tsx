@@ -102,7 +102,7 @@ export function ProductMedia({
   return (
     <div
       className={cn(
-        "relative aspect-square overflow-hidden bg-forest",
+        "relative aspect-square overflow-hidden bg-shell",
         // isolate — чтобы multiply смешивался только с фотографией,
         // а не со всей страницей
         "isolate",

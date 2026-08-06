@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { IBM_Plex_Mono, Literata, Manrope } from "next/font/google";
 import { usePrefersReducedMotion } from "@/lib/use-media-query";
 
 /**
@@ -14,36 +13,23 @@ import { usePrefersReducedMotion } from "@/lib/use-media-query";
  * Последний кадр первого ролика совпадает с первым кадром второго,
  * поэтому подмена ролика на середине пути незаметна.
  *
- * ШРИФТЫ: в задании были Fraunces и Work Sans, но у них нет кириллицы —
- * весь русский текст свалился бы в системный шрифт. Взяты ближайшие
- * с кириллицей: Literata вместо Fraunces, Manrope вместо Work Sans.
+ * ШРИФТЫ И ЦВЕТА: раньше блок держал собственный набор — своя коричневая
+ * палитра и отдельно подключённые шрифты. Из-за этого он не менялся вместе
+ * с сайтом. Теперь берёт общие токены из globals.css, и правка палитры
+ * в одном месте меняет в том числе первый экран.
  */
 
-const literata = Literata({
-  subsets: ["cyrillic", "latin"],
-  weight: ["300", "400"],
-  variable: "--font-hero-serif",
-});
-
-const manrope = Manrope({
-  subsets: ["cyrillic", "latin"],
-  weight: ["300", "400"],
-  variable: "--font-hero-sans",
-});
-
-const mono = IBM_Plex_Mono({
-  subsets: ["cyrillic", "latin"],
-  weight: ["400"],
-  variable: "--font-hero-mono",
-});
-
 const palette = {
-  bg: "#1b120d",
-  brass: "#b98a46",
-  brassLight: "#dcb26c",
-  text: "#f3e9d8",
-  muted: "#c7b8a2",
+  bg: "var(--color-forest)",
+  accent: "var(--color-rose)",
+  accentLight: "var(--color-rose-deep)",
+  text: "var(--color-cream)",
+  muted: "var(--color-cream-muted)",
 };
+
+/** Затемнение под текстом. Тот же зелёный, что и фон блока. */
+const scrim =
+  "linear-gradient(to top, rgba(20,41,29,0.94) 0%, rgba(20,41,29,0.45) 45%, transparent 74%)";
 
 /** Три остановки сцены — по одной на каждую паузу. */
 const stops = [
@@ -329,7 +315,6 @@ export function ScrollHero() {
     };
   }, [reducedMotion]);
 
-  const fontVars = `${literata.variable} ${manrope.variable} ${mono.variable}`;
 
   const Overlay = ({
     stop,
@@ -348,19 +333,19 @@ export function ScrollHero() {
       }}
       className="absolute inset-x-0 bottom-0 px-6 pb-16 md:px-14 md:pb-20"
       style={{
-        fontFamily: "var(--font-hero-sans)",
+        fontFamily: "var(--font-sans)",
         opacity: isStatic ? 1 : 0,
       }}
     >
       <p
         className="text-[0.68rem] tracking-[0.32em] uppercase"
-        style={{ fontFamily: "var(--font-hero-mono)", color: palette.brass }}
+        style={{ fontFamily: "var(--font-sans)", color: palette.accent }}
       >
         {stop.eyebrow}
       </p>
       <h2
         className="mt-4 max-w-2xl text-4xl leading-[1.08] font-light md:text-6xl"
-        style={{ fontFamily: "var(--font-hero-serif)", color: palette.text }}
+        style={{ fontFamily: "var(--font-display)", color: palette.text }}
       >
         {stop.title}
       </h2>
@@ -374,10 +359,10 @@ export function ScrollHero() {
           href="/catalog"
           className="mt-8 inline-flex min-h-11 items-center rounded-full px-7 text-[0.72rem] tracking-[0.28em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
           style={{
-            fontFamily: "var(--font-hero-mono)",
-            background: palette.brass,
+            fontFamily: "var(--font-sans)",
+            background: palette.accent,
             color: palette.bg,
-            outlineColor: palette.brassLight,
+            outlineColor: palette.accentLight,
           }}
         >
           Смотреть каталог
@@ -389,7 +374,7 @@ export function ScrollHero() {
   // ── Без движения: три кадра друг под другом, тот же текст ──
   if (reducedMotion) {
     return (
-      <div className={fontVars} style={{ background: palette.bg }}>
+      <div style={{ background: palette.bg }}>
         {stops.map((stop, i) => (
           <section key={stop.eyebrow} className="relative h-[80vh] overflow-hidden">
             <video
@@ -411,7 +396,7 @@ export function ScrollHero() {
               className="absolute inset-0"
               style={{
                 background:
-                  "linear-gradient(to top, rgba(27,18,13,0.92) 0%, rgba(27,18,13,0.35) 45%, transparent 75%)",
+                  scrim,
               }}
             />
             <Overlay stop={stop} index={i} withCta={i === 2} isStatic />
@@ -424,7 +409,7 @@ export function ScrollHero() {
   return (
     <div
       ref={wrapRef}
-      className={`relative ${fontVars}`}
+      className="relative"
       style={{ height: SCENE_HEIGHT, background: palette.bg }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
@@ -457,7 +442,7 @@ export function ScrollHero() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to top, rgba(27,18,13,0.9) 0%, rgba(27,18,13,0.3) 42%, transparent 70%)",
+              scrim,
           }}
         />
 

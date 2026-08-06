@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Literata, Manrope } from "next/font/google";
+import { Comforter, Montserrat, Playfair_Display } from "next/font/google";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { CursorDog } from "@/components/brand/CursorDog";
 import { DustBackground } from "@/components/brand/DustBackground";
@@ -8,26 +8,29 @@ import { Footer } from "@/components/layout/Footer";
 import { site } from "@/content/site";
 import "./globals.css";
 
-/** Антиква на заголовки, цены и сноски — голос бренда. */
-const literata = Literata({
-  variable: "--font-literata",
+/** Высококонтрастная антиква на заголовки — голос бренда. */
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["cyrillic", "latin"],
-  weight: ["300", "400"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   display: "swap",
 });
 
-/** Гротеск на текст, формы и таблицы. */
-const manrope = Manrope({
-  variable: "--font-manrope",
+/** Геометрический гротеск: текст, формы, таблицы и метки вразрядку. */
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["cyrillic", "latin"],
-  weight: ["300", "400", "500"],
+  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 
-/** Моноширинный на служебные подписи: разделы, статусы, единицы. */
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
+/**
+ * Скрипт на короткие акцентные надписи.
+ * Единственное начертание — 400; других у семейства нет.
+ */
+const comforter = Comforter({
+  variable: "--font-comforter",
   subsets: ["cyrillic", "latin"],
   weight: ["400"],
   display: "swap",
@@ -55,9 +58,9 @@ export default function RootLayout({
   return (
     <html
       lang="ru"
-      className={`${manrope.variable} ${literata.variable} ${plexMono.variable} h-full`}
+      className={`${montserrat.variable} ${playfair.variable} ${comforter.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col bg-night text-paper">
+      <body className="flex min-h-full flex-col bg-cream text-ebony">
         <CartProvider>
           <DustBackground />
           <Header />

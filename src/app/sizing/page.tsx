@@ -52,7 +52,7 @@ export default function SizingPage() {
               key={step.id}
               className="grid gap-3 border-b border-line py-8 sm:grid-cols-[auto_1fr] sm:gap-8"
             >
-              <span className="display text-5xl text-brass">{step.n}</span>
+              <span className="display text-5xl text-forest">{step.n}</span>
               <div>
                 <h2 className="display text-2xl">{step.label}</h2>
                 <p className="label mt-2 text-muted">{step.hint}</p>
@@ -62,7 +62,7 @@ export default function SizingPage() {
           ))}
         </ol>
 
-        <div className="mx-auto mt-10 max-w-3xl border-l-2 border-brass bg-forest px-5 py-4">
+        <div className="mx-auto mt-10 max-w-3xl border-l-2 border-gold bg-shell px-5 py-4">
           <p className="text-sm">
             Не уверены в замерах? Пришлите их нам в Instagram вместе с фото
             питомца — поможем выбрать размер. Ошибка в один сантиметр для
@@ -73,7 +73,7 @@ export default function SizingPage() {
         <div className="mt-12 text-center">
           <Link
             href="/catalog"
-            className="label inline-block bg-brass px-8 py-4 text-night transition-colors hover:bg-brass-light"
+            className="label inline-block bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"
           >
             Выбрать изделие
           </Link>

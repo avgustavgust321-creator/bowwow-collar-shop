@@ -64,18 +64,18 @@ export default async function ProductPage({
       />
 
       <nav className="label flex flex-wrap items-center gap-2 border-b border-line px-5 py-4 text-muted md:px-8">
-        <Link href="/catalog" className="hover:text-brass">
+        <Link href="/catalog" className="hover:text-forest">
           Каталог
         </Link>
         <span>/</span>
         <Link
           href={`/catalog?category=${product.category}`}
-          className="hover:text-brass"
+          className="hover:text-forest"
         >
           {category?.title}
         </Link>
         <span>/</span>
-        <span className="text-paper">{product.title}</span>
+        <span className="text-ink">{product.title}</span>
       </nav>
 
       <ProductView product={product} />
@@ -126,7 +126,7 @@ export default async function ProductPage({
                 {product.customFit && (
                   <p className="mt-4 text-sm text-muted">
                     Не подходит ни один размер?{" "}
-                    <Link href="/sizing" className="underline hover:text-brass">
+                    <Link href="/sizing" className="underline hover:text-forest">
                       Снимите замеры
                     </Link>{" "}
                     — сошьём по фигуре питомца.
@@ -151,7 +151,7 @@ export default async function ProductPage({
               <div>
                 <dt className="label text-muted">Уход</dt>
                 <dd className="mt-1">
-                  <Link href="/care" className="underline hover:text-brass">
+                  <Link href="/care" className="underline hover:text-forest">
                     Как ухаживать
                   </Link>
                 </dd>

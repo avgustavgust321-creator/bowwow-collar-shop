@@ -32,8 +32,8 @@ function Chip({
       className={cn(
         "label border px-4 py-2 transition-colors",
         active
-          ? "border-brass bg-brass text-night"
-          : "border-line text-muted hover:border-brass hover:text-brass",
+          ? "border-gold bg-forest text-cream"
+          : "border-line text-muted hover:border-gold hover:text-forest",
       )}
     >
       {children}

@@ -19,7 +19,7 @@ export default function PolicyPage() {
     <>
       <PageHeader title="Данные" />
       <Prose>
-        <p className="border-l-2 border-brass bg-forest px-4 py-3 text-sm">
+        <p className="border-l-2 border-gold bg-shell px-4 py-3 text-sm">
           Страница ожидает юридический текст. Перечень собираемых данных ниже
           соответствует тому, что сайт запрашивает на самом деле.
         </p>

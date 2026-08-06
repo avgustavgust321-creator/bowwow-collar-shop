@@ -47,7 +47,7 @@ export default function FaqPage() {
             <details key={item.q} className="group border-b border-line py-5">
               <summary className="display flex cursor-pointer list-none items-center justify-between gap-4 text-xl">
                 {item.q}
-                <span className="text-brass transition-transform group-open:rotate-45">
+                <span className="text-forest transition-transform group-open:rotate-45">
                   +
                 </span>
               </summary>
@@ -58,7 +58,7 @@ export default function FaqPage() {
 
         <p className="mt-12 text-center text-muted">
           Не нашли ответ?{" "}
-          <Link href="/sizing" className="underline hover:text-brass">
+          <Link href="/sizing" className="underline hover:text-forest">
             Посмотрите, как снимать замеры
           </Link>{" "}
           или напишите нам в Instagram.

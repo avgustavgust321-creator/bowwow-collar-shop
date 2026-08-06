@@ -47,7 +47,7 @@ export default function AboutPage() {
           <h2 className="label text-muted">Палитра кожи</h2>
           <div className="mt-5 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
             {selectableLeatherColors.map((color) => (
-              <div key={color.id} className="bg-night">
+              <div key={color.id} className="bg-cream">
                 <div
                   className="aspect-4/3"
                   style={{ backgroundColor: color.hex }}
@@ -62,7 +62,7 @@ export default function AboutPage() {
       <section className="px-5 pb-20 text-center md:px-8">
         <Link
           href="/catalog"
-          className="label inline-block bg-brass px-8 py-4 text-night transition-colors hover:bg-brass-light"
+          className="label inline-block bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"
         >
           Смотреть каталог
         </Link>
@@ -72,7 +72,7 @@ export default function AboutPage() {
             href={site.contacts.instagram}
             target="_blank"
             rel="noreferrer"
-            className="underline hover:text-brass"
+            className="underline hover:text-forest"
           >
             Instagram {site.contacts.instagramHandle}
           </a>

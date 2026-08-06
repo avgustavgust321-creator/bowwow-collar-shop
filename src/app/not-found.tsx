@@ -9,7 +9,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/catalog"
-        className="label mt-8 inline-block bg-brass px-8 py-4 text-night transition-colors hover:bg-brass-light"
+        className="label mt-8 inline-block bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"
       >
         В каталог
       </Link>

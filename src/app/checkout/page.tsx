@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
 import { calcPrice, describeConfiguration } from "@/lib/price";
 
 const fieldClass =
-  "w-full rounded-xl border-2 border-line bg-night px-4 py-3 outline-none focus:border-line";
+  "w-full rounded-xl border-2 border-line bg-cream px-4 py-3 outline-none focus:border-line";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function CheckoutPage() {
         <h1 className="display text-4xl">Корзина пуста</h1>
         <Link
           href="/catalog"
-          className="label mt-8 inline-block bg-brass px-8 py-4 text-night transition-colors hover:bg-brass-light"
+          className="label mt-8 inline-block bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"
         >
           В каталог
         </Link>
@@ -82,7 +82,7 @@ export default function CheckoutPage() {
       <h1 className="display text-4xl md:text-6xl">Оформление</h1>
 
       {errors.length > 0 && (
-        <ul className="mt-6 border-l-2 border-brass bg-forest py-4 pl-4 text-sm">
+        <ul className="mt-6 border-l-2 border-gold bg-shell py-4 pl-4 text-sm">
           {errors.map((e) => (
             <li key={e}>{e}</li>
           ))}
@@ -133,8 +133,8 @@ export default function CheckoutPage() {
                 className={cn(
                   "flex cursor-pointer items-start gap-3 border p-4 transition-colors",
                   delivery === option.id
-                    ? "border-line bg-forest"
-                    : "border-line hover:border-brass",
+                    ? "border-line bg-shell"
+                    : "border-line hover:border-gold",
                 )}
               >
                 <input
@@ -181,7 +181,7 @@ export default function CheckoutPage() {
           </label>
         </div>
 
-        <aside className="h-fit border border-line bg-forest p-6 lg:sticky lg:top-24">
+        <aside className="h-fit border border-line bg-shell p-6 lg:sticky lg:top-24">
           <h2 className="label text-muted">Заказ</h2>
           <ul className="mt-4 flex flex-col gap-4 border-b border-line pb-4">
             {lines.map((line) => {
@@ -220,7 +220,7 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={pending}
-            className="label mt-6 w-full bg-brass px-8 py-5 text-night transition-colors hover:bg-brass-light disabled:opacity-50"
+            className="label mt-6 w-full bg-forest px-8 py-5 text-cream transition-colors hover:bg-forest-lift disabled:opacity-50"
           >
             {pending ? "Отправляем…" : "Оформить заказ"}
           </button>

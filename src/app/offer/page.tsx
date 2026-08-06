@@ -28,7 +28,7 @@ export default function OfferPage() {
     <>
       <PageHeader title="Оферта" />
       <Prose>
-        <p className="border-l-2 border-brass bg-forest px-4 py-3 text-sm">
+        <p className="border-l-2 border-gold bg-shell px-4 py-3 text-sm">
           Страница ожидает юридический текст. Реквизиты подтягиваются из файла
           настроек сайта.
         </p>

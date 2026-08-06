@@ -34,13 +34,13 @@ export function ProductCard({
         {product.collection && (
           <p className="label text-muted">{product.collection}</p>
         )}
-        <h3 className="display mt-2 text-xl transition-colors group-hover:text-brass">
+        <h3 className="display mt-2 text-xl transition-colors group-hover:text-forest">
           {product.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-sm text-muted">
           {product.summary}
         </p>
-        <p className="hand mt-4 text-lg text-paper">
+        <p className="hand mt-4 text-lg text-ink">
           {price.from && "от "}
           {formatPrice(price.value)}
         </p>

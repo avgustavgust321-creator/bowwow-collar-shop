@@ -26,7 +26,7 @@ export function ProductView({ product }: { product: Product }) {
       {/* На телефоне фото залипает под шапкой: свотчи цвета лежат ниже,
           и без этого выбор шёл бы вслепую — картинка уезжала бы за экран.
           На широком экране всё видно сразу, там залипание не нужно. */}
-      <div className="sticky top-14 z-20 border-b border-line bg-night lg:static lg:border-r lg:border-b-0">
+      <div className="sticky top-14 z-20 border-b border-line bg-cream lg:static lg:border-r lg:border-b-0">
         <ProductGallery
           product={product}
           colorId={tintColorId}
@@ -36,7 +36,7 @@ export function ProductView({ product }: { product: Product }) {
 
       <div className="px-5 py-10 md:px-8">
         {product.badge && (
-          <span className="label bg-brass px-2 py-1 text-night">
+          <span className="label bg-forest px-2 py-1 text-cream">
             {product.badge}
           </span>
         )}

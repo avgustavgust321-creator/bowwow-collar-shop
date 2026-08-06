@@ -93,7 +93,7 @@ export function CursorDog() {
         style={{
           width: SIZE,
           height: SIZE * (762 / 1200),
-          backgroundColor: "var(--color-forest)",
+          backgroundColor: "var(--color-shell)",
           opacity: 0.75,
           maskImage: "url(/images/brand/dog-line.png)",
           WebkitMaskImage: "url(/images/brand/dog-line.png)",

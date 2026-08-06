@@ -76,8 +76,8 @@ export function Configurator({
                     className={cn(
                       "label px-4 py-2 transition-colors",
                       config.fit === mode
-                        ? "bg-forest text-paper"
-                        : "hover:text-brass",
+                        ? "bg-shell text-ink"
+                        : "hover:text-forest",
                     )}
                   >
                     {title}
@@ -97,8 +97,8 @@ export function Configurator({
                   className={cn(
                     "flex min-w-20 flex-col items-start border px-3 py-2 text-left transition-colors",
                     config.sizeCode === size.code
-                      ? "border-line bg-forest text-paper"
-                      : "border-line hover:border-brass",
+                      ? "border-line bg-shell text-ink"
+                      : "border-line hover:border-gold",
                   )}
                 >
                   <span className="label">{size.code}</span>
@@ -123,7 +123,7 @@ export function Configurator({
                     <label key={field} className="flex flex-col gap-1">
                       <span className="label">{m.label}</span>
                       <span className="text-xs text-muted">{m.hint}</span>
-                      <div className="mt-1 flex items-center border border-line bg-forest focus-within:border-brass">
+                      <div className="mt-1 flex items-center border border-line bg-shell focus-within:border-gold">
                         <input
                           type="number"
                           inputMode="decimal"
@@ -150,11 +150,11 @@ export function Configurator({
                   );
                 })}
               </div>
-              <p className="border-l-2 border-brass bg-forest px-4 py-3 text-sm">
+              <p className="border-l-2 border-gold bg-shell px-4 py-3 text-sm">
                 По индивидуальным замерам цена предварительная — мастер
                 подтвердит её после проверки. Как правильно измерить питомца,
                 описано{" "}
-                <Link href="/sizing" className="underline hover:text-brass">
+                <Link href="/sizing" className="underline hover:text-forest">
                   здесь
                 </Link>
                 .
@@ -192,7 +192,7 @@ export function Configurator({
           <section key={slot.id}>
             <h2 className="label text-muted">
               {slot.label}
-              <span className="ml-3 normal-case text-paper">
+              <span className="ml-3 normal-case text-ink">
                 {current?.name}
               </span>
             </h2>
@@ -239,8 +239,8 @@ export function Configurator({
                 className={cn(
                   "flex items-center gap-2 border px-4 py-2 transition-colors",
                   config.hardware === hw.id
-                    ? "border-line bg-forest text-paper"
-                    : "border-line hover:border-brass",
+                    ? "border-line bg-shell text-ink"
+                    : "border-line hover:border-gold",
                 )}
               >
                 <span
@@ -249,7 +249,7 @@ export function Configurator({
                 />
                 <span className="label">{hw.name}</span>
                 {hw.priceDelta > 0 && (
-                  <span className="label text-brass">
+                  <span className="label text-forest">
                     +{formatPrice(hw.priceDelta)}
                   </span>
                 )}
@@ -266,7 +266,7 @@ export function Configurator({
             <h2 className="label text-muted">
               Гравировка на бирке
               {product.engraving.price > 0 && (
-                <span className="ml-3 text-brass">
+                <span className="ml-3 text-forest">
                   +{formatPrice(product.engraving.price)}
                 </span>
               )}
@@ -281,10 +281,10 @@ export function Configurator({
             maxLength={product.engraving.maxChars}
             onChange={(e) => patch({ engraving: e.target.value })}
             placeholder="Имя питомца"
-            className="mt-3 w-full rounded-xl border-2 border-line bg-night px-4 py-3 outline-none focus:border-line"
+            className="mt-3 w-full rounded-xl border-2 border-line bg-cream px-4 py-3 outline-none focus:border-line"
           />
           {engravingLength > 0 && (
-            <p className="display mt-3 border border-line bg-forest px-4 py-4 text-center text-2xl text-gold">
+            <p className="display mt-3 border border-line bg-shell px-4 py-4 text-center text-2xl text-gold">
               {config.engraving}
             </p>
           )}
@@ -311,7 +311,7 @@ export function Configurator({
         </div>
 
         {showErrors && errors.length > 0 && (
-          <ul className="mt-4 border-l-2 border-brass pl-4 text-sm text-brass">
+          <ul className="mt-4 border-l-2 border-gold pl-4 text-sm text-forest">
             {errors.map((e) => (
               <li key={e}>{e}</li>
             ))}
@@ -321,7 +321,7 @@ export function Configurator({
         <button
           type="button"
           onClick={handleAdd}
-          className="label mt-6 w-full bg-brass px-8 py-5 text-night transition-colors hover:bg-brass-light"
+          className="label mt-6 w-full bg-forest px-8 py-5 text-cream transition-colors hover:bg-forest-lift"
         >
           Добавить в корзину
         </button>
@@ -329,7 +329,7 @@ export function Configurator({
         {added && (
           <p className="mt-3 text-center text-sm">
             Добавлено.{" "}
-            <Link href="/cart" className="underline hover:text-brass">
+            <Link href="/cart" className="underline hover:text-forest">
               Перейти в корзину
             </Link>
           </p>

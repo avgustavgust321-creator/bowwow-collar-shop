@@ -22,7 +22,7 @@ export default function CartPage() {
         </p>
         <Link
           href="/catalog"
-          className="label mt-8 inline-block bg-brass px-8 py-4 text-night transition-colors hover:bg-brass-light"
+          className="label mt-8 inline-block bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"
         >
           В каталог
         </Link>
@@ -58,7 +58,7 @@ export default function CartPage() {
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <Link
                       href={`/product/${product.slug}`}
-                      className="display text-lg hover:text-brass"
+                      className="display text-lg hover:text-forest"
                     >
                       {product.title}
                     </Link>
@@ -82,7 +82,7 @@ export default function CartPage() {
                         type="button"
                         onClick={() => setQty(line.key, line.qty - 1)}
                         aria-label="Уменьшить количество"
-                        className="px-3 py-1.5 transition-colors hover:text-brass"
+                        className="px-3 py-1.5 transition-colors hover:text-forest"
                       >
                         −
                       </button>
@@ -91,7 +91,7 @@ export default function CartPage() {
                         type="button"
                         onClick={() => setQty(line.key, line.qty + 1)}
                         aria-label="Увеличить количество"
-                        className="px-3 py-1.5 transition-colors hover:text-brass"
+                        className="px-3 py-1.5 transition-colors hover:text-forest"
                       >
                         +
                       </button>
@@ -99,7 +99,7 @@ export default function CartPage() {
                     <button
                       type="button"
                       onClick={() => remove(line.key)}
-                      className="label text-muted transition-colors hover:text-brass"
+                      className="label text-muted transition-colors hover:text-forest"
                     >
                       Удалить
                     </button>
@@ -110,7 +110,7 @@ export default function CartPage() {
           })}
         </ul>
 
-        <aside className="h-fit border border-line bg-forest p-6 lg:sticky lg:top-24">
+        <aside className="h-fit border border-line bg-shell p-6 lg:sticky lg:top-24">
           <h2 className="label text-muted">Итого</h2>
           <p className="display mt-2 text-4xl">
             {approximate && <span className="text-muted">от&nbsp;</span>}
@@ -120,20 +120,20 @@ export default function CartPage() {
             Стоимость доставки рассчитывается при оформлении.
           </p>
           {approximate && (
-            <p className="mt-3 border-l-2 border-brass pl-3 text-sm">
+            <p className="mt-3 border-l-2 border-gold pl-3 text-sm">
               В заказе есть позиции по индивидуальным замерам — окончательную
               сумму подтвердит мастер.
             </p>
           )}
           <Link
             href="/checkout"
-            className="label mt-6 block bg-brass px-8 py-5 text-center text-night transition-colors hover:bg-brass-light"
+            className="label mt-6 block bg-forest px-8 py-5 text-center text-cream transition-colors hover:bg-forest-lift"
           >
             Оформить заказ
           </Link>
           <Link
             href="/catalog"
-            className="label mt-3 block py-2 text-center text-muted transition-colors hover:text-brass"
+            className="label mt-3 block py-2 text-center text-muted transition-colors hover:text-forest"
           >
             Продолжить покупки
           </Link>
