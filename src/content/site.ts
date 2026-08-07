@@ -14,8 +14,8 @@ export const site = {
   city: "Минск",
 
   contacts: {
-    instagram: "https://instagram.com/bowwow.collar", // ЗАПОЛНИТЬ: реальная ссылка
-    instagramHandle: "@bowwow.collar", // ЗАПОЛНИТЬ
+    instagram: "https://www.instagram.com/bow_wow_collar/",
+    instagramHandle: "@bow_wow_collar",
     telegram: "https://t.me/bowwow", // ЗАПОЛНИТЬ
     phone: "+375 (__) ___-__-__", // ЗАПОЛНИТЬ
     email: "hello@bowwow.by", // ЗАПОЛНИТЬ
