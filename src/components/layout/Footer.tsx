@@ -6,6 +6,9 @@ import {
 } from "@/components/ui/hover-footer";
 import { footerNav, site } from "@/content/site";
 
+/** Значение считается заполненным, пока в нём нет пометки ЗАПОЛНИТЬ. */
+const filled = (value: string) => !value.includes("ЗАПОЛНИТЬ");
+
 export function Footer() {
   return (
     <footer className="relative mt-20 overflow-hidden bg-forest text-cream on-dark">
@@ -66,12 +69,16 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Реквизиты показываем, только когда они заполнены. Пока в них
+            стоит «ЗАПОЛНИТЬ», это слово читал каждый посетитель — лучше
+            не показывать строку вовсе, чем показывать заглушку. */}
         <div className="mt-14 flex flex-col gap-2 border-t border-line-dark pt-6 text-xs text-cream-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {site.name}. {site.legal.entity}, УНП{" "}
-            {site.legal.unp}
+            © {new Date().getFullYear()} {site.name}
+            {filled(site.legal.entity) && `. ${site.legal.entity}`}
+            {filled(site.legal.unp) && `, УНП ${site.legal.unp}`}
           </p>
-          <p>{site.legal.registry}</p>
+          {filled(site.legal.registry) && <p>{site.legal.registry}</p>}
         </div>
       </div>
 
