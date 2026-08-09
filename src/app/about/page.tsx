@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { PageHeader, Prose } from "@/components/ui/Page";
 import { selectableLeatherColors } from "@/content/leather";
@@ -22,6 +23,29 @@ export default function AboutPage() {
         title="О бренде"
         lead="Мастерская кожаной амуниции для собак и кошек. Брест."
       />
+
+      {/* Мастер и верстак до текста: в ручной работе человек за столом
+          убеждает быстрее, чем абзац про ценности бренда. */}
+      <section className="px-5 pb-4 md:px-8">
+        <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
+          <Image
+            src="/images/workshop/master.jpg"
+            alt="Мастер за рабочим столом собирает ошейник"
+            width={936}
+            height={1400}
+            sizes="(min-width: 640px) 50vw, 100vw"
+            className="h-full w-full object-cover"
+          />
+          <Image
+            src="/images/workshop/verstak.jpg"
+            alt="Инструменты и заготовка ошейника на раскройном мате"
+            width={1052}
+            height={1400}
+            sizes="(min-width: 640px) 50vw, 100vw"
+            className="h-full w-full object-cover"
+          />
+        </div>
+      </section>
 
       <Prose>
         <p>

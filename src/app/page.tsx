@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ScrollHero } from "@/components/hero/ScrollHero";
 import { Community } from "@/components/home/Community";
+import { Workshop } from "@/components/home/Workshop";
 import { LeatherDeck } from "@/components/home/LeatherDeck";
 import { Reveal } from "@/components/ui/Reveal";
 import { site } from "@/content/site";
@@ -179,6 +180,8 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+
+      <Workshop />
 
       {/* ПАЛИТРА — веер образцов во всю ширину, подписной элемент страницы */}
       <section className="bg-forest pt-16 pb-16 text-cream md:pt-24">
