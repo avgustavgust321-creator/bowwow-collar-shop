@@ -138,6 +138,20 @@ export default async function ProductPage({
                     — сошьём по фигуре питомца.
                   </p>
                 )}
+
+                {/* Обещание про переделку стоит прямо под сеткой: сомнение
+                    «а если промахнусь с размером» возникает именно здесь,
+                    а не на странице доставки, куда за ним никто не пойдёт. */}
+                <p className="mt-3 border-l-2 border-gold pl-4 text-sm text-muted">
+                  Ошиблись с размером — сошьём заново бесплатно, оплатите
+                  только пересылку.{" "}
+                  <Link
+                    href="/delivery"
+                    className="underline hover:text-forest"
+                  >
+                    Подробнее
+                  </Link>
+                </p>
               </div>
             )}
 
