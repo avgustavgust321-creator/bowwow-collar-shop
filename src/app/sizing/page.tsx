@@ -45,7 +45,7 @@ export default function SizingPage() {
         lead="Четыре мерки, и изделие сядет по фигуре. Замеряйте питомца стоя, на спокойной собаке — не после прогулки и не во время игры."
       />
 
-      <section className="px-5 py-14 md:px-8">
+      <section className="wrap px-5 py-14 md:px-10">
         <ol className="mx-auto flex max-w-3xl flex-col">
           {steps.map((step) => (
             <li

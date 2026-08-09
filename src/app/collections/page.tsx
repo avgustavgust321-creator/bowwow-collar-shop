@@ -33,7 +33,7 @@ export default function CollectionsPage() {
       />
 
       {groups.map(([name, items]) => (
-        <section key={name} className="px-5 pt-12 md:px-8">
+        <section key={name} className="wrap px-5 pt-12 md:px-10">
           <div className="flex items-baseline justify-between gap-4 border-b border-line pb-4">
             <h2 className="display text-3xl md:text-4xl">{name}</h2>
             <span className="label text-muted">{items.length}</span>

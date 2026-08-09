@@ -69,7 +69,7 @@ export default async function ProductPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav className="label flex flex-wrap items-center gap-2 border-b border-line px-5 py-4 text-muted md:px-8">
+      <nav className="wrap label flex flex-wrap items-center gap-2 border-b border-line px-5 py-4 text-muted md:px-10">
         <Link href="/catalog" className="hover:text-forest">
           Каталог
         </Link>
@@ -88,7 +88,7 @@ export default async function ProductPage({
 
       {/* Описание и характеристики */}
       <section className="relative border-t border-line">
-        <div className="relative grid gap-10 px-5 py-16 md:px-8 lg:grid-cols-2">
+        <div className="wrap relative grid gap-10 px-5 py-16 md:px-10 lg:grid-cols-2">
           <div>
             <h2 className="label text-muted">Об изделии</h2>
             <div className="mt-5 flex max-w-prose flex-col gap-4 text-muted">
@@ -182,7 +182,7 @@ export default async function ProductPage({
       </section>
 
       {related.length > 0 && (
-        <section className="px-5 pb-8 md:px-8">
+        <section className="wrap px-5 pb-8 md:px-10">
           <h2 className="display py-8 text-2xl">Из этой же категории</h2>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((p) => (

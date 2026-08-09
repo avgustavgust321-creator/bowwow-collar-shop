@@ -41,21 +41,21 @@ export default async function CatalogPage({
   return (
     <>
       <section className="relative overflow-hidden">
-        <div className="relative px-5 pt-12 pb-8 md:px-8">
-          <h1 className="display-hero text-center">Каталог</h1>
+        <div className="wrap relative px-5 pt-12 pb-8 md:px-10">
+          <h1 className="display-hero">Каталог</h1>
           {activeCategory && (
-            <p className="mx-auto mt-8 max-w-xl text-center text-muted">
+            <p className="mt-6 max-w-xl text-muted">
               {activeCategory.description}
             </p>
           )}
         </div>
       </section>
 
-      <div className="px-5 md:px-8">
+      <div className="wrap px-5 md:px-10">
         <Filters params={{ category, pet, sort: sp.sort as string | undefined }} />
       </div>
 
-      <section className="px-5 pb-8 md:px-8">
+      <section className="wrap px-5 pb-8 md:px-10">
         <p className="label py-5 text-muted">
           {list.length}{" "}
           {list.length === 1

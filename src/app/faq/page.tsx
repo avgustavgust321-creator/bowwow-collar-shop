@@ -41,7 +41,7 @@ export default function FaqPage() {
     <>
       <PageHeader title="Вопросы" />
 
-      <section className="px-5 py-14 md:px-8">
+      <section className="wrap px-5 py-14 md:px-10">
         <div className="mx-auto flex max-w-2xl flex-col border-t border-line">
           {faq.map((item) => (
             <details key={item.q} className="group border-b border-line py-5">

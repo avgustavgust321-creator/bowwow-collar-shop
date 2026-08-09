@@ -29,13 +29,11 @@ function InstagramMark({ className }: { className?: string }) {
 /**
  * Блок «В инстаграме»: фотографии собак, каждая — ссылка в инстаграм.
  *
- * Все снимки из инстаграма вертикальные, поэтому неровность даёт не разная
- * высота плиток, а ступенька: средняя колонка опущена. Ровная сетка
+ * Четыре кадра в ряд со ступенькой: каждый второй опущен. Ровная сетка
  * одинаковых плиток читалась бы как галерея из шаблона.
  *
- * Три колонки, а не четыре: шесть кадров ложатся двумя полными рядами,
- * и каждый снимок остаётся крупным — в мелкой плитке строчка и пряжка,
- * ради которых эти фотографии и сняты, перестают читаться.
+ * Кадров именно четыре, а не шесть: шестью лента занимала полторы тысячи
+ * пикселей и по площади перевешивала блок с самими товарами.
  *
  * Подписи под фотографиями нет намеренно: пока нет настоящих отзывов от
  * заказчиков, любой текст под чужой собакой был бы выдуманным.
@@ -43,7 +41,7 @@ function InstagramMark({ className }: { className?: string }) {
 export function Community() {
   return (
     <section className="px-5 py-16 md:px-10 md:py-24">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="wrap flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="hand text-gold-ink">их собаки</p>
           <h2 className="display mt-2 text-3xl md:text-5xl">В инстаграме</h2>
@@ -59,15 +57,13 @@ export function Community() {
         </a>
       </div>
 
-      <ul className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5">
+      <ul className="wrap mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
         {communityPhotos.map((photo, i) => (
           <li
             key={photo.src}
             className={cn(
-              // Ступенька: на телефоне опущен каждый второй кадр,
-              // на широком экране — вся средняя колонка.
-              i % 2 === 1 && "mt-6 md:mt-0",
-              i % 3 === 1 && "md:mt-12",
+              // Ступенька: каждый второй кадр опущен
+              i % 2 === 1 && "mt-6 md:mt-10",
             )}
           >
             <a
@@ -82,7 +78,7 @@ export function Community() {
                   src={photo.src}
                   alt=""
                   fill
-                  sizes="(min-width: 768px) 33vw, 50vw"
+                  sizes="(min-width: 768px) 25vw, 50vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                 />
               </div>

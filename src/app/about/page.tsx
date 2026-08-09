@@ -26,7 +26,7 @@ export default function AboutPage() {
 
       {/* Мастер и верстак до текста: в ручной работе человек за столом
           убеждает быстрее, чем абзац про ценности бренда. */}
-      <section className="px-5 pb-4 md:px-8">
+      <section className="wrap px-5 pb-4 md:px-10">
         <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
           <Image
             src="/images/workshop/master.jpg"
@@ -66,7 +66,7 @@ export default function AboutPage() {
         </p>
       </Prose>
 
-      <section className="px-5 pb-16 md:px-8">
+      <section className="wrap px-5 pb-16 md:px-10">
         <div className="mx-auto max-w-4xl">
           <h2 className="label text-muted">Палитра кожи</h2>
           <div className="mt-5 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
@@ -83,7 +83,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="px-5 pb-20 text-center md:px-8">
+      <section className="wrap px-5 pb-20 text-center md:px-10">
         <Link
           href="/catalog"
           className="label inline-block bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"

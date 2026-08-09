@@ -17,8 +17,8 @@ export default function DeliveryPage() {
         lead="Изделия шьются под заказ, поэтому отсчёт срока доставки начинается после того, как вещь готова."
       />
 
-      <section className="px-5 py-14 md:px-8">
-        <div className="mx-auto max-w-2xl">
+      <section className="wrap px-5 py-14 md:px-10">
+        <div className="max-w-2xl">
           <h2 className="label text-muted">Способы доставки</h2>
           <ul className="mt-5 flex flex-col border-t border-line">
             {deliveryOptions.map((option) => (

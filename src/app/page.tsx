@@ -71,7 +71,7 @@ export default function HomePage() {
 
       {/* ФАКТЫ — одна тихая строка вместо четырёх плашек с общими словами */}
       <section className="border-b border-line px-5 py-8 md:px-10">
-        <ul className="label flex flex-wrap items-center gap-x-4 gap-y-2 text-muted">
+        <ul className="wrap label flex flex-wrap items-center gap-x-4 gap-y-2 text-muted">
           {facts.map((fact, i) => (
             <li key={fact} className="flex items-center gap-x-4">
               {i > 0 && (
@@ -87,7 +87,7 @@ export default function HomePage() {
 
       {/* ДВЕ МОДЕЛИ — разного веса: хит крупно, базовая рядом */}
       <section className="px-5 py-16 md:px-10 md:py-24">
-        <div className="grid gap-px bg-line lg:grid-cols-[1.6fr_1fr]">
+        <div className="wrap grid gap-px bg-line lg:grid-cols-[1.6fr_1fr]">
           {lined && (
             <Reveal className="h-full">
               <Link
@@ -154,7 +154,7 @@ export default function HomePage() {
           )}
         </div>
 
-        <div className="mt-8 flex justify-end">
+        <div className="wrap mt-8 flex justify-end">
           <Link
             href="/catalog"
             className="label border-b border-gold pb-1 transition-colors hover:border-forest hover:text-forest"
@@ -192,8 +192,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <Workshop />
-
       {/* ПАЛИТРА — веер образцов во всю ширину, подписной элемент страницы */}
       <section className="bg-forest pt-16 pb-16 text-cream md:pt-24">
         <div className="px-5 md:px-10">
@@ -219,7 +217,7 @@ export default function HomePage() {
           Как собирается заказ
         </h2>
 
-        <ol className="mt-12">
+        <ol className="wrap mt-12">
           {steps.map((step, i) => (
             <Reveal key={step.title} delay={i * 70} className="contents">
               <li className="grid grid-cols-[auto_1fr] gap-x-6 border-t border-line py-8 md:grid-cols-[6rem_1fr_10rem] md:gap-x-10 md:py-10">
@@ -244,6 +242,8 @@ export default function HomePage() {
           ))}
         </ol>
       </section>
+
+      <Workshop />
 
       <Community />
 

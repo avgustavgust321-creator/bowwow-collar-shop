@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <section className="px-5 py-32 text-center md:px-8">
+    <section className="wrap px-5 py-32 text-center md:px-10">
       <p className="display-hero">404</p>
       <p className="mt-6 text-muted">
         Такой страницы нет. Возможно, изделие сняли с производства.

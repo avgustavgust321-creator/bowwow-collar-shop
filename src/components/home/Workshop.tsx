@@ -14,7 +14,7 @@ import { workshopShots } from "@/content/workshop";
 export function Workshop() {
   return (
     <section className="bg-forest py-16 text-cream md:py-24">
-      <div className="px-5 md:px-10">
+      <div className="wrap px-5 md:px-10">
         <p className="hand text-rose">мастерская</p>
         <h2 className="display mt-3 max-w-2xl text-3xl md:text-5xl">
           Как это шьётся
@@ -25,7 +25,7 @@ export function Workshop() {
         </p>
       </div>
 
-      <ol className="mt-12 grid grid-cols-2 gap-px bg-forest-lift md:grid-cols-4">
+      <ol className="wrap mt-12 grid grid-cols-2 gap-px bg-forest-lift md:grid-cols-4">
         {workshopShots.map((shot, i) => (
           <li key={shot.src} className="relative bg-forest">
             <div className="relative aspect-[3/4]">

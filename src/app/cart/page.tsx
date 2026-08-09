@@ -10,12 +10,12 @@ export default function CartPage() {
   const { lines, total, approximate, ready, setQty, remove } = useCart();
 
   if (!ready) {
-    return <div className="px-5 py-24 md:px-8" aria-busy="true" />;
+    return <div className="wrap px-5 py-24 md:px-10" aria-busy="true" />;
   }
 
   if (lines.length === 0) {
     return (
-      <section className="px-5 py-24 text-center md:px-8">
+      <section className="wrap px-5 py-24 text-center md:px-10">
         <h1 className="display text-4xl md:text-6xl">Корзина пуста</h1>
         <p className="mt-4 text-muted">
           Соберите ошейник или шлейку под своего питомца.
@@ -31,7 +31,7 @@ export default function CartPage() {
   }
 
   return (
-    <section className="px-5 py-10 md:px-8">
+    <section className="wrap px-5 py-10 md:px-10">
       <h1 className="display text-4xl md:text-6xl">Корзина</h1>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[2fr_1fr]">

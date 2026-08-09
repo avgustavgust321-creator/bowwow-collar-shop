@@ -23,12 +23,12 @@ export default function CheckoutPage() {
   const selectedDelivery = deliveryOptions.find((d) => d.id === delivery);
 
   if (!ready) {
-    return <div className="px-5 py-24 md:px-8" aria-busy="true" />;
+    return <div className="wrap px-5 py-24 md:px-10" aria-busy="true" />;
   }
 
   if (lines.length === 0) {
     return (
-      <section className="px-5 py-24 text-center md:px-8">
+      <section className="wrap px-5 py-24 text-center md:px-10">
         <h1 className="display text-4xl">Корзина пуста</h1>
         <Link
           href="/catalog"
@@ -78,7 +78,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <section className="px-5 py-10 md:px-8">
+    <section className="wrap px-5 py-10 md:px-10">
       <h1 className="display text-4xl md:text-6xl">Оформление</h1>
 
       {errors.length > 0 && (

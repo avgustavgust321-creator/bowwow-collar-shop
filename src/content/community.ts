@@ -45,14 +45,4 @@ export const communityPhotos: CommunityPhoto[] = [
     alt: "Собака на руках у хозяйки на берегу, бирюзовый ошейник",
     href: "https://www.instagram.com/p/DQjv5jNiCAZ/",
   },
-  {
-    src: "/images/community/na-trave.jpg",
-    alt: "Белая собака лежит на траве рядом с бежевым поводком",
-    href: "https://www.instagram.com/p/DQRgiV6Dc0s/",
-  },
-  {
-    src: "/images/community/spaniel.jpg",
-    alt: "Спаниель в красном ошейнике рядом с хозяином",
-    href: "https://www.instagram.com/p/DPZBAwCDToz/",
-  },
 ];

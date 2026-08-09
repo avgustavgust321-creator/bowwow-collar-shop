@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { categories, pets } from "@/content/categories";
-import { sortOptions } from "@/lib/catalog";
+import { categories } from "@/content/categories";
 import { cn } from "@/lib/cn";
 
 type Params = { category?: string; pet?: string; sort?: string };
@@ -41,60 +40,35 @@ function Chip({
   );
 }
 
+/**
+ * Фильтры каталога.
+ *
+ * Раньше здесь было двенадцать кнопок в трёх группах — на семь товаров.
+ * Механика весила больше содержимого: до первого изделия человек проходил
+ * четыреста пикселей переключателей, которые нечего переключать.
+ *
+ * Остались категории — единственный фильтр, который при таком каталоге
+ * что-то меняет. «Для кого» и сортировка вернутся, когда позиций станет
+ * хотя бы пара десятков: код для них лежит рядом и никуда не делся.
+ */
 export function Filters({ params }: { params: Params }) {
   return (
-    <div className="flex flex-col gap-5 border-y border-line py-5">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="label mr-2 text-muted">Категория</span>
+    <div className="flex flex-wrap items-center gap-2 border-y border-line py-5">
+      <Chip
+        href={buildHref(params, { category: undefined })}
+        active={!params.category}
+      >
+        Все
+      </Chip>
+      {categories.map((c) => (
         <Chip
-          href={buildHref(params, { category: undefined })}
-          active={!params.category}
+          key={c.id}
+          href={buildHref(params, { category: c.id })}
+          active={params.category === c.id}
         >
-          Все
+          {c.title}
         </Chip>
-        {categories.map((c) => (
-          <Chip
-            key={c.id}
-            href={buildHref(params, { category: c.id })}
-            active={params.category === c.id}
-          >
-            {c.title}
-          </Chip>
-        ))}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="label mr-2 text-muted">Для кого</span>
-          <Chip href={buildHref(params, { pet: undefined })} active={!params.pet}>
-            Все
-          </Chip>
-          {pets.map((p) => (
-            <Chip
-              key={p.id}
-              href={buildHref(params, { pet: p.id })}
-              active={params.pet === p.id}
-            >
-              {p.title}
-            </Chip>
-          ))}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="label mr-2 text-muted">Сортировка</span>
-          {sortOptions.map((s) => (
-            <Chip
-              key={s.id}
-              href={buildHref(params, {
-                sort: s.id === "default" ? undefined : s.id,
-              })}
-              active={(params.sort ?? "default") === s.id}
-            >
-              {s.label}
-            </Chip>
-          ))}
-        </div>
-      </div>
+      ))}
     </div>
   );
 }

@@ -43,7 +43,7 @@ export default async function OrderPage({
   const delivery = deliveryById.get(order.customer.delivery);
 
   return (
-    <section className="px-5 py-16 md:px-8">
+    <section className="wrap px-5 py-16 md:px-10">
       <div className="mx-auto max-w-2xl">
         <p className="label text-forest">Спасибо за заказ</p>
         <h1 className="display mt-3 text-4xl md:text-6xl">Заказ {order.id}</h1>
