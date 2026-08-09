@@ -11,7 +11,7 @@ export const site = {
     "12 цветов кожи, латунная фурнитура, индивидуальные размеры и гравировка.",
   url: "https://bowwow.by", // ЗАПОЛНИТЬ: реальный домен
   currency: "BYN",
-  city: "Минск",
+  city: "Брест",
 
   contacts: {
     instagram: "https://www.instagram.com/bow_wow_collar/",

@@ -31,11 +31,7 @@ export default function DeliveryPage() {
                   <p className="mt-1 text-sm text-muted">{option.hint}</p>
                 </div>
                 <p className="whitespace-nowrap">
-                  {"priceNote" in option && option.priceNote
-                    ? option.priceNote
-                    : option.price > 0
-                      ? formatPrice(option.price)
-                      : "бесплатно"}
+                  {option.price > 0 ? formatPrice(option.price) : "бесплатно"}
                 </p>
               </li>
             ))}

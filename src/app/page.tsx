@@ -43,7 +43,7 @@ const steps = [
   },
   {
     title: "Шьём и отправляем",
-    text: "Каждая вещь шьётся под конкретную собаку. Отправляем по Беларуси, в Минске можно забрать самому.",
+    text: "Каждая вещь шьётся под конкретную собаку. Отправляем Европочтой по всей Беларуси, по Бресту привезёт курьер.",
     href: "/delivery",
     link: "Доставка",
   },
@@ -246,7 +246,7 @@ export default function HomePage() {
         </div>
 
         <div className="flex flex-col justify-center bg-forest px-5 py-16 text-cream on-dark md:px-12">
-          <p className="hand text-rose">мастерская в Минске</p>
+          <p className="hand text-rose">мастерская в Бресте</p>
           <h2 className="display mt-3 text-3xl md:text-5xl">
             Соберите под свою собаку
           </h2>

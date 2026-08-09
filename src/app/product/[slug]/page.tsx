@@ -5,7 +5,13 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { ProductView } from "@/components/product/ProductView";
 import { categoryById } from "@/content/categories";
 import { site } from "@/content/site";
-import { formatPrice, getProduct, priceFrom, products } from "@/lib/catalog";
+import {
+  formatPrice,
+  getProduct,
+  priceFrom,
+  productionTerm,
+  products,
+} from "@/lib/catalog";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -142,7 +148,7 @@ export default async function ProductPage({
               </div>
               <div>
                 <dt className="label text-muted">Изготовление</dt>
-                <dd className="mt-1">{product.productionDays} дней</dd>
+                <dd className="mt-1">{productionTerm(product)}</dd>
               </div>
               <div>
                 <dt className="label text-muted">Цвета кожи</dt>

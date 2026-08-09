@@ -97,7 +97,7 @@ export default function CheckoutPage() {
           <fieldset className="flex flex-col gap-4">
             <legend className="label text-muted">Контакты</legend>
             <label className="flex flex-col gap-1">
-              <span className="label">Имя</span>
+              <span className="label">Фамилия, имя, отчество</span>
               <input name="name" required autoComplete="name" className={fieldClass} />
             </label>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -152,11 +152,7 @@ export default function CheckoutPage() {
                   </span>
                 </span>
                 <span className="text-sm whitespace-nowrap text-muted">
-                  {"priceNote" in option && option.priceNote
-                    ? option.priceNote
-                    : option.price > 0
-                      ? formatPrice(option.price)
-                      : "бесплатно"}
+                  {option.price > 0 ? formatPrice(option.price) : "бесплатно"}
                 </span>
               </label>
             ))}
@@ -168,7 +164,7 @@ export default function CheckoutPage() {
                   name="address"
                   required
                   autoComplete="street-address"
-                  placeholder="Город, улица, дом, квартира или номер отделения"
+                  placeholder="Номер и адрес отделения Европочты или адрес курьеру"
                   className={fieldClass}
                 />
               </label>

@@ -44,12 +44,17 @@ export const products = validateCatalog([
     ],
     placeholder: "pepa",
     sizes: [
-      { code: "XS", price: 90 }, // ЗАПОЛНИТЬ note: обхват шеи в см
-      { code: "S", price: 110 },
-      { code: "M", price: 130 },
-      { code: "L", price: 140 },
-      { code: "XL", price: 150 },
-      { code: "Big Boss", price: 150, from: true, note: "Для крупных пород" },
+      { code: "XS", note: "обхват шеи 21–26 см", price: 90 },
+      { code: "S", note: "25–31 см", price: 110 },
+      { code: "M", note: "30–36 см", price: 130 },
+      { code: "L", note: "35–43 см", price: 140 },
+      { code: "XL", note: "42–50 см", price: 150 },
+      {
+        code: "Big Boss",
+        price: 150,
+        from: true,
+        note: "от 50 см, усиленная фурнитура",
+      },
     ],
     price: null,
     leatherSlots: [
@@ -83,7 +88,8 @@ export const products = validateCatalog([
     hardware: true,
     engraving: { maxChars: 14, price: 10 },
     customFit: { price: 0, fields: ["neck"] }, // ЗАПОЛНИТЬ цену
-    productionDays: 7, // ЗАПОЛНИТЬ реальный срок
+    productionDays: 7,
+    productionDaysMax: 10,
   },
 
   {
@@ -104,11 +110,11 @@ export const products = validateCatalog([
     ],
     placeholder: "amster",
     sizes: [
-      { code: "XS", price: 65 }, // ЗАПОЛНИТЬ note: обхват шеи в см
-      { code: "S", price: 75 },
-      { code: "M", price: 80 },
-      { code: "L", price: 90 },
-      { code: "XL", price: 110 },
+      { code: "XS", note: "обхват шеи 21–26 см", price: 65 },
+      { code: "S", note: "25–31 см", price: 75 },
+      { code: "M", note: "30–36 см", price: 80 },
+      { code: "L", note: "35–43 см", price: 90 },
+      { code: "XL", note: "42–50 см", price: 110 },
     ],
     price: null,
     leatherSlots: [{ id: "outer", label: "Цвет кожи", defaultColor: "amster" }],
@@ -137,7 +143,8 @@ export const products = validateCatalog([
     hardware: true,
     engraving: { maxChars: 14, price: 10 },
     customFit: { price: 0, fields: ["neck"] }, // ЗАПОЛНИТЬ цену
-    productionDays: 7, // ЗАПОЛНИТЬ реальный срок
+    productionDays: 7,
+    productionDaysMax: 10,
   },
 
   {
@@ -172,7 +179,8 @@ export const products = validateCatalog([
       price: 0, // ЗАПОЛНИТЬ цену
       fields: ["chest", "backLength", "neck", "chestPlate"],
     },
-    productionDays: 10, // ЗАПОЛНИТЬ реальный срок
+    productionDays: 7,
+    productionDaysMax: 10,
   },
 
   {
@@ -197,7 +205,8 @@ export const products = validateCatalog([
     hardware: true,
     engraving: null,
     customFit: null,
-    productionDays: 7, // ЗАПОЛНИТЬ реальный срок
+    productionDays: 7,
+    productionDaysMax: 10,
   },
 
   {
@@ -223,7 +232,8 @@ export const products = validateCatalog([
     hardware: true,
     engraving: null,
     customFit: null,
-    productionDays: 7, // ЗАПОЛНИТЬ реальный срок
+    productionDays: 7,
+    productionDaysMax: 10,
   },
 
   {
@@ -248,7 +258,8 @@ export const products = validateCatalog([
     hardware: true,
     engraving: null,
     customFit: null,
-    productionDays: 7, // ЗАПОЛНИТЬ реальный срок
+    productionDays: 7,
+    productionDaysMax: 10,
   },
 
   {
@@ -271,6 +282,7 @@ export const products = validateCatalog([
     hardware: true,
     engraving: null,
     customFit: null,
-    productionDays: 5, // ЗАПОЛНИТЬ реальный срок
+    productionDays: 7,
+    productionDaysMax: 10,
   },
 ]);

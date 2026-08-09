@@ -10,7 +10,7 @@ import {
   leatherById,
   selectableLeatherColors,
 } from "@/content/leather";
-import { formatPrice } from "@/lib/catalog";
+import { formatPrice, productionTerm } from "@/lib/catalog";
 import { cn } from "@/lib/cn";
 import {
   calcPrice,
@@ -306,7 +306,7 @@ export function Configurator({
           <p className="text-right text-sm text-muted">
             Изготовление
             <br />
-            {product.productionDays} дней
+            {productionTerm(product)}
           </p>
         </div>
 

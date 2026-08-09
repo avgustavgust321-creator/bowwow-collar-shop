@@ -7,7 +7,7 @@ import { site } from "@/content/site";
 export const metadata: Metadata = {
   title: "О бренде",
   description:
-    "BOW WOW COLLAR — мастерская кожаной амуниции для собак и кошек в Минске.",
+    "BOW WOW COLLAR — мастерская кожаной амуниции для собак и кошек в Бресте.",
 };
 
 /**
@@ -20,7 +20,7 @@ export default function AboutPage() {
     <>
       <PageHeader
         title="О бренде"
-        lead="Мастерская кожаной амуниции для собак и кошек. Минск."
+        lead="Мастерская кожаной амуниции для собак и кошек. Брест."
       />
 
       <Prose>

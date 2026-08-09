@@ -77,3 +77,9 @@ export function framesFor(
 export function formatPrice(value: number): string {
   return `${value.toLocaleString("ru-BY")} р.`;
 }
+
+/** Срок изготовления: «7–10 дней», если задана верхняя граница, иначе «7 дней». */
+export function productionTerm(product: Product): string {
+  const { productionDays: min, productionDaysMax: max } = product;
+  return max && max > min ? `${min}–${max} дней` : `${min} дней`;
+}

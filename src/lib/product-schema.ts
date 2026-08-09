@@ -81,6 +81,8 @@ export const productSchema = z
       })
       .nullable(),
     productionDays: z.number().int().positive(),
+    /** Верхняя граница срока: выводится как «7–10 дней». */
+    productionDaysMax: z.number().int().positive().optional(),
     collection: z.string().optional(),
     badge: z.string().optional(),
   })
