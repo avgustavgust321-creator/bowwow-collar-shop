@@ -13,17 +13,18 @@
  *   2. Доплату за индивидуальные замеры (сейчас 0 — «бесплатно»).
  *   3. Доплату за гравировку (сейчас 0 — «бесплатно»).
  *   4. Реальные сроки изготовления в днях.
- *   5. Фотографии: положить в /public/images/products/ и вписать
- *      пути в images. Пока массив пустой — показывается заглушка
- *      цветом кожи из поля placeholder.
+ *   5. Фотографии: класть в папку товара внутри public/images/tovary/
+ *      (какая папка у какого товара — поле photos). Подключаются сами,
+ *      правила — в public/images/tovary/_КАК-ДОБАВЛЯТЬ-ФОТО.txt.
  *   6. Тексты описаний написаны как черновик по материалам
  *      инстаграма — перечитайте и поправьте под свой голос.
  * ═══════════════════════════════════════════════════════════════
  */
 
+import { withPhotos } from "@/lib/photos";
 import { validateCatalog } from "@/lib/product-schema";
 
-export const products = validateCatalog([
+const catalog = [
   {
     slug: "collar-lined",
     title: "Ошейник с цветным подкладом",
@@ -38,10 +39,7 @@ export const products = validateCatalog([
       "Подклад мягче верхнего слоя и не натирает шерсть даже при постоянной носке. Строчка идёт по всей длине, а места у пряжки и колец прошиваются иглой — туда машинка не достаёт.",
       "Фурнитура — литая пряжка и полукольцо под адресник. Каждый ошейник шьётся под конкретного питомца.",
     ],
-    images: [
-      "/images/products/collar-lined-front.png",
-      "/images/products/collar-lined-side.png",
-    ],
+    photos: "1-oshejniki/s-podkladom",
     placeholder: "pepa",
     sizes: [
       { code: "XS", note: "обхват шеи 21–26 см", price: 90 },
@@ -62,29 +60,6 @@ export const products = validateCatalog([
       { id: "outer", label: "Основная кожа", defaultColor: "chocolate", fixed: true },
       { id: "lining", label: "Цвет подклада", defaultColor: "tiffani" },
     ],
-    // Подклад на фотографии перекрашивается в выбранный цвет
-    tint: {
-      slot: "lining",
-      masks: [
-        "/images/products/collar-lined-front-tint.png",
-        "/images/products/collar-lined-side-tint.png",
-      ],
-    },
-    // Настоящие снимки под каждый цвет подклада — по одному кадру
-    colorPhotos: {
-      pepa: ["/images/products/collar-lined/pepa.jpg"], // Пепа
-      titanik: ["/images/products/collar-lined/titanik.jpg"], // Титаник
-      amster: ["/images/products/collar-lined/amster.jpg"], // Амстер
-      slizerin: ["/images/products/collar-lined/slizerin.jpg"], // Слизерин
-      matrica: ["/images/products/collar-lined/matrica.jpg"], // Матрица
-      ulun: ["/images/products/collar-lined/ulun.jpg"], // Улун
-      taxi: ["/images/products/collar-lined/taxi.jpg"], // Такси
-      opera: ["/images/products/collar-lined/opera.jpg"], // Опера
-      lilu: ["/images/products/collar-lined/lilu.jpg"], // Лилу
-      narnia: ["/images/products/collar-lined/narnia.jpg"], // Нарния
-      tiffani: ["/images/products/collar-lined/tiffani.jpg"], // Тиффани
-      nordik: ["/images/products/collar-lined/nordik.jpg"], // Нордик
-    },
     hardware: true,
     engraving: { maxChars: 14, price: 10 },
     customFit: { price: 0, fields: ["neck"] }, // ЗАПОЛНИТЬ цену
@@ -104,10 +79,7 @@ export const products = validateCatalog([
       "Двенадцать цветов кожи: от почти чёрного «Слизерина» до мятного «Тиффани».",
       "Кожа со временем темнеет и полируется от носки — ошейник становится только лучше.",
     ],
-    images: [
-      "/images/products/collar-solid-main.png",
-      "/images/products/collar-solid-colors.png",
-    ],
+    photos: "1-oshejniki/odnotonnye",
     placeholder: "amster",
     sizes: [
       { code: "XS", note: "обхват шеи 21–26 см", price: 65 },
@@ -118,28 +90,6 @@ export const products = validateCatalog([
     ],
     price: null,
     leatherSlots: [{ id: "outer", label: "Цвет кожи", defaultColor: "amster" }],
-    // У однотонной модели перекрашивается всё изделие целиком.
-    // Второй кадр витринный — там цвета показаны как есть, маски нет.
-    tint: {
-      slot: "outer",
-      masks: ["/images/products/collar-solid-main-tint.png", ""],
-    },
-    // Настоящие снимки каждого цвета на песочном фоне — по одному кадру.
-    // Пока цвет есть здесь, перекраска по маске для него не применяется.
-    colorPhotos: {
-      pepa: ["/images/products/collar-solid/pepa.jpg"], // Пепа
-      titanik: ["/images/products/collar-solid/titanik.jpg"], // Титаник
-      amster: ["/images/products/collar-solid/amster.jpg"], // Амстер
-      slizerin: ["/images/products/collar-solid/slizerin.jpg"], // Слизерин
-      matrica: ["/images/products/collar-solid/matrica.jpg"], // Матрица
-      ulun: ["/images/products/collar-solid/ulun.jpg"], // Улун
-      taxi: ["/images/products/collar-solid/taxi.jpg"], // Такси
-      opera: ["/images/products/collar-solid/opera.jpg"], // Опера
-      lilu: ["/images/products/collar-solid/lilu.jpg"], // Лилу
-      narnia: ["/images/products/collar-solid/narnia.jpg"], // Нарния
-      tiffani: ["/images/products/collar-solid/tiffani.jpg"], // Тиффани
-      nordik: ["/images/products/collar-solid/nordik.jpg"], // Нордик
-    },
     hardware: true,
     engraving: { maxChars: 14, price: 10 },
     customFit: { price: 0, fields: ["neck"] }, // ЗАПОЛНИТЬ цену
@@ -161,7 +111,7 @@ export const products = validateCatalog([
       "Нагрузка уходит на грудь, а не на шею — это безопаснее для брахицефалов и для собак, которые тянут поводок.",
       "Шьётся из той же кожи, что и ошейники, поэтому комплект собирается в один цвет.",
     ],
-    images: [],
+    photos: "2-shlejki/na-chetyre-pryazhki",
     placeholder: "narnia",
     sizes: [
       { code: "Small", note: "до 2,5 кг", price: 150 },
@@ -195,7 +145,7 @@ export const products = validateCatalog([
       "Карабин литой, с широким зевом — легко пристёгивается одной рукой.",
       "В отличие от рулетки поводок держит постоянную длину: собака всегда понимает границу, а рука не устаёт от рывков.",
     ],
-    images: [],
+    photos: "3-povodki/lap",
     placeholder: "opera",
     sizes: null,
     price: 99,
@@ -222,7 +172,7 @@ export const products = validateCatalog([
       "Можно носить через плечо, когда руки заняты, или пристегнуть к поясу.",
       "Кожаные элементы и фурнитура те же, что в остальной линейке, поэтому поводок собирается в комплект с ошейником.",
     ],
-    images: [],
+    photos: "3-povodki/perestezhka",
     placeholder: "titanik",
     sizes: null,
     price: 80,
@@ -248,14 +198,7 @@ export const products = validateCatalog([
       "Ручка простёгана в два слоя и со временем принимает форму кисти.",
       "Модель для тех, кто гуляет долго и с сильной собакой.",
     ],
-    // Съёмка DOGSTREET: все поводки в ней — эта модель
-    images: [
-      "/images/products/leash-flat-handle/1-na-bagazhnike.jpg",
-      "/images/products/leash-flat-handle/2-cveta.jpg",
-      "/images/products/leash-flat-handle/3-ruchka.jpg",
-      "/images/products/leash-flat-handle/4-salon.jpg",
-      "/images/products/leash-flat-handle/5-na-sobake.jpg",
-    ],
+    photos: "3-povodki/s-ploskoj-ruchkoj",
     placeholder: "nordik",
     sizes: null,
     price: 95,
@@ -281,7 +224,7 @@ export const products = validateCatalog([
       "Из тех же обрезков кожи, что и основная линейка: каждый холдер получается в своём цвете.",
       "Приятный маленький подарок владельцу собаки.",
     ],
-    images: [],
+    photos: "4-aksessuary/holder-kruassan",
     placeholder: "taxi",
     sizes: null,
     price: 70,
@@ -292,4 +235,48 @@ export const products = validateCatalog([
     productionDays: 7,
     productionDaysMax: 10,
   },
-]);
+  {
+    slug: "bowl",
+    title: "Миска с надписью",
+    category: "bowls",
+    pet: ["dog", "cat"],
+    collection: "Миски",
+    badge: "Новинка",
+    summary:
+      "Печатается на 3D-принтере под заказ: свой цвет, своя надпись по кругу.",
+    description: [
+      "Корпус миски печатается на 3D-принтере, внутри — чаша из нержавеющей стали. Еда и вода касаются только стали.",
+      "Надпись идёт рельефным поясом по кругу. Текст любой — кличка, фраза, шутка, — цвет надписи и цвет самой миски выбираете из 25 оттенков.",
+      "Три объёма: 250, 500 и 800 мл.",
+    ],
+    photos: "5-miski/miska",
+    placeholder: "pepa",
+    // ЗАПОЛНИТЬ: цены. Пока их нет, товар в режиме черновика (draft) —
+    // открывается по прямой ссылке, но не виден в каталоге и на главной.
+    sizes: [
+      { code: "250 мл", price: 1 },
+      { code: "500 мл", price: 1 },
+      { code: "800 мл", price: 1 },
+    ],
+    price: null,
+    leatherSlots: [
+      { id: "base", label: "Цвет миски", palette: "plastic" as const, defaultColor: "rozovyj" },
+      { id: "text", label: "Цвет надписи", palette: "plastic" as const, defaultColor: "oliva" },
+    ],
+    hardware: false,
+    engraving: {
+      maxChars: 30, // ЗАПОЛНИТЬ: сколько знаков помещается по кругу
+      price: 0,
+      label: "Надпись на миске",
+      placeholder: "Например, «Марта. Не делиться»",
+      colorSlot: "text",
+    },
+    customFit: null,
+    productionDays: 7, // ЗАПОЛНИТЬ: реальный срок печати
+    productionDaysMax: 10,
+    livePreview: "bowl" as const,
+    draft: true,
+  },
+];
+
+export const products = validateCatalog(catalog.map(withPhotos));

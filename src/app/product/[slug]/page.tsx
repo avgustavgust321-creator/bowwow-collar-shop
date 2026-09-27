@@ -5,10 +5,13 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { ProductView } from "@/components/product/ProductView";
 import { categoryById } from "@/content/categories";
 import { site } from "@/content/site";
+import { selectableColors } from "@/lib/palette";
 import {
   formatPrice,
   getProduct,
   priceFrom,
+  listedProducts,
+  mainSlot,
   productionTerm,
   products,
 } from "@/lib/catalog";
@@ -29,6 +32,8 @@ export async function generateMetadata({
     title: product.title,
     description: product.summary,
     openGraph: { title: product.title, description: product.summary },
+    // Черновик с ценой-заглушкой поисковикам не показываем
+    ...(product.draft ? { robots: { index: false, follow: false } } : {}),
   };
 }
 
@@ -43,7 +48,11 @@ export default async function ProductPage({
 
   const category = categoryById.get(product.category);
   const price = priceFrom(product);
-  const related = products
+  // Кожаное изделие или печатное — от этого зависят материал, число
+  // цветов, ссылка на уход и обещание перешить по размеру
+  const leather = (mainSlot(product)?.palette ?? "leather") === "leather";
+  const colorCount = selectableColors(mainSlot(product)?.palette).length;
+  const related = listedProducts
     .filter((p) => p.slug !== product.slug && p.category === product.category)
     .slice(0, 4);
 
@@ -125,10 +134,16 @@ export default async function ProductPage({
                             {size.note ?? "—"}
                           </td>
                           <td className="py-3 text-right">
-                            {size.from && (
-                              <span className="text-muted">от </span>
+                            {product.draft ? (
+                              <span className="text-muted">скоро</span>
+                            ) : (
+                              <>
+                                {size.from && (
+                                  <span className="text-muted">от </span>
+                                )}
+                                {formatPrice(size.price)}
+                              </>
                             )}
-                            {formatPrice(size.price)}
                           </td>
                         </tr>
                       ))}
@@ -138,7 +153,10 @@ export default async function ProductPage({
                 {product.customFit && (
                   <p className="mt-4 text-sm text-muted">
                     Не подходит ни один размер?{" "}
-                    <Link href="/sizing" className="underline hover:text-forest">
+                    <Link
+                      href="/sizing"
+                      className="underline hover:text-forest"
+                    >
                       Снимите замеры
                     </Link>{" "}
                     — сошьём по фигуре питомца.
@@ -148,43 +166,53 @@ export default async function ProductPage({
                 {/* Обещание про переделку стоит прямо под сеткой: сомнение
                     «а если промахнусь с размером» возникает именно здесь,
                     а не на странице доставки, куда за ним никто не пойдёт. */}
-                <p className="mt-3 border-l-2 border-gold pl-4 text-sm text-muted">
-                  Ошиблись с размером — сошьём заново бесплатно, оплатите
-                  только пересылку.{" "}
-                  <Link
-                    href="/delivery"
-                    className="underline hover:text-forest"
-                  >
-                    Подробнее
-                  </Link>
-                </p>
+                {leather && (
+                  <p className="mt-3 border-l-2 border-gold pl-4 text-sm text-muted">
+                    Ошиблись с размером — сошьём заново бесплатно, оплатите
+                    только пересылку.{" "}
+                    <Link
+                      href="/delivery"
+                      className="underline hover:text-forest"
+                    >
+                      Подробнее
+                    </Link>
+                  </p>
+                )}
               </div>
             )}
 
             <dl className="grid grid-cols-2 gap-x-6 gap-y-4 border-t border-line pt-6 text-sm">
               <div>
                 <dt className="label text-muted">Материал</dt>
-                <dd className="mt-1">Натуральная кожа</dd>
+                <dd className="mt-1">
+                  {leather
+                    ? "Итальянская кожа"
+                    : "Пластик, 3D-печать; чаша — нержавеющая сталь"}
+                </dd>
               </div>
               <div>
                 <dt className="label text-muted">Изготовление</dt>
                 <dd className="mt-1">{productionTerm(product)}</dd>
               </div>
               <div>
-                <dt className="label text-muted">Цвета кожи</dt>
-                <dd className="mt-1">12 вариантов</dd>
+                <dt className="label text-muted">
+                  {leather ? "Цвета кожи" : "Цвета"}
+                </dt>
+                <dd className="mt-1">{colorCount} вариантов</dd>
               </div>
-              <div>
-                <dt className="label text-muted">Уход</dt>
-                <dd className="mt-1">
-                  <Link
-                    href="/care"
-                    className="inline-flex min-h-11 items-center underline hover:text-forest"
-                  >
-                    Как ухаживать
-                  </Link>
-                </dd>
-              </div>
+              {leather && (
+                <div>
+                  <dt className="label text-muted">Уход</dt>
+                  <dd className="mt-1">
+                    <Link
+                      href="/care"
+                      className="inline-flex min-h-11 items-center underline hover:text-forest"
+                    >
+                      Как ухаживать
+                    </Link>
+                  </dd>
+                </div>
+              )}
             </dl>
           </div>
         </div>

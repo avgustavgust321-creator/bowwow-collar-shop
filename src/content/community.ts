@@ -1,7 +1,7 @@
 /**
  * Фотографии собак для блока «В инстаграме» на главной.
  *
- * КАК ДОБАВИТЬ СВОЮ: положите файл в public/images/community/ и впишите
+ * КАК ДОБАВИТЬ СВОЮ: положите файл в public/images/sajt/instagram/ и впишите
  * сюда строку. Порядок в массиве — порядок на странице.
  *
  * Клик по фотографии открывает инстаграм. По умолчанию — профиль бренда,
@@ -25,23 +25,23 @@ export type CommunityPhoto = {
 
 export const communityPhotos: CommunityPhoto[] = [
   {
-    src: "/images/community/doberman.jpg",
+    src: "/images/sajt/instagram/doberman.jpg",
     alt: "Доберман в розовом кожаном ошейнике сидит в траве",
     href: "https://www.instagram.com/p/DZSf4a5jQ9F/",
   },
   {
-    src: "/images/community/detali.jpg",
+    src: "/images/sajt/instagram/detali.jpg",
     alt: "Латунные карабины, поводок и шлейка крупным планом, белая собака в ошейнике",
     href: "https://www.instagram.com/p/DYKiYwKNYr0/",
   },
   {
-    src: "/images/community/jack-rassel.jpg",
+    src: "/images/sajt/instagram/jack-rassel.jpg",
     alt: "Розовый ошейник с латунной пряжкой и биркой на джек-рассел-терьере",
     href: "https://www.instagram.com/p/DSmfLzOjYlG/",
   },
   {
-    // Пост опубликован со страницы заказчицы, а не бренда
-    src: "/images/community/u-vody.jpg",
+    // Пост со страницы UGC-креатора бренда
+    src: "/images/sajt/instagram/u-vody.jpg",
     alt: "Собака на руках у хозяйки на берегу, бирюзовый ошейник",
     href: "https://www.instagram.com/p/DQjv5jNiCAZ/",
   },

@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { measurements } from "@/content/categories";
 import type { MeasurementId } from "@/content/categories";
-import { hardwareById, leatherById } from "@/content/leather";
+import { hardwareById } from "@/content/leather";
+import { colorOf } from "@/lib/palette";
 import type { Product } from "@/lib/product-schema";
 
 /**
@@ -118,7 +119,7 @@ export function validateConfiguration(
 
   for (const slot of product.leatherSlots) {
     const colorId = config.leather[slot.id];
-    if (!colorId || !leatherById.has(colorId)) {
+    if (!colorOf(slot.palette, colorId)) {
       errors.push(`Выберите цвет: ${slot.label}`);
     }
   }
@@ -133,7 +134,7 @@ export function validateConfiguration(
       errors.push("Для этого изделия гравировка недоступна");
     } else if (engraving.length > product.engraving.maxChars) {
       errors.push(
-        `Гравировка не длиннее ${product.engraving.maxChars} символов`,
+        `${product.engraving.label ?? "Гравировка"}: не длиннее ${product.engraving.maxChars} символов`,
       );
     }
   }
@@ -179,7 +180,7 @@ export function describeConfiguration(
   }
 
   for (const slot of product.leatherSlots) {
-    const color = leatherById.get(config.leather[slot.id] ?? "");
+    const color = colorOf(slot.palette, config.leather[slot.id]);
     if (color) parts.push(`${slot.label}: ${color.name}`);
   }
 
@@ -189,7 +190,9 @@ export function describeConfiguration(
   }
 
   const engraving = config.engraving?.trim();
-  if (engraving) parts.push(`Гравировка: «${engraving}»`);
+  if (engraving) {
+    parts.push(`${product.engraving?.label ?? "Гравировка"}: «${engraving}»`);
+  }
 
   return parts;
 }

@@ -25,6 +25,13 @@ export const categories = [
     single: "Аксессуар",
     description: "Холдеры для пакетов и мелочи, которые носят с собой.",
   },
+  {
+    id: "bowls",
+    title: "Миски",
+    single: "Миска",
+    description:
+      "Печатаются на 3D-принтере в ваших цветах и с вашей надписью по кругу.",
+  },
 ] as const;
 
 export type CategoryId = (typeof categories)[number]["id"];

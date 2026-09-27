@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { ProductMedia } from "@/components/product/ProductMedia";
 import { framesFor } from "@/lib/catalog";
 import { cn } from "@/lib/cn";
@@ -18,16 +18,50 @@ export function ProductGallery({
   product,
   colorId,
   mediaClassName,
+  renderPreview,
 }: {
   product: Product;
   colorId?: string;
   /** Переопределение размеров главного кадра — например, на мобильном */
   mediaClassName?: string;
+  /**
+   * Живое превью изделия — встаёт первым кадром перед фотографиями.
+   * Так у миски первым показывается рисунок в выбранных цветах.
+   */
+  renderPreview?: (className?: string) => ReactNode;
 }) {
   const [active, setActive] = useState(0);
   const [slide, setSlide] = useState(0);
   const scroller = useRef<HTMLDivElement>(null);
-  const { frames } = framesFor(product, colorId);
+  const { frames: photos } = framesFor(product, colorId);
+  // Кадр null — место живого превью; остальные — индексы фотографий.
+  // Если фотографий нет, а превью тоже нет, оставляем один кадр —
+  // ProductMedia нарисует на его месте заглушку.
+  const photoFrames =
+    photos.length > 0 ? photos.map((_, i) => i) : renderPreview ? [] : [0];
+  const frames: (number | null)[] = [
+    ...(renderPreview ? [null] : []),
+    ...photoFrames,
+  ];
+  const keyOf = (frame: number | null) =>
+    frame === null ? "preview" : (photos[frame] ?? "placeholder");
+
+  const render = (
+    frame: number | null,
+    opts: { className?: string; sizes: string; priority?: boolean },
+  ) =>
+    frame === null ? (
+      renderPreview!(opts.className)
+    ) : (
+      <ProductMedia
+        product={product}
+        index={frame}
+        colorId={colorId}
+        priority={opts.priority}
+        sizes={opts.sizes}
+        className={opts.className}
+      />
+    );
 
   // Смена цвета может укоротить набор кадров — не даём уйти за край
   const current = Math.min(active, frames.length - 1);
@@ -54,16 +88,13 @@ export function ProductGallery({
           }
           className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {frames.map((src, i) => (
-            <div key={src} className="w-full shrink-0 snap-center">
-              <ProductMedia
-                product={product}
-                index={i}
-                colorId={colorId}
-                priority={i === 0}
-                sizes="100vw"
-                className={mediaClassName}
-              />
+          {frames.map((frame, i) => (
+            <div key={keyOf(frame)} className="w-full shrink-0 snap-center">
+              {render(frame, {
+                className: mediaClassName,
+                sizes: "100vw",
+                priority: i === 0,
+              })}
             </div>
           ))}
         </div>
@@ -80,19 +111,13 @@ export function ProductGallery({
 
       {/* ── Широкий экран: главный кадр и миниатюры ── */}
       <div className="hidden lg:block">
-        <ProductMedia
-          product={product}
-          index={current}
-          colorId={colorId}
-          priority
-          sizes="50vw"
-        />
+        {render(frames[current] ?? null, { sizes: "50vw", priority: true })}
 
         {frames.length > 1 && (
           <div className="flex gap-3 border-t border-line p-3">
-            {frames.map((src, i) => (
+            {frames.map((frame, i) => (
               <button
-                key={src}
+                key={keyOf(frame)}
                 type="button"
                 onClick={() => setActive(i)}
                 aria-label={`Кадр ${i + 1}`}
@@ -104,12 +129,7 @@ export function ProductGallery({
                     : "border-line opacity-70 hover:opacity-100",
                 )}
               >
-                <ProductMedia
-                  product={product}
-                  index={i}
-                  colorId={colorId}
-                  sizes="160px"
-                />
+                {render(frame, { sizes: "160px" })}
               </button>
             ))}
           </div>

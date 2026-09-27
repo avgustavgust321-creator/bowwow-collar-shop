@@ -4,6 +4,27 @@ import type { Product } from "@/lib/product-schema";
 
 export { products };
 
+/**
+ * Товары, которые видны покупателю: без черновиков. Черновик открывается
+ * по прямой ссылке, но в каталог, на главную и в карту сайта не попадает.
+ */
+export const listedProducts = products.filter((p) => !p.draft);
+
+/**
+ * Главный цветовой слот товара — тот, от которого зависит фото.
+ * У ошейника с подкладом это подклад (верх у него постоянный),
+ * у однотонного — сама кожа, у миски — цвет основы.
+ */
+export function mainSlot(product: Product) {
+  return (
+    (product.tint
+      ? product.leatherSlots.find((s) => s.id === product.tint!.slot)
+      : undefined) ??
+    product.leatherSlots.find((s) => !s.fixed) ??
+    product.leatherSlots[0]
+  );
+}
+
 export function getProduct(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
@@ -38,7 +59,7 @@ export function filterProducts({
   pet?: PetId;
   sort?: SortId;
 }): Product[] {
-  let list = [...products];
+  let list = [...listedProducts];
 
   if (category) list = list.filter((p) => p.category === category);
   if (pet) list = list.filter((p) => (p.pet as string[]).includes(pet));
@@ -55,22 +76,21 @@ export function filterProducts({
 /**
  * Какие кадры показывать для выбранного цвета.
  *
- * Если под цвет есть настоящая съёмка — берём её и расчётную перекраску
- * не применяем. Фотография всегда точнее вычисленного оттенка.
+ * Сначала снимки именно этого цвета, если они есть, за ними — общие
+ * снимки товара. real = true означает, что первый кадр — настоящая
+ * съёмка выбранного цвета и расчётная перекраска не нужна.
  */
 export function framesFor(
   product: Product,
   colorId?: string,
 ): { frames: string[]; real: boolean } {
-  const slot = product.tint
-    ? product.leatherSlots.find((s) => s.id === product.tint!.slot)
-    : undefined;
-  const color = colorId ?? slot?.defaultColor;
-  const shots = color ? product.colorPhotos?.[color] : undefined;
+  const color = colorId ?? mainSlot(product)?.defaultColor;
+  const shots = (color ? product.colorPhotos?.[color] : undefined) ?? [];
 
-  return shots?.length
-    ? { frames: shots, real: true }
-    : { frames: product.images, real: false };
+  return {
+    frames: [...shots, ...product.images],
+    real: shots.length > 0,
+  };
 }
 
 /** Форматирование цены в белорусских рублях. */

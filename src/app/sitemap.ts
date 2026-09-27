@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/content/site";
-import { products } from "@/lib/catalog";
+import { listedProducts as products } from "@/lib/catalog";
 
 const staticPaths = [
   "",

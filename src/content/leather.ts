@@ -9,7 +9,8 @@
  * оно подтянется в свотчи, фильтры и превью товара.
  */
 
-export type LeatherColor = {
+/** Цвет в любой палитре — кожи или пластика. */
+export type SwatchColor = {
   id: string;
   name: string;
   hex: string;
@@ -21,6 +22,8 @@ export type LeatherColor = {
    */
   selectable?: boolean;
 };
+
+export type LeatherColor = SwatchColor;
 
 export const leatherColors: LeatherColor[] = [
   { id: "slizerin", name: "Слизерин", hex: "#323E35", dark: true },

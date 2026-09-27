@@ -7,12 +7,18 @@
  *
  * Обычный `npm run dev` из терминала работает и без неё.
  */
-import { spawn } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const nodeBinDir = path.dirname(process.execPath);
+
+// Сначала опись фото: вдруг в папки товаров добавили новые снимки
+execFileSync(process.execPath, [path.join(projectRoot, "scripts/photo-manifest.mjs")], {
+  cwd: projectRoot,
+  stdio: "inherit",
+});
 
 const child = spawn(
   process.execPath,

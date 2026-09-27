@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "photos": "node scripts/photo-manifest.mjs",
+    "predev": "node scripts/photo-manifest.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/photo-manifest.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

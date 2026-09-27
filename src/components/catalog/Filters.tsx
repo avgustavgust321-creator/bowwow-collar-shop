@@ -1,5 +1,12 @@
 import Link from "next/link";
 import { categories } from "@/content/categories";
+import { listedProducts } from "@/lib/catalog";
+
+// Категории без единого товара в продаже не показываем: «Миски» появятся
+// в фильтре сами, когда миска выйдет из черновика
+const liveCategories = categories.filter((c) =>
+  listedProducts.some((p) => p.category === c.id),
+);
 import { cn } from "@/lib/cn";
 
 type Params = { category?: string; pet?: string; sort?: string };
@@ -60,7 +67,7 @@ export function Filters({ params }: { params: Params }) {
       >
         Все
       </Chip>
-      {categories.map((c) => (
+      {liveCategories.map((c) => (
         <Chip
           key={c.id}
           href={buildHref(params, { category: c.id })}

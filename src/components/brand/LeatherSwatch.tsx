@@ -30,7 +30,7 @@ export function LeatherSwatch({
         aria-hidden
         className="absolute inset-0 mix-blend-overlay opacity-70"
         style={{
-          backgroundImage: "url(/images/brand/leather-grain.png)",
+          backgroundImage: "url(/images/sajt/faktury/leather-grain.png)",
           backgroundSize: "150px 150px",
         }}
       />

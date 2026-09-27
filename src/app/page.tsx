@@ -101,7 +101,7 @@ export default function HomePage() {
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
-                    src="/images/products/collar-lined/tiffani.jpg"
+                    src="/images/tovary/1-oshejniki/s-podkladom/tiffani.jpg"
                     alt="Ошейник с мятным подкладом на замше"
                     fill
                     priority
@@ -134,7 +134,7 @@ export default function HomePage() {
               >
                 <div className="relative aspect-square overflow-hidden">
                   <Image
-                    src="/images/products/collar-solid/amster.jpg"
+                    src="/images/tovary/1-oshejniki/odnotonnye/amster.jpg"
                     alt="Однотонный ошейник цвета «Амстер» на песке"
                     fill
                     sizes="(min-width: 1024px) 40vw, 100vw"
@@ -173,7 +173,7 @@ export default function HomePage() {
       <section className="relative">
         <div className="relative aspect-[4/3] md:aspect-[21/9]">
           <Image
-            src="/images/photos/shot-6.jpg"
+            src="/images/sajt/progulki/shot-6.jpg"
             alt="Латунный карабин и кожаный подклад крупным планом"
             fill
             sizes="100vw"
@@ -257,7 +257,7 @@ export default function HomePage() {
       <section className="grid md:grid-cols-2">
         <div className="relative min-h-[60vh]">
           <Image
-            src="/images/photos/shot-8.jpg"
+            src="/images/sajt/progulki/shot-8.jpg"
             alt="Далматин в широком ошейнике с розовым подкладом"
             fill
             sizes="(min-width: 768px) 50vw, 100vw"

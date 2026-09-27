@@ -5,11 +5,8 @@ import { useId, useMemo, useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 import { measurements } from "@/content/categories";
 import type { MeasurementId } from "@/content/categories";
-import {
-  hardwareOptions,
-  leatherById,
-  selectableLeatherColors,
-} from "@/content/leather";
+import { hardwareOptions } from "@/content/leather";
+import { colorOf, selectableColors } from "@/lib/palette";
 import { formatPrice, productionTerm } from "@/lib/catalog";
 import { cn } from "@/lib/cn";
 import {
@@ -105,10 +102,12 @@ export function Configurator({
                   )}
                 >
                   <span className="label">{size.code}</span>
-                  <span className="mt-1 text-xs">
-                    {size.from && "от "}
-                    {formatPrice(size.price)}
-                  </span>
+                  {!product.draft && (
+                    <span className="mt-1 text-xs">
+                      {size.from && "от "}
+                      {formatPrice(size.price)}
+                    </span>
+                  )}
                   {size.note && (
                     <span
                       className={cn(
@@ -178,7 +177,7 @@ export function Configurator({
       {product.leatherSlots.map((slot) => {
         // Ищем по всей палитре, а не только по выбираемой: у зафиксированных
         // слотов цвет может быть вне списка выбора — как шоколадный верх
-        const current = leatherById.get(config.leather[slot.id] ?? "");
+        const current = colorOf(slot.palette, config.leather[slot.id]);
 
         // Зафиксированный цвет модели: показываем, но не даём менять.
         if (slot.fixed) {
@@ -207,7 +206,7 @@ export function Configurator({
               </span>
             </h2>
             <div className="mt-3 flex flex-wrap gap-2">
-              {selectableLeatherColors.map((color) => {
+              {selectableColors(slot.palette).map((color) => {
                 const active = config.leather[slot.id] === color.id;
                 return (
                   <button
@@ -279,7 +278,7 @@ export function Configurator({
         <section>
           <div className="flex items-baseline justify-between">
             <h2 id={engravingLabelId} className="label text-muted">
-              Гравировка на бирке
+              {product.engraving.label ?? "Гравировка на бирке"}
               {product.engraving.price > 0 && (
                 <span className="ml-3 text-forest">
                   +{formatPrice(product.engraving.price)}
@@ -296,10 +295,10 @@ export function Configurator({
             maxLength={product.engraving.maxChars}
             onChange={(e) => patch({ engraving: e.target.value })}
             aria-labelledby={engravingLabelId}
-            placeholder="Например, Марта"
+            placeholder={product.engraving.placeholder ?? "Например, Марта"}
             className="field mt-3"
           />
-          {engravingLength > 0 && (
+          {engravingLength > 0 && !product.livePreview && (
             <p className="display mt-3 bg-forest px-4 py-4 text-center text-2xl tracking-wide text-gold">
               {config.engraving}
             </p>
@@ -313,10 +312,16 @@ export function Configurator({
           <div>
             <p className="label text-muted">Итого</p>
             <p className="display mt-1 text-4xl">
-              {price.approximate && (
-                <span className="text-muted">от&nbsp;</span>
+              {product.draft ? (
+                <span className="text-muted">скоро</span>
+              ) : (
+                <>
+                  {price.approximate && (
+                    <span className="text-muted">от&nbsp;</span>
+                  )}
+                  {formatPrice(price.total)}
+                </>
               )}
-              {formatPrice(price.total)}
             </p>
           </div>
           <p className="text-right text-sm text-muted">
@@ -334,13 +339,19 @@ export function Configurator({
           </ul>
         )}
 
-        <button
-          type="button"
-          onClick={handleAdd}
-          className="label mt-6 w-full bg-forest px-8 py-5 text-cream transition-colors hover:bg-forest-lift"
-        >
-          Добавить в корзину
-        </button>
+        {product.draft ? (
+          <p className="label mt-6 w-full border border-line px-8 py-5 text-center text-muted">
+            Скоро в продаже
+          </p>
+        ) : (
+          <button
+            type="button"
+            onClick={handleAdd}
+            className="label mt-6 w-full bg-forest px-8 py-5 text-cream transition-colors hover:bg-forest-lift"
+          >
+            Добавить в корзину
+          </button>
+        )}
 
         {added && (
           <p className="mt-3 text-center text-sm">

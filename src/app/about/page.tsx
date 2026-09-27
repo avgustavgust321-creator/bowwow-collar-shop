@@ -29,7 +29,7 @@ export default function AboutPage() {
       <section className="wrap px-5 pb-4 md:px-10">
         <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
           <Image
-            src="/images/workshop/master.jpg"
+            src="/images/sajt/masterskaya/master.jpg"
             alt="Мастер за рабочим столом собирает ошейник"
             width={936}
             height={1400}
@@ -37,7 +37,7 @@ export default function AboutPage() {
             className="h-full w-full object-cover"
           />
           <Image
-            src="/images/workshop/verstak.jpg"
+            src="/images/sajt/masterskaya/verstak.jpg"
             alt="Инструменты и заготовка ошейника на раскройном мате"
             width={1052}
             height={1400}

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { categories, measurements, pets } from "@/content/categories";
 import { leatherColors } from "@/content/leather";
+import { colorOf, paletteIds } from "@/lib/palette";
 
 const categoryIds = categories.map((c) => c.id) as [string, ...string[]];
 const petIds = pets.map((p) => p.id) as [string, ...string[]];
@@ -17,16 +18,24 @@ export const sizeOptionSchema = z.object({
   from: z.boolean().optional(),
 });
 
-/** Слот выбора кожи: у ошейника с подкладом их два — верх и подклад. */
+/**
+ * Слот выбора цвета: у ошейника с подкладом их два — верх и подклад,
+ * у миски — основа и надпись. Имя «leather» историческое: слот бывает
+ * и пластиковым, палитру задаёт поле palette.
+ */
 export const leatherSlotSchema = z.object({
   id: z.string().min(1),
   label: z.string().min(1),
-  defaultColor: z.enum(leatherIds),
+  /** Из какой палитры цвета: кожа (по умолчанию) или пластик */
+  palette: z.enum(paletteIds).optional(),
+  defaultColor: z.string().min(1),
   /**
    * Цвет зафиксирован моделью и не выбирается — показывается справочно.
    * Так устроен ошейник с подкладом: верх всегда одного цвета.
    */
   fixed: z.boolean().optional(),
+}).refine((s) => Boolean(colorOf(s.palette, s.defaultColor)), {
+  message: "defaultColor нет в палитре этого слота",
 });
 
 /**
@@ -49,6 +58,12 @@ export const productSchema = z
     pet: z.array(z.enum(petIds)).min(1),
     summary: z.string().min(1),
     description: z.array(z.string().min(1)).min(1),
+    /**
+     * Папка с фото внутри public/images/tovary, например
+     * «1-oshejniki/s-podkladom». Всё, что в ней лежит, подключается само.
+     */
+    photos: z.string().min(1),
+    /** Общие кадры — заполняются из папки, вручную не пишутся */
     images: z.array(z.string().startsWith("/")),
     /** Цвет подложки-заглушки, пока нет фотографий */
     placeholder: z.enum(leatherIds),
@@ -62,17 +77,23 @@ export const productSchema = z
      * Если для выбранного цвета снимок есть, показывается он, а расчётная
      * перекраска не применяется — фотография всегда честнее.
      */
-    // partialRecord, а не record: обычный record с перечислением требует
-    // ключ на каждый цвет палитры, включая нерасходные вроде «шоколада»
     colorPhotos: z
-      .partialRecord(
-        z.enum(leatherIds),
-        z.array(z.string().startsWith("/")).min(1),
-      )
+      .record(z.string(), z.array(z.string().startsWith("/")).min(1))
       .optional(),
     hardware: z.boolean(),
+    /**
+     * Персональный текст: гравировка на бирке у ошейника, надпись на миске.
+     * label и placeholder меняют подписи поля под изделие.
+     */
     engraving: z
-      .object({ maxChars: z.number().int().positive(), price: z.number().min(0) })
+      .object({
+        maxChars: z.number().int().positive(),
+        price: z.number().min(0),
+        label: z.string().optional(),
+        placeholder: z.string().optional(),
+        /** Id слота, в цвет которого окрашен текст — для превью */
+        colorSlot: z.string().optional(),
+      })
       .nullable(),
     customFit: z
       .object({
@@ -85,6 +106,13 @@ export const productSchema = z
     productionDaysMax: z.number().int().positive().optional(),
     collection: z.string().optional(),
     badge: z.string().optional(),
+    /** Живое превью изделия в выбранных цветах вместо заглушки */
+    livePreview: z.enum(["bowl"]).optional(),
+    /**
+     * Черновик: товар открывается по прямой ссылке, но не виден в каталоге,
+     * на главной и в карте сайта — пока не проставлены цены.
+     */
+    draft: z.boolean().optional(),
   })
   .refine((p) => (p.sizes === null) !== (p.price === null), {
     message: "У товара должна быть либо размерная сетка, либо единая цена",

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Comforter, Montserrat, Playfair_Display } from "next/font/google";
 import { CartProvider } from "@/components/cart/CartProvider";
-import { CursorDog } from "@/components/brand/CursorDog";
 import { DustBackground } from "@/components/brand/DustBackground";
 import { Header } from "@/components/ui/header-3";
 import { Footer } from "@/components/layout/Footer";
@@ -66,7 +65,6 @@ export default function RootLayout({
           <Header />
           <main className="relative z-10 flex-1">{children}</main>
           <Footer />
-          <CursorDog />
         </CartProvider>
       </body>
     </html>

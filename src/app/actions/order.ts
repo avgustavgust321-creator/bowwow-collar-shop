@@ -45,6 +45,12 @@ export async function submitOrder(input: unknown): Promise<CheckoutResult> {
       errors.push(`Товара «${line.slug}» больше нет в каталоге`);
       continue;
     }
+    // Черновик ещё без настоящей цены — заказать его нельзя, даже если
+    // кто-то положил его в корзину в обход кнопки
+    if (product.draft) {
+      errors.push(`${product.title}: скоро в продаже, заказ пока не принимается`);
+      continue;
+    }
 
     const configErrors = validateConfiguration(product, line.config);
     if (configErrors.length > 0) {

@@ -19,22 +19,22 @@ export type WorkshopShot = {
 
 export const workshopShots: WorkshopShot[] = [
   {
-    src: "/images/workshop/raskroy.jpg",
+    src: "/images/sajt/masterskaya/raskroy.jpg",
     alt: "Мастер режет кожаную полосу ножом на раскройном мате",
     caption: "Раскрой",
   },
   {
-    src: "/images/workshop/proboynik.jpg",
+    src: "/images/sajt/masterskaya/proboynik.jpg",
     alt: "Пробойник и киянка — мастер пробивает отверстия в ремне",
     caption: "Отверстия",
   },
   {
-    src: "/images/workshop/strochka.jpg",
+    src: "/images/sajt/masterskaya/strochka.jpg",
     alt: "Мастер прошивает ремень иглой у пряжки",
     caption: "Строчка",
   },
   {
-    src: "/images/workshop/gotovye.jpg",
+    src: "/images/sajt/masterskaya/gotovye.jpg",
     alt: "Готовые ошейники и поводки висят на стойке в мастерской",
     caption: "Готово",
   },

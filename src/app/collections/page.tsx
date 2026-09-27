@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ProductCard } from "@/components/product/ProductCard";
 import { PageHeader } from "@/components/ui/Page";
-import { products } from "@/lib/catalog";
+import { listedProducts as products } from "@/lib/catalog";
 import type { Product } from "@/lib/product-schema";
 
 export const metadata: Metadata = {

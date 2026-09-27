@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { BowlPreview } from "@/components/product/BowlPreview";
 import { leatherById } from "@/content/leather";
 import { framesFor } from "@/lib/catalog";
+import { colorOf } from "@/lib/palette";
 import type { Product } from "@/lib/product-schema";
 import { cn } from "@/lib/cn";
 
@@ -30,6 +32,13 @@ const glyphs: Record<string, React.ReactNode> = {
     <>
       <rect x="26" y="38" width="48" height="44" rx="6" />
       <path d="M38 38V26a12 12 0 0 1 24 0v12" />
+    </>
+  ),
+  bowls: (
+    <>
+      <ellipse cx="50" cy="36" rx="26" ry="7" />
+      <path d="M24 36l-6 30a32 8 0 0 0 64 0l-6-30" />
+      <path d="M21 52a29 7 0 0 0 58 0" />
     </>
   ),
 };
@@ -72,6 +81,23 @@ export function ProductMedia({
    * светлая, в оттенок кожи товара, и контур изделия нарисован тем же
    * цветом, только гуще — заглушка встаёт в ряд с фотографиями.
    */
+  // Изделие с живым превью (миска) без фото — рисуем его в цветах
+  // по умолчанию, а не безликую заглушку
+  if (!photo && product.livePreview === "bowl") {
+    const [baseSlot] = product.leatherSlots;
+    const textSlot = product.leatherSlots.find(
+      (s) => s.id === product.engraving?.colorSlot,
+    );
+    return (
+      <BowlPreview
+        className={className}
+        base={colorOf(baseSlot?.palette, baseSlot?.defaultColor)?.hex ?? "#E8AFCF"}
+        textColor={colorOf(textSlot?.palette, textSlot?.defaultColor)?.hex ?? "#22301f"}
+        inscription="BOW WOW"
+      />
+    );
+  }
+
   if (!photo) {
     return (
       <div
@@ -106,7 +132,7 @@ export function ProductMedia({
     : undefined;
   // Под настоящий снимок перекраска не нужна — цвет уже на фотографии
   const mask = real ? undefined : product.tint?.masks[index];
-  const tintHex = leatherById.get(colorId ?? tintSlot?.defaultColor ?? "")?.hex;
+  const tintHex = colorOf(tintSlot?.palette, colorId ?? tintSlot?.defaultColor)?.hex;
 
   return (
     <div
