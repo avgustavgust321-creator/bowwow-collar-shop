@@ -2,9 +2,19 @@
 
 import Link from "next/link";
 import { useCart } from "@/components/cart/CartProvider";
+import { deliveryOptions } from "@/content/delivery";
 import { ProductMedia } from "@/components/product/ProductMedia";
 import { formatPrice, getProduct } from "@/lib/catalog";
 import { calcPrice, describeConfiguration } from "@/lib/price";
+
+/** Цена доставки в корзине — из настроек доставки, а не вписана руками */
+const deliveryFrom = Math.min(...deliveryOptions.map((d) => d.price));
+const deliveryNote =
+  `Доставка — ${deliveryFrom > 0 ? `${deliveryFrom} р.` : "бесплатно"}: ` +
+  deliveryOptions
+    .map((d) => d.title[0].toLowerCase() + d.title.slice(1))
+    .join(" или ") +
+  ".";
 
 export default function CartPage() {
   const { lines, total, approximate, ready, setQty, remove } = useCart();
@@ -58,7 +68,7 @@ export default function CartPage() {
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <Link
                       href={`/product/${product.slug}`}
-                      className="display text-lg hover:text-forest"
+                      className="display inline-flex min-h-11 items-center text-xl hover:text-forest"
                     >
                       {product.title}
                     </Link>
@@ -82,16 +92,18 @@ export default function CartPage() {
                         type="button"
                         onClick={() => setQty(line.key, line.qty - 1)}
                         aria-label="Уменьшить количество"
-                        className="px-3 py-1.5 transition-colors hover:text-forest"
+                        className="inline-flex size-11 items-center justify-center text-lg transition-colors hover:bg-shell hover:text-forest"
                       >
                         −
                       </button>
-                      <span className="min-w-8 text-center">{line.qty}</span>
+                      <span aria-live="polite" className="min-w-8 text-center">
+                        {line.qty}
+                      </span>
                       <button
                         type="button"
                         onClick={() => setQty(line.key, line.qty + 1)}
                         aria-label="Увеличить количество"
-                        className="px-3 py-1.5 transition-colors hover:text-forest"
+                        className="inline-flex size-11 items-center justify-center text-lg transition-colors hover:bg-shell hover:text-forest"
                       >
                         +
                       </button>
@@ -99,7 +111,7 @@ export default function CartPage() {
                     <button
                       type="button"
                       onClick={() => remove(line.key)}
-                      className="label text-muted transition-colors hover:text-forest"
+                      className="label inline-flex min-h-11 items-center px-2 text-muted underline-offset-4 transition-colors hover:text-forest hover:underline"
                     >
                       Удалить
                     </button>
@@ -117,7 +129,7 @@ export default function CartPage() {
             {formatPrice(total)}
           </p>
           <p className="mt-3 text-sm text-muted">
-            Стоимость доставки рассчитывается при оформлении.
+            {deliveryNote}
           </p>
           {approximate && (
             <p className="mt-3 border-l-2 border-gold pl-3 text-sm">
@@ -133,7 +145,7 @@ export default function CartPage() {
           </Link>
           <Link
             href="/catalog"
-            className="label mt-3 block py-2 text-center text-muted transition-colors hover:text-forest"
+            className="label mt-3 flex min-h-11 items-center justify-center text-muted transition-colors hover:text-forest"
           >
             Продолжить покупки
           </Link>

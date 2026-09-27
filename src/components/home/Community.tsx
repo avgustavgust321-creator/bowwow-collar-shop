@@ -38,32 +38,39 @@ function InstagramMark({ className }: { className?: string }) {
  * Подписи под фотографиями нет намеренно: пока нет настоящих отзывов от
  * заказчиков, любой текст под чужой собакой был бы выдуманным.
  */
+/** Наклоны снимков — небольшие, чтобы выглядело разложенным, а не упавшим */
+const tilts = ["-rotate-2", "rotate-[1.5deg]", "-rotate-1", "rotate-2"];
+
 export function Community() {
   return (
     <section className="px-5 py-16 md:px-10 md:py-24">
       <div className="wrap flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="hand text-gold-ink">их собаки</p>
-          <h2 className="display mt-2 text-3xl md:text-5xl">В инстаграме</h2>
+          <p className="hand -rotate-3 text-3xl text-gold-ink md:text-4xl">в инстаграме</p>
+          <h2 className="display-xl mt-1 text-ink">
+            Их <em className="text-gold-ink">собаки</em>
+          </h2>
         </div>
         <a
           href={site.contacts.instagram}
           target="_blank"
           rel="noreferrer"
-          className="label inline-flex items-center gap-2 border-b border-gold pb-1 transition-colors hover:border-forest hover:text-forest"
+          className="label inline-flex min-h-11 items-center gap-2 border-b border-gold transition-colors hover:border-forest hover:text-forest"
         >
           <InstagramMark className="size-4" />
           {site.contacts.instagramHandle}
         </a>
       </div>
 
-      <ul className="wrap mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
+      <ul className="wrap mt-14 grid grid-cols-2 gap-5 md:grid-cols-4 md:gap-8">
         {communityPhotos.map((photo, i) => (
           <li
             key={photo.src}
             className={cn(
-              // Ступенька: каждый второй кадр опущен
+              // Снимки разложены, а не выставлены: лёгкий наклон в разные
+              // стороны и ступенька — каждый второй опущен
               i % 2 === 1 && "mt-6 md:mt-10",
+              tilts[i % tilts.length],
             )}
           >
             <a
@@ -71,9 +78,9 @@ export function Community() {
               target="_blank"
               rel="noreferrer"
               aria-label={`${photo.alt} — открыть инстаграм ${site.contacts.instagramHandle}`}
-              className="group relative block overflow-hidden"
+              className="group relative block bg-cream p-2.5 pb-9 shadow-card transition-transform duration-500 hover:z-10 hover:rotate-0 hover:scale-[1.03] focus-visible:rotate-0 md:p-3 md:pb-12"
             >
-              <div className="relative aspect-[3/4] w-full">
+              <div className="relative aspect-[3/4] w-full overflow-hidden">
                 <Image
                   src={photo.src}
                   alt=""
@@ -87,7 +94,7 @@ export function Community() {
                   что кадр кликабельный и уводит наружу */}
               <span
                 aria-hidden
-                className="absolute inset-0 flex items-center justify-center bg-forest/0 opacity-0 transition-all duration-300 group-hover:bg-forest/45 group-hover:opacity-100 group-focus-visible:bg-forest/45 group-focus-visible:opacity-100"
+                className="absolute inset-2.5 bottom-9 flex items-center justify-center bg-forest/0 md:inset-3 md:bottom-12 opacity-0 transition-all duration-300 group-hover:bg-forest/45 group-hover:opacity-100 group-focus-visible:bg-forest/45 group-focus-visible:opacity-100"
               >
                 <InstagramMark className="size-8 text-cream" />
               </span>

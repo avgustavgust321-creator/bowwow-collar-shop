@@ -80,6 +80,27 @@ export function Header() {
         },
       )}
     >
+      {/*
+        Строка обещаний. Видна, пока страница вверху, и сворачивается при
+        прокрутке — тогда шапка снова ровно 56 px, как рассчитывают липкая
+        галерея товара и мобильное меню. На телефоне помещается одно
+        обещание, на планшете два, на широком экране все три.
+      */}
+      <div
+        className={cn(
+          "overflow-hidden bg-forest text-cream transition-[height] duration-300",
+          scrolled || open ? "h-0" : "h-8",
+        )}
+      >
+        <ul className="label flex h-8 items-center justify-center gap-5 px-3 text-center tracking-[0.04em] whitespace-nowrap md:px-5 md:tracking-[0.08em]">
+          <li className="hidden lg:block">Шьём за 7–10 дней</li>
+          <li aria-hidden className="hidden text-rose lg:block">✦</li>
+          <li className="hidden md:block">Европочта по Беларуси — 6 р.</li>
+          <li aria-hidden className="hidden text-rose md:block">✦</li>
+          <li>Не подошёл размер — перешьём бесплатно</li>
+        </ul>
+      </div>
+
       <nav className="mx-auto flex h-14 w-full items-center justify-between px-5 md:px-10">
         <div className="flex items-center gap-4">
           <Link
@@ -374,17 +395,24 @@ const aboutLinks: LinkItem[] = [
   { title: "Обработка данных", href: "/policy", icon: Shield },
 ];
 
+/**
+ * Прокручена ли страница дальше порога.
+ *
+ * Через useSyncExternalStore, а не состояние, обновляемое по событию:
+ * при перезагрузке браузер сам возвращает прежнюю прокрутку ещё до того,
+ * как шапка оживёт, события scroll после этого не бывает — и строка
+ * обещаний оставалась развёрнутой посреди страницы. Так значение
+ * читается сразу при монтировании.
+ */
 function useScroll(threshold: number) {
-  const [scrolled, setScrolled] = React.useState(false);
+  const subscribe = React.useCallback((notify: () => void) => {
+    window.addEventListener("scroll", notify, { passive: true });
+    return () => window.removeEventListener("scroll", notify);
+  }, []);
 
-  const onScroll = React.useCallback(() => {
-    setScrolled(window.scrollY > threshold);
-  }, [threshold]);
-
-  React.useEffect(() => {
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [onScroll]);
-
-  return scrolled;
+  return React.useSyncExternalStore(
+    subscribe,
+    () => window.scrollY > threshold,
+    () => false,
+  );
 }

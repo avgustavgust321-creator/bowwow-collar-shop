@@ -41,8 +41,11 @@ export default async function CatalogPage({
   return (
     <>
       <section className="relative overflow-hidden">
-        <div className="wrap relative px-5 pt-12 pb-8 md:px-10">
-          <h1 className="display-hero">Каталог</h1>
+        <div className="wrap relative px-5 pt-14 pb-10 md:px-10 md:pt-20">
+          <p className="hand -rotate-3 text-3xl text-gold-ink md:text-4xl">
+            сшито в Бресте
+          </p>
+          <h1 className="display-xl mt-1 text-ink">Каталог</h1>
           {activeCategory && (
             <p className="mt-6 max-w-xl text-muted">
               {activeCategory.description}

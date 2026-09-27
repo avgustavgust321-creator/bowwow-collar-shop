@@ -22,7 +22,9 @@ const emailConfirmed = site.contacts.emailConfirmed;
 
 export function Footer() {
   return (
-    <footer className="relative mt-20 overflow-hidden bg-forest text-cream on-dark">
+    <footer className="leather-texture relative mt-20 overflow-hidden bg-forest text-cream on-dark">
+      {/* Полосатая кромка маркизы — тот же приём, что над шагами на главной */}
+      <div aria-hidden className="stripes-rose relative z-10 h-3" />
       <FooterBackgroundGradient />
 
       <div className="wrap relative z-10 px-5 pt-14 pb-8 md:px-10">

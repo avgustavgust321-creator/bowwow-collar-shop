@@ -211,11 +211,24 @@ export default function CheckoutPage() {
             })}
           </ul>
 
-          <div className="mt-4 flex items-end justify-between">
+          {/* Доставка входит в итог уже здесь: раньше покупатель видел
+              сумму без неё, а на странице заказа — на 6 р. больше */}
+          {selectedDelivery && (
+            <div className="mt-4 flex items-baseline justify-between text-sm">
+              <span className="text-muted">{selectedDelivery.title}</span>
+              <span>
+                {selectedDelivery.price > 0
+                  ? formatPrice(selectedDelivery.price)
+                  : "бесплатно"}
+              </span>
+            </div>
+          )}
+
+          <div className="mt-3 flex items-end justify-between border-t border-line pt-3">
             <span className="label text-muted">Итого</span>
             <span className="display text-3xl">
               {approximate && <span className="text-muted">от&nbsp;</span>}
-              {formatPrice(total)}
+              {formatPrice(total + (selectedDelivery?.price ?? 0))}
             </span>
           </div>
 

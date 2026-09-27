@@ -14,11 +14,13 @@ export function PageHeader({
   lead?: string;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-line">
-      <div className="wrap relative px-5 pt-12 pb-10 md:px-10">
-        <h1 className="display-hero">{title}</h1>
+    <section className="relative overflow-hidden">
+      <div className="wrap relative px-5 pt-14 pb-12 md:px-10 md:pt-20">
+        <h1 className="display-xl text-ink">{title}</h1>
         {lead && <p className="mt-6 max-w-xl text-muted">{lead}</p>}
       </div>
+      {/* Полосатая кромка — фирменный приём, как над шагами на главной */}
+      <div aria-hidden className="stripes-rose h-2" />
     </section>
   );
 }

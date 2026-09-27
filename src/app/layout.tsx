@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Comforter, Montserrat, Playfair_Display } from "next/font/google";
 import { CartProvider } from "@/components/cart/CartProvider";
-import { DustBackground } from "@/components/brand/DustBackground";
 import { Header } from "@/components/ui/header-3";
 import { Footer } from "@/components/layout/Footer";
 import { site } from "@/content/site";
@@ -59,9 +58,8 @@ export default function RootLayout({
       lang="ru"
       className={`${montserrat.variable} ${playfair.variable} ${comforter.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col bg-cream text-ebony">
+      <body className="flex min-h-full flex-col text-ebony">
         <CartProvider>
-          <DustBackground />
           <Header />
           <main className="relative z-10 flex-1">{children}</main>
           <Footer />

@@ -13,11 +13,11 @@ import { workshopShots } from "@/content/workshop";
  */
 export function Workshop() {
   return (
-    <section className="bg-forest py-16 text-cream md:py-24">
+    <section className="leather-texture bg-forest py-20 text-cream on-dark md:py-28">
       <div className="wrap px-5 md:px-10">
-        <p className="hand text-rose">мастерская</p>
-        <h2 className="display mt-3 max-w-2xl text-3xl md:text-5xl">
-          Как это шьётся
+        <p className="hand -rotate-3 text-3xl text-rose md:text-4xl">мастерская</p>
+        <h2 className="display-xl mt-1 max-w-3xl">
+          Как это <em className="text-rose">шьётся</em>
         </h2>
         <p className="mt-4 max-w-lg text-cream-muted">
           Ошейник проходит через руки от куска кожи до готовой вещи: раскрой,
@@ -26,10 +26,10 @@ export function Workshop() {
         </p>
       </div>
 
-      <ol className="wrap mt-12 grid grid-cols-2 gap-px bg-forest-lift md:grid-cols-4">
+      <ol className="wrap mt-14 grid grid-cols-2 gap-3 px-5 md:grid-cols-4 md:gap-5 md:px-10">
         {workshopShots.map((shot, i) => (
-          <li key={shot.src} className="relative bg-forest">
-            <div className="relative aspect-[3/4]">
+          <li key={shot.src} className="relative">
+            <div className="frame-gold relative aspect-[3/4] overflow-hidden">
               <Image
                 src={shot.src}
                 alt={shot.alt}
@@ -38,7 +38,7 @@ export function Workshop() {
                 className="object-cover"
               />
             </div>
-            <p className="label flex items-baseline gap-2 px-4 py-4">
+            <p className="label flex items-baseline gap-2 pt-4">
               <span aria-hidden className="text-rose">
                 {i + 1}
               </span>
