@@ -248,7 +248,14 @@ export const products = validateCatalog([
       "Ручка простёгана в два слоя и со временем принимает форму кисти.",
       "Модель для тех, кто гуляет долго и с сильной собакой.",
     ],
-    images: [],
+    // Съёмка DOGSTREET: все поводки в ней — эта модель
+    images: [
+      "/images/products/leash-flat-handle/1-na-bagazhnike.jpg",
+      "/images/products/leash-flat-handle/2-cveta.jpg",
+      "/images/products/leash-flat-handle/3-ruchka.jpg",
+      "/images/products/leash-flat-handle/4-salon.jpg",
+      "/images/products/leash-flat-handle/5-na-sobake.jpg",
+    ],
     placeholder: "nordik",
     sizes: null,
     price: 95,
