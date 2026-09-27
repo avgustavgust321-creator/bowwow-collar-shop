@@ -29,10 +29,10 @@ function Chip({
       href={href}
       scroll={false}
       className={cn(
-        "label border px-4 py-2 transition-colors",
+        "label inline-flex min-h-11 items-center border px-4 transition-colors",
         active
-          ? "border-gold bg-forest text-cream"
-          : "border-line text-muted hover:border-gold hover:text-forest",
+          ? "border-forest bg-forest text-cream"
+          : "border-line text-muted hover:border-forest hover:text-forest",
       )}
     >
       {children}

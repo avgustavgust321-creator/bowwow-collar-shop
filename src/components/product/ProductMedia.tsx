@@ -63,6 +63,15 @@ export function ProductMedia({
   const photo = frames[index];
   const placeholderHex = leatherById.get(product.placeholder)?.hex ?? "#A9813E";
 
+  /*
+   * Заглушка, пока у товара нет фотографии.
+   *
+   * Раньше это был почти чёрный квадрат — наследство тёмной версии сайта.
+   * В светлом каталоге он выбивал дыру в сетке рядом с фотографиями на
+   * песке, а подпись «фото скоро» на нём читалась хуже нормы. Теперь плитка
+   * светлая, в оттенок кожи товара, и контур изделия нарисован тем же
+   * цветом, только гуще — заглушка встаёт в ряд с фотографиями.
+   */
   if (!photo) {
     return (
       <div
@@ -71,7 +80,7 @@ export function ProductMedia({
           className,
         )}
         style={{
-          backgroundColor: `color-mix(in srgb, ${placeholderHex} 22%, #12211a)`,
+          backgroundColor: `color-mix(in srgb, ${placeholderHex} 16%, var(--color-shell))`,
         }}
       >
         <svg
@@ -79,13 +88,13 @@ export function ProductMedia({
           aria-hidden
           className="w-1/2 transition-transform duration-500 group-hover:scale-[1.04]"
           fill="none"
-          stroke="rgba(241,234,224,0.45)"
+          stroke={`color-mix(in srgb, ${placeholderHex} 70%, var(--color-ink))`}
           strokeWidth="2.5"
           strokeLinecap="round"
         >
           {glyphs[product.category]}
         </svg>
-        <span className="label absolute bottom-3 left-3 text-muted">
+        <span className="label absolute bottom-3 left-3 text-ink">
           фото скоро
         </span>
       </div>

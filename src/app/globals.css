@@ -114,6 +114,21 @@ body {
   line-height: 1.65;
 }
 
+/* Заголовки переносятся ровными строками, без одного слова на последней;
+   абзацы — без одинокого короткого слова в конце. Дёшево и сразу видно:
+   «Ошейник / однотонный» вместо «Ошейник однотонный / —». */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
 ::selection {
   background: var(--color-rose);
   color: var(--color-forest);
@@ -172,11 +187,49 @@ body {
   margin-inline: auto;
 }
 
+/**
+ * Поле ввода — одно на весь сайт.
+ *
+ * Раньше у каждой формы было своё: скругление 12 пикселей и двойная рамка
+ * остались от рисованой версии сайта и спорили с прямыми углами кнопок.
+ * А в фокусе рамка не менялась вовсе — с клавиатуры было не понять, в
+ * каком поле курсор. Теперь фокус — тёмно-зелёная рамка плюс кольцо.
+ */
+@utility field {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition:
+    border-color 150ms ease-out,
+    box-shadow 150ms ease-out;
+
+  /* Подсказка без прозрачности: в ней бывает формат, например номер
+     телефона, и она должна читаться так же, как обычный текст */
+  &::placeholder {
+    color: var(--color-muted);
+    opacity: 1;
+  }
+  &:hover {
+    border-color: rgba(34, 48, 31, 0.35);
+  }
+  &:focus {
+    outline: none;
+    border-color: var(--color-forest);
+    box-shadow: 0 0 0 1px var(--color-forest);
+  }
+}
+
 @utility label {
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 0.68rem;
-  letter-spacing: 0.24em;
+  /* 12 пикселей — нижняя граница для текста. Было 10,9: капс и разрядка
+     визуально его увеличивали, но на телефоне подписи всё равно мельчили */
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 

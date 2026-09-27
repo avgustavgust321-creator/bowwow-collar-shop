@@ -86,9 +86,9 @@ export function Header() {
             href="/"
             aria-label="На главную"
             onClick={closeMenu}
-            className="rounded-xs p-1 hover:bg-accent"
+            className="inline-flex min-h-11 items-center rounded-xs px-1 hover:bg-accent"
           >
-            <Logo className="h-5" />
+            <Logo className="h-5" priority />
           </Link>
 
           <NavigationMenu className="hidden md:flex">

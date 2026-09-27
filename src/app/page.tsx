@@ -23,7 +23,7 @@ import { formatPrice, priceFrom, products } from "@/lib/catalog";
 const facts = [
   "итальянская кожа 3,5 мм",
   "12 цветов",
-  "размеры по сетке или по вашим замерам",
+  "размер по вашим меркам",
   "латунь или серебро",
   "гравировка до 14 знаков",
 ];
@@ -73,13 +73,18 @@ export default function HomePage() {
       <section className="border-b border-line px-5 py-8 md:px-10">
         <ul className="wrap label flex flex-wrap items-center gap-x-4 gap-y-2 text-muted">
           {facts.map((fact, i) => (
-            <li key={fact} className="flex items-center gap-x-4">
-              {i > 0 && (
+            // Разделитель стоит после факта, а не перед: при переносе строки
+            // точка остаётся в конце строки, а не повисает в начале следующей
+            <li
+              key={fact}
+              className="flex items-center gap-x-4 whitespace-nowrap"
+            >
+              {fact}
+              {i < facts.length - 1 && (
                 <span aria-hidden className="text-gold-ink">
                   ·
                 </span>
               )}
-              {fact}
             </li>
           ))}
         </ul>

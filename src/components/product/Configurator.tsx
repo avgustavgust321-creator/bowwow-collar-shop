@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 import { measurements } from "@/content/categories";
 import type { MeasurementId } from "@/content/categories";
@@ -53,6 +53,9 @@ export function Configurator({
   };
 
   const engravingLength = config.engraving?.trim().length ?? 0;
+  // Подпись поля гравировки — заголовок над ним, а не плейсхолдер:
+  // плейсхолдер исчезает при вводе, и скринридер его как подпись не читает
+  const engravingLabelId = useId();
 
   return (
     <div className="flex flex-col gap-8">
@@ -74,10 +77,10 @@ export function Configurator({
                     type="button"
                     onClick={() => patch({ fit: mode })}
                     className={cn(
-                      "label px-4 py-2 transition-colors",
+                      "label min-h-11 px-4 transition-colors",
                       config.fit === mode
-                        ? "bg-shell text-ink"
-                        : "hover:text-forest",
+                        ? "bg-forest text-cream"
+                        : "hover:bg-shell hover:text-forest",
                     )}
                   >
                     {title}
@@ -95,19 +98,26 @@ export function Configurator({
                   type="button"
                   onClick={() => patch({ sizeCode: size.code })}
                   className={cn(
-                    "flex min-w-20 flex-col items-start border px-3 py-2 text-left transition-colors",
+                    "flex min-h-11 min-w-20 flex-col items-start border px-3 py-2 text-left transition-colors",
                     config.sizeCode === size.code
-                      ? "border-line bg-shell text-ink"
-                      : "border-line hover:border-gold",
+                      ? "border-forest bg-forest text-cream"
+                      : "border-line hover:border-forest",
                   )}
                 >
                   <span className="label">{size.code}</span>
-                  <span className="mt-1 text-xs opacity-70">
+                  <span className="mt-1 text-xs">
                     {size.from && "от "}
                     {formatPrice(size.price)}
                   </span>
                   {size.note && (
-                    <span className="mt-0.5 text-xs opacity-60">
+                    <span
+                      className={cn(
+                        "mt-0.5 text-xs",
+                        config.sizeCode === size.code
+                          ? "text-cream-muted"
+                          : "text-muted",
+                      )}
+                    >
                       {size.note}
                     </span>
                   )}
@@ -123,7 +133,7 @@ export function Configurator({
                     <label key={field} className="flex flex-col gap-1">
                       <span className="label">{m.label}</span>
                       <span className="text-xs text-muted">{m.hint}</span>
-                      <div className="mt-1 flex items-center border border-line bg-shell focus-within:border-gold">
+                      <div className="mt-1 flex min-h-11 items-center border border-line bg-cream transition-colors focus-within:border-forest focus-within:shadow-[0_0_0_1px_var(--color-forest)]">
                         <input
                           type="number"
                           inputMode="decimal"
@@ -141,7 +151,7 @@ export function Configurator({
                               },
                             })
                           }
-                          className="w-full bg-transparent px-3 py-2 outline-none"
+                          className="w-full bg-transparent px-3 py-2 text-ink outline-none"
                           placeholder="0"
                         />
                         <span className="label px-3 text-muted">см</span>
@@ -175,7 +185,7 @@ export function Configurator({
           return (
             <section key={slot.id} className="flex items-center gap-3">
               <span
-                className="size-10 shrink-0 rounded-full border-2 border-line"
+                className="size-11 shrink-0 rounded-full border border-black/10"
                 style={{ backgroundColor: current?.hex }}
               />
               <div>
@@ -212,10 +222,10 @@ export function Configurator({
                       })
                     }
                     className={cn(
-                      "size-10 rounded-full border-2 transition-transform",
+                      "size-11 rounded-full border border-black/10 transition-shadow",
                       active
-                        ? "border-line scale-110"
-                        : "border-transparent hover:scale-105",
+                        ? "ring-2 ring-forest ring-offset-2 ring-offset-cream"
+                        : "hover:ring-1 hover:ring-forest/40 hover:ring-offset-2 hover:ring-offset-cream",
                     )}
                     style={{ backgroundColor: color.hex }}
                   />
@@ -237,19 +247,24 @@ export function Configurator({
                 type="button"
                 onClick={() => patch({ hardware: hw.id })}
                 className={cn(
-                  "flex items-center gap-2 border px-4 py-2 transition-colors",
+                  "flex min-h-11 items-center gap-2 border px-4 transition-colors",
                   config.hardware === hw.id
-                    ? "border-line bg-shell text-ink"
-                    : "border-line hover:border-gold",
+                    ? "border-forest bg-forest text-cream"
+                    : "border-line hover:border-forest",
                 )}
               >
                 <span
-                  className="size-4 rounded-full"
+                  className="size-4 rounded-full border border-black/15"
                   style={{ backgroundColor: hw.hex }}
                 />
                 <span className="label">{hw.name}</span>
                 {hw.priceDelta > 0 && (
-                  <span className="label text-forest">
+                  <span
+                    className={cn(
+                      "label",
+                      config.hardware === hw.id ? "text-rose" : "text-forest",
+                    )}
+                  >
                     +{formatPrice(hw.priceDelta)}
                   </span>
                 )}
@@ -263,7 +278,7 @@ export function Configurator({
       {product.engraving && (
         <section>
           <div className="flex items-baseline justify-between">
-            <h2 className="label text-muted">
+            <h2 id={engravingLabelId} className="label text-muted">
               Гравировка на бирке
               {product.engraving.price > 0 && (
                 <span className="ml-3 text-forest">
@@ -280,11 +295,12 @@ export function Configurator({
             value={config.engraving ?? ""}
             maxLength={product.engraving.maxChars}
             onChange={(e) => patch({ engraving: e.target.value })}
-            placeholder="Имя питомца"
-            className="mt-3 w-full rounded-xl border-2 border-line bg-cream px-4 py-3 outline-none focus:border-line"
+            aria-labelledby={engravingLabelId}
+            placeholder="Например, Марта"
+            className="field mt-3"
           />
           {engravingLength > 0 && (
-            <p className="display mt-3 border border-line bg-shell px-4 py-4 text-center text-2xl text-gold">
+            <p className="display mt-3 bg-forest px-4 py-4 text-center text-2xl tracking-wide text-gold">
               {config.engraving}
             </p>
           )}

@@ -10,8 +10,8 @@ import { formatPrice, getProduct } from "@/lib/catalog";
 import { cn } from "@/lib/cn";
 import { calcPrice, describeConfiguration } from "@/lib/price";
 
-const fieldClass =
-  "w-full rounded-xl border-2 border-line bg-cream px-4 py-3 outline-none focus:border-line";
+/** Общий стиль поля — утилита field в globals.css */
+const fieldClass = "field";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -80,6 +80,9 @@ export default function CheckoutPage() {
   return (
     <section className="wrap px-5 py-10 md:px-10">
       <h1 className="display text-4xl md:text-6xl">Оформление</h1>
+      <p className="mt-3 text-sm text-muted">
+        Все поля, кроме комментария, обязательные.
+      </p>
 
       {errors.length > 0 && (
         <ul className="mt-6 border-l-2 border-gold bg-shell py-4 pl-4 text-sm">
@@ -133,8 +136,8 @@ export default function CheckoutPage() {
                 className={cn(
                   "flex cursor-pointer items-start gap-3 border p-4 transition-colors",
                   delivery === option.id
-                    ? "border-line bg-shell"
-                    : "border-line hover:border-gold",
+                    ? "border-forest bg-shell shadow-[inset_0_0_0_1px_var(--color-forest)]"
+                    : "border-line hover:border-forest",
                 )}
               >
                 <input
@@ -143,7 +146,7 @@ export default function CheckoutPage() {
                   value={option.id}
                   checked={delivery === option.id}
                   onChange={() => setDelivery(option.id)}
-                  className="mt-1 accent-bubblegum"
+                  className="mt-0.5 size-5 shrink-0 accent-forest"
                 />
                 <span className="flex-1">
                   <span className="label block">{option.title}</span>
@@ -172,7 +175,10 @@ export default function CheckoutPage() {
           </fieldset>
 
           <label className="flex flex-col gap-1">
-            <span className="label text-muted">Комментарий к заказу</span>
+            <span className="label text-muted">
+              Комментарий к заказу{" "}
+              <span className="normal-case tracking-normal">(необязательно)</span>
+            </span>
             <textarea name="comment" rows={4} className={fieldClass} />
           </label>
         </div>

@@ -69,14 +69,20 @@ export default async function ProductPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav className="wrap label flex flex-wrap items-center gap-2 border-b border-line px-5 py-4 text-muted md:px-10">
-        <Link href="/catalog" className="hover:text-forest">
+      <nav
+        aria-label="Навигационная цепочка"
+        className="wrap label flex flex-wrap items-center gap-x-2 border-b border-line px-5 py-1 text-muted md:px-10"
+      >
+        <Link
+          href="/catalog"
+          className="inline-flex min-h-11 items-center hover:text-forest"
+        >
           Каталог
         </Link>
         <span>/</span>
         <Link
           href={`/catalog?category=${product.category}`}
-          className="hover:text-forest"
+          className="inline-flex min-h-11 items-center hover:text-forest"
         >
           {category?.title}
         </Link>
@@ -171,7 +177,10 @@ export default async function ProductPage({
               <div>
                 <dt className="label text-muted">Уход</dt>
                 <dd className="mt-1">
-                  <Link href="/care" className="underline hover:text-forest">
+                  <Link
+                    href="/care"
+                    className="inline-flex min-h-11 items-center underline hover:text-forest"
+                  >
                     Как ухаживать
                   </Link>
                 </dd>
