@@ -24,10 +24,12 @@ export type ProductPhotos = {
 export function photosIn(folder: string, palette: PaletteId): ProductPhotos {
   const files = folders[folder];
   if (!files) {
-    throw new Error(
-      `Папки с фото «${folder}» нет в public/images/tovary — ` +
-        "проверьте поле photos у товара или запустите node scripts/photo-manifest.mjs",
-    );
+    // Не роняем сборку: у модели просто пока нет фото — покажется заглушка.
+    // Раньше здесь была ошибка, и сайт не собирался на сервере, потому что
+    // git не хранит пустые папки. Опечатку в поле photos видно по этому
+    // предупреждению в логе сборки.
+    console.warn(`Фото: папки «${folder}» нет в public/images/tovary`);
+    return { images: [], colorPhotos: {} };
   }
 
   const images: string[] = [];
