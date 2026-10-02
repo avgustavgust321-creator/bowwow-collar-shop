@@ -47,12 +47,12 @@ const catalog = [
       { code: "M", note: "30–36 см", price: 130 },
       { code: "L", note: "35–43 см", price: 140 },
       { code: "XL", note: "42–50 см", price: 150 },
+      // Big Boss — на 10 р. дороже XL. Размер открыт сверху, поэтому
+      // шьём по обхвату шеи конкретной собаки
       {
         code: "Big Boss",
-        price: 150,
-        from: true,
+        price: 160,
         note: "от 50 см, усиленная фурнитура",
-        // Размер открыт сверху — шьём по обхвату шеи конкретной собаки
         measure: ["neck"],
       },
     ],
@@ -89,6 +89,12 @@ const catalog = [
       { code: "M", note: "30–36 см", price: 80 },
       { code: "L", note: "35–43 см", price: 90 },
       { code: "XL", note: "42–50 см", price: 110 },
+      {
+        code: "Big Boss",
+        price: 120,
+        note: "от 50 см, усиленная фурнитура",
+        measure: ["neck"],
+      },
     ],
     price: null,
     leatherSlots: [{ id: "outer", label: "Цвет кожи", defaultColor: "amster" }],
@@ -287,7 +293,7 @@ const catalog = [
     leatherSlots: [
       { id: "outer", label: "Цвет кожи", defaultColor: "chocolate", fixed: true },
     ],
-    hardware: true,
+    hardware: false, // фурнитура у холдера одна, выбирать нечего
     engraving: null,
     customFit: null,
     productionDays: 7,
