@@ -1,18 +1,20 @@
+import { createClient } from "redis";
 import type { Order, OrderStatus } from "@/lib/orders/types";
 
 /**
- * Хранилище заказов.
+ * Хранилище заказов — Redis.
  *
- * В продакшене — Upstash Redis по REST API (бесплатный тариф, без SDK
- * и без своей базы). Если переменные окружения не заданы, заказы живут
- * в памяти процесса: этого хватает для локальной разработки, но на
- * Vercel такой заказ пропадёт при следующем холодном старте — поэтому
- * при старте пишем предупреждение.
+ * Подключается двумя способами, смотря что выбрано во вкладке Storage
+ * на Vercel:
+ *   • Upstash — по HTTP, настройки KV_REST_API_URL и KV_REST_API_TOKEN
+ *     (или UPSTASH_REDIS_REST_*);
+ *   • Redis Cloud — обычным подключением по одному адресу REDIS_URL.
+ *
+ * Если не задано ни то ни другое, заказы живут в памяти процесса: этого
+ * хватает для локальной разработки, но на Vercel такой заказ пропадёт
+ * при следующем холодном старте — поэтому пишем предупреждение.
  */
 
-// Если базу подключить через вкладку Storage на Vercel, он сам кладёт
-// адрес и ключ под именами KV_REST_API_*. Принимаем оба варианта, чтобы
-// ничего не переписывать руками.
 // При подключении Vercel разрешает добавить к именам свою приставку
 // (например STORAGE_KV_REST_API_URL), поэтому ищем и по окончанию имени.
 function envBySuffix(...suffixes: string[]): string | undefined {
@@ -28,9 +30,11 @@ function envBySuffix(...suffixes: string[]): string | undefined {
   return undefined;
 }
 
-const REDIS_URL = envBySuffix("UPSTASH_REDIS_REST_URL", "KV_REST_API_URL");
-const REDIS_TOKEN = envBySuffix("UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN");
-const hasRedis = Boolean(REDIS_URL && REDIS_TOKEN);
+const REST_URL = envBySuffix("UPSTASH_REDIS_REST_URL", "KV_REST_API_URL");
+const REST_TOKEN = envBySuffix("UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN");
+const hasRest = Boolean(REST_URL && REST_TOKEN);
+const TCP_URL = hasRest ? undefined : envBySuffix("REDIS_URL", "KV_URL");
+const hasRedis = hasRest || Boolean(TCP_URL);
 
 /**
  * Имена (не значения!) настроек, похожих на базу, — чтобы по странице
@@ -54,16 +58,16 @@ function warnOnce() {
   if (hasRedis || warned) return;
   warned = true;
   console.warn(
-    "[orders] UPSTASH_REDIS_REST_URL не задан — заказы хранятся в памяти процесса. " +
-      "Для боевого режима задайте переменные окружения (см. .env.example).",
+    "[orders] База не подключена — заказы хранятся в памяти процесса. " +
+      "Подключите Redis во вкладке Storage на Vercel (см. .env.example).",
   );
 }
 
-async function redis(command: unknown[]): Promise<unknown> {
-  const res = await fetch(REDIS_URL!, {
+async function restCommand(command: string[]): Promise<unknown> {
+  const res = await fetch(REST_URL!, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${REDIS_TOKEN}`,
+      Authorization: `Bearer ${REST_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(command),
@@ -74,6 +78,48 @@ async function redis(command: unknown[]): Promise<unknown> {
   }
   const data = (await res.json()) as { result?: unknown };
   return data.result;
+}
+
+// Одно подключение на весь процесс: функция на Vercel живёт какое-то
+// время между заказами, и переподключаться каждый раз незачем
+let tcpClient: Promise<ReturnType<typeof createClient>> | null = null;
+
+function getTcpClient() {
+  tcpClient ??= (async () => {
+    const client = createClient({ url: TCP_URL });
+    client.on("error", (error) => console.error("[orders] Redis:", error));
+    await client.connect();
+    return client;
+  })().catch((error) => {
+    // Не запоминаем неудачное подключение — следующий заказ попробует снова
+    tcpClient = null;
+    throw error;
+  });
+  return tcpClient;
+}
+
+async function redis(command: string[]): Promise<unknown> {
+  if (hasRest) return restCommand(command);
+  const client = await getTcpClient();
+  return client.sendCommand(command);
+}
+
+/** Отвечает ли база: для страницы проверки, заказов не трогает */
+export async function pingStorage(): Promise<"ok" | "нет базы" | string> {
+  if (!hasRedis) return "нет базы";
+  try {
+    const answer = await Promise.race([
+      redis(["PING"]),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("нет ответа за 5 секунд")), 5000),
+      ),
+    ]);
+    return answer === "PONG" ? "ok" : `неожиданный ответ: ${String(answer)}`;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    // Страница проверки открыта всем — адрес базы с паролем вырезаем
+    return `ошибка: ${message.replace(/rediss?:\/\/\S+/g, "[адрес базы]")}`;
+  }
 }
 
 const key = (id: string) => `order:${id}`;
