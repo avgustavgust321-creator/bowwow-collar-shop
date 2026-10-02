@@ -24,6 +24,14 @@ export const customerSchema = z.object({
   delivery: z.enum(deliveryIds),
   address: z.string().trim().max(300).optional(),
   comment: z.string().trim().max(1000).optional(),
+  /**
+   * Согласие на обработку данных, в том числе на передачу за границу
+   * (хостинг, база, Telegram). По закону — отдельной отметкой, поэтому
+   * без него сервер заказ не принимает.
+   */
+  consent: z.literal(true, {
+    error: "Нужно согласие на обработку персональных данных",
+  }),
 });
 
 export const checkoutInputSchema = z.object({

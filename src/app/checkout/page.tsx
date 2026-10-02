@@ -52,6 +52,7 @@ export default function CheckoutPage() {
         delivery,
         address: String(form.get("address") ?? ""),
         comment: String(form.get("comment") ?? ""),
+        consent: form.get("consent") === "on",
       },
       lines: lines.map((l) => ({
         slug: l.slug,
@@ -232,25 +233,38 @@ export default function CheckoutPage() {
             </span>
           </div>
 
-          <button
-            type="submit"
-            disabled={pending}
-            className="label mt-6 w-full bg-forest px-8 py-5 text-cream transition-colors hover:bg-forest-lift disabled:opacity-50"
-          >
-            {pending ? "Отправляем…" : "Оформить заказ"}
-          </button>
+          <label className="mt-5 flex cursor-pointer items-start gap-3 text-sm">
+            <input
+              type="checkbox"
+              name="consent"
+              required
+              className="mt-0.5 size-5 shrink-0 accent-forest"
+            />
+            <span>
+              Даю согласие на обработку моих персональных данных, в том числе
+              на их передачу за пределы Беларуси, на условиях{" "}
+              <Link href="/policy" className="underline hover:text-forest">
+                политики
+              </Link>
+              .
+            </span>
+          </label>
 
-          <p className="mt-4 text-xs text-muted">
-            Нажимая кнопку, вы соглашаетесь с{" "}
-            <Link href="/offer" className="underline">
-              условиями оферты
-            </Link>{" "}
-            и{" "}
-            <Link href="/policy" className="underline">
-              обработкой персональных данных
+          <p className="mt-4 text-sm text-muted">
+            Оформляя заказ, вы принимаете{" "}
+            <Link href="/offer" className="underline hover:text-forest">
+              условия оферты
             </Link>
             .
           </p>
+
+          <button
+            type="submit"
+            disabled={pending}
+            className="label mt-5 w-full bg-forest px-8 py-5 text-cream transition-colors hover:bg-forest-lift disabled:opacity-50"
+          >
+            {pending ? "Отправляем…" : "Оформить заказ"}
+          </button>
         </aside>
       </form>
     </section>

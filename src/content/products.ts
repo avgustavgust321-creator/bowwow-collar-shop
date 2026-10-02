@@ -315,12 +315,10 @@ const catalog = [
     ],
     photos: "5-miski/miska",
     placeholder: "pepa",
-    // ЗАПОЛНИТЬ: цены. Пока их нет, товар в режиме черновика (draft) —
-    // открывается по прямой ссылке, но не виден в каталоге и на главной.
     sizes: [
-      { code: "250 мл", price: 1 },
-      { code: "500 мл", price: 1 },
-      { code: "800 мл", price: 1 },
+      { code: "250 мл", price: 70 },
+      { code: "500 мл", price: 90 },
+      { code: "800 мл", price: 110 },
     ],
     price: null,
     leatherSlots: [
@@ -328,8 +326,8 @@ const catalog = [
       { id: "text", label: "Цвет надписи", palette: "plastic" as const, defaultColor: "oliva" },
     ],
     hardware: false,
+    // Длина надписи не ограничена — какой текст, такой и печатаем
     engraving: {
-      maxChars: 30, // ЗАПОЛНИТЬ: сколько знаков помещается по кругу
       price: 0,
       label: "Надпись на миске",
       placeholder: "Например, «Марта. Не делиться»",
@@ -339,7 +337,6 @@ const catalog = [
     productionDays: 7, // ЗАПОЛНИТЬ: реальный срок печати
     productionDaysMax: 10,
     livePreview: "bowl" as const,
-    draft: true,
   },
 ];
 

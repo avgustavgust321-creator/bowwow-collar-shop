@@ -18,7 +18,9 @@ export const configurationSchema = z.object({
   /** id слота кожи → id цвета */
   leather: z.record(z.string(), z.string()),
   hardware: z.string().optional(),
-  engraving: z.string().optional(),
+  // Потолок только от злоупотреблений: даже «без ограничений» —
+  // не роман на миске
+  engraving: z.string().max(300).optional(),
   /** Сколько шагов удлинения добавлено к базовой длине поводка */
   extraLength: z.number().int().min(0).max(20).optional(),
 });
@@ -166,7 +168,10 @@ export function validateConfiguration(
   if (engraving) {
     if (!product.engraving) {
       errors.push("Для этого изделия гравировка недоступна");
-    } else if (engraving.length > product.engraving.maxChars) {
+    } else if (
+      product.engraving.maxChars &&
+      engraving.length > product.engraving.maxChars
+    ) {
       errors.push(
         `${product.engraving.label ?? "Гравировка"}: не длиннее ${product.engraving.maxChars} символов`,
       );

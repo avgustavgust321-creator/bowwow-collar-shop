@@ -92,7 +92,8 @@ export const productSchema = z
      */
     engraving: z
       .object({
-        maxChars: z.number().int().positive(),
+        /** Не указано — длина текста не ограничена */
+        maxChars: z.number().int().positive().optional(),
         price: z.number().min(0),
         label: z.string().optional(),
         placeholder: z.string().optional(),

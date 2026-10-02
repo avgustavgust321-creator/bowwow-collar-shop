@@ -4,14 +4,10 @@ import {
   FooterBackgroundGradient,
   TextHoverEffect,
 } from "@/components/ui/hover-footer";
-import { footerNav, site } from "@/content/site";
+import { footerNav, isFilled, sellerLine, site } from "@/content/site";
 
-/**
- * Значение считается заполненным, пока в нём нет пометки ЗАПОЛНИТЬ
- * и шаблонных прочерков вроде «+375 (__) ___-__-__».
- */
-const filled = (value: string) =>
-  Boolean(value) && !value.includes("ЗАПОЛНИТЬ") && !value.includes("_");
+/** Пустые реквизиты и шаблоны вроде «+375 (__) ___-__-__» не показываем */
+const filled = isFilled;
 
 /**
  * Почта-заглушка стоит на домене, которого у бренда нет: письмо туда
@@ -92,10 +88,8 @@ export function Footer() {
         <div className="mt-14 flex flex-col gap-2 border-t border-line-dark pt-6 text-xs text-cream-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {site.name}
-            {filled(site.legal.entity) && `. ${site.legal.entity}`}
-            {filled(site.legal.unp) && `, УНП ${site.legal.unp}`}
+            {`. ${sellerLine()}`}
           </p>
-          {filled(site.legal.registry) && <p>{site.legal.registry}</p>}
         </div>
       </div>
 

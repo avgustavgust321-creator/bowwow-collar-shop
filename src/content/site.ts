@@ -25,14 +25,40 @@ export const site = {
     emailConfirmed: false,
   },
 
-  /** Реквизиты для юридических страниц и подвала */
+  /**
+   * Реквизиты для оферты, политики и подвала.
+   *
+   * Продавец — ремесленник: физическое лицо, не ИП. Сайт ремесленника по
+   * закону не интернет-магазин, поэтому в Торговом реестре не регистрируется
+   * (registry пустой и нигде не показывается).
+   */
   legal: {
-    entity: "ИП ЗАПОЛНИТЬ",
-    unp: "ЗАПОЛНИТЬ",
-    registry: "ЗАПОЛНИТЬ: дата и номер записи в Торговом реестре РБ",
-    address: "ЗАПОЛНИТЬ",
+    /** Фамилия, имя, отчество ремесленника — обязательны для покупателя */
+    fullName: "ЗАПОЛНИТЬ: фамилия, имя, отчество",
+    status: "ремесленник",
+    unp: "ВЕ7146962", // ЗАПОЛНИТЬ: сверить буквы с документом
+    address: "г. Брест",
+    registry: "",
   },
 } as const;
+
+/**
+ * Заполнено ли значение: без пометки ЗАПОЛНИТЬ и без «_» из шаблона
+ * телефона. Незаполненное на сайте не показываем — лучше пустое место,
+ * чем слово «ЗАПОЛНИТЬ» перед покупателем.
+ */
+export function isFilled(value: string | undefined): value is string {
+  return Boolean(value) && !value!.includes("ЗАПОЛНИТЬ") && !value!.includes("_");
+}
+
+/** Продавец одной строкой: «Ремесленник Иванова Анна Сергеевна, УНП …» */
+export function sellerLine(): string {
+  const { fullName, status, unp } = site.legal;
+  const who = isFilled(fullName)
+    ? `${status[0].toUpperCase()}${status.slice(1)} ${fullName}`
+    : `${status[0].toUpperCase()}${status.slice(1)}`;
+  return isFilled(unp) ? `${who}, УНП ${unp}` : who;
+}
 
 export const mainNav = [
   { href: "/catalog", label: "Каталог" },

@@ -354,13 +354,14 @@ export function Configurator({
               )}
             </h2>
             <span className="text-xs text-muted">
-              {engravingLength}/{product.engraving.maxChars}
+              {product.engraving.maxChars &&
+                `${engravingLength}/${product.engraving.maxChars}`}
             </span>
           </div>
           <input
             type="text"
             value={config.engraving ?? ""}
-            maxLength={product.engraving.maxChars}
+            maxLength={product.engraving.maxChars ?? 300}
             onChange={(e) => patch({ engraving: e.target.value })}
             aria-labelledby={engravingLabelId}
             placeholder={product.engraving.placeholder ?? "Например, Марта"}
