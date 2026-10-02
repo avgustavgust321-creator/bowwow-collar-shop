@@ -35,7 +35,7 @@
     Нарния         →  narnia.jpg
     Тиффани        →  tiffani.jpg
     Латунь         →  brass.jpg
-    Серебро        →  silver.jpg
+    Серебристая фурнитура →  silver.jpg
 
   Пластик — миски (это цвет самой миски):
     Белый          →  belyj.jpg

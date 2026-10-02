@@ -58,7 +58,9 @@ export const selectableLeatherColors = leatherColors.filter(
 );
 
 /**
- * Фурнитура. Латунь идёт по умолчанию, серебро — за доплату.
+ * Фурнитура. Латунь идёт по умолчанию, серебристая — за доплату и
+ * дольше: её заказывают отдельно. Это не серебро, а металл серебряного
+ * цвета — так и называем, чтобы не обещать драгоценный металл.
  * priceDelta прибавляется к цене изделия при расчёте.
  */
 export type HardwareOption = {
@@ -67,11 +69,13 @@ export type HardwareOption = {
   hex: string;
   /** Доплата в рублях; 0 — вариант по умолчанию */
   priceDelta: number;
+  /** На сколько дней дольше изготовление с этой фурнитурой */
+  extraDays?: number;
 };
 
 export const hardwareOptions: HardwareOption[] = [
   { id: "brass", name: "Латунь", hex: "#A9813E", priceDelta: 0 },
-  { id: "silver", name: "Серебро", hex: "#B9BCC0", priceDelta: 10 },
+  { id: "silver", name: "Серебряного цвета", hex: "#B9BCC0", priceDelta: 10, extraDays: 3 },
 ];
 
 export const hardwareById = new Map(hardwareOptions.map((h) => [h.id, h]));

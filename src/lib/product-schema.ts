@@ -16,6 +16,11 @@ export const sizeOptionSchema = z.object({
   price: z.number().positive(),
   /** Цена «от» — точную назовёт мастер после замеров */
   from: z.boolean().optional(),
+  /**
+   * Мерки, которые нужно указать при выборе этого размера. Так устроен
+   * Big Boss: размер открытый сверху, поэтому просим обхват шеи.
+   */
+  measure: z.array(z.enum(measurementIds)).min(1).optional(),
 });
 
 /**
@@ -82,7 +87,7 @@ export const productSchema = z
       .optional(),
     hardware: z.boolean(),
     /**
-     * Персональный текст: гравировка на бирке у ошейника, надпись на миске.
+     * Персональный текст: гравировка на ремне ошейника, надпись на миске.
      * label и placeholder меняют подписи поля под изделие.
      */
     engraving: z
@@ -111,6 +116,20 @@ export const productSchema = z
      * конструктора и корзины, только ссылка в личные сообщения.
      */
     viaInstagram: z.boolean().optional(),
+    /**
+     * Длина поводка: базовая и шаг удлинения с доплатой за каждый шаг.
+     * maxSteps — сколько шагов можно добавить на сайте.
+     */
+    length: z
+      .object({
+        base: z.number().positive(),
+        step: z.number().positive(),
+        pricePerStep: z.number().min(0),
+        maxSteps: z.number().int().positive(),
+      })
+      .optional(),
+    /** Пояснение в конструкторе — например, что ещё уточняется после заказа */
+    configNote: z.string().optional(),
     /** Живое превью изделия в выбранных цветах вместо заглушки */
     livePreview: z.enum(["bowl"]).optional(),
     /**

@@ -7,10 +7,11 @@ import { measurements } from "@/content/categories";
 import type { MeasurementId } from "@/content/categories";
 import { hardwareOptions } from "@/content/leather";
 import { colorOf, selectableColors } from "@/lib/palette";
-import { formatPrice, productionTerm } from "@/lib/catalog";
+import { formatLength, formatPrice, productionTerm } from "@/lib/catalog";
 import { cn } from "@/lib/cn";
 import {
   calcPrice,
+  extraProductionDays,
   validateConfiguration,
   type Configuration,
 } from "@/lib/price";
@@ -47,6 +48,42 @@ export function Configurator({
     }
     add(product.slug, config);
     setAdded(true);
+  };
+
+  const selectedSize = product.sizes?.find((s) => s.code === config.sizeCode);
+  const extraDays = extraProductionDays(product, config);
+
+  // Поле мерки — и для «своих замеров», и для размера, который сам
+  // просит мерку (Big Boss просит обхват шеи)
+  const measureField = (field: string) => {
+    const m = measurements[field as MeasurementId];
+    return (
+      <label key={field} className="flex flex-col gap-1">
+        <span className="label">{m.label}</span>
+        <span className="text-xs text-muted">{m.hint}</span>
+        <div className="mt-1 flex min-h-11 items-center border border-line bg-cream transition-colors focus-within:border-forest focus-within:shadow-[0_0_0_1px_var(--color-forest)]">
+          <input
+            type="number"
+            inputMode="decimal"
+            min={5}
+            max={150}
+            step={0.5}
+            value={config.measurements?.[field] ?? ""}
+            onChange={(e) =>
+              patch({
+                measurements: {
+                  ...config.measurements,
+                  [field]: e.target.value ? Number(e.target.value) : Number.NaN,
+                },
+              })
+            }
+            className="w-full bg-transparent px-3 py-2 text-ink outline-none"
+            placeholder="0"
+          />
+          <span className="label px-3 text-muted">см</span>
+        </div>
+      </label>
+    );
   };
 
   const engravingLength = config.engraving?.trim().length ?? 0;
@@ -122,42 +159,23 @@ export function Configurator({
                   )}
                 </button>
               ))}
+              {selectedSize?.measure && (
+                <div className="mt-2 grid w-full gap-4 sm:grid-cols-2">
+                  {selectedSize.measure.map(measureField)}
+                  <p className="text-sm text-muted sm:col-span-2">
+                    {selectedSize.code} шьётся под конкретную собаку — укажите
+                    мерку, и мастер подтвердит цену.{" "}
+                    <Link href="/sizing" className="underline hover:text-forest">
+                      Как измерить
+                    </Link>
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="mt-4 flex flex-col gap-4">
               <div className="grid gap-4 sm:grid-cols-2">
-                {product.customFit?.fields.map((field) => {
-                  const m = measurements[field as MeasurementId];
-                  return (
-                    <label key={field} className="flex flex-col gap-1">
-                      <span className="label">{m.label}</span>
-                      <span className="text-xs text-muted">{m.hint}</span>
-                      <div className="mt-1 flex min-h-11 items-center border border-line bg-cream transition-colors focus-within:border-forest focus-within:shadow-[0_0_0_1px_var(--color-forest)]">
-                        <input
-                          type="number"
-                          inputMode="decimal"
-                          min={5}
-                          max={150}
-                          step={0.5}
-                          value={config.measurements?.[field] ?? ""}
-                          onChange={(e) =>
-                            patch({
-                              measurements: {
-                                ...config.measurements,
-                                [field]: e.target.value
-                                  ? Number(e.target.value)
-                                  : Number.NaN,
-                              },
-                            })
-                          }
-                          className="w-full bg-transparent px-3 py-2 text-ink outline-none"
-                          placeholder="0"
-                        />
-                        <span className="label px-3 text-muted">см</span>
-                      </div>
-                    </label>
-                  );
-                })}
+                {product.customFit?.fields.map(measureField)}
               </div>
               <p className="border-l-2 border-gold bg-shell px-4 py-3 text-sm">
                 По индивидуальным замерам цена предварительная — мастер
@@ -257,14 +275,19 @@ export function Configurator({
                   style={{ backgroundColor: hw.hex }}
                 />
                 <span className="label">{hw.name}</span>
-                {hw.priceDelta > 0 && (
+                {(hw.priceDelta > 0 || hw.extraDays) && (
                   <span
                     className={cn(
                       "label",
                       config.hardware === hw.id ? "text-rose" : "text-forest",
                     )}
                   >
-                    +{formatPrice(hw.priceDelta)}
+                    {[
+                      hw.priceDelta > 0 && `+${formatPrice(hw.priceDelta)}`,
+                      hw.extraDays && `+${hw.extraDays} дня`,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
                   </span>
                 )}
               </button>
@@ -273,12 +296,57 @@ export function Configurator({
         </section>
       )}
 
+      {/* ── Длина ──────────────────────────────────────────── */}
+      {product.length && (
+        <section>
+          <h2 className="label text-muted">Длина</h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {Array.from({ length: product.length.maxSteps + 1 }, (_, steps) => {
+              const { base, step, pricePerStep } = product.length!;
+              const active = (config.extraLength ?? 0) === steps;
+              return (
+                <button
+                  key={steps}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => patch({ extraLength: steps })}
+                  className={cn(
+                    "flex min-h-11 min-w-20 flex-col items-start border px-3 py-2 text-left transition-colors",
+                    active
+                      ? "border-forest bg-forest text-cream"
+                      : "border-line hover:border-forest",
+                  )}
+                >
+                  <span className="label">{formatLength(base + steps * step)}</span>
+                  <span
+                    className={cn(
+                      "mt-1 text-xs",
+                      active ? "text-cream-muted" : "text-muted",
+                    )}
+                  >
+                    {steps === 0
+                      ? "стандарт"
+                      : `+${formatPrice(steps * pricePerStep)}`}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {product.configNote && (
+        <p className="border-l-2 border-gold bg-shell px-4 py-3 text-sm">
+          {product.configNote}
+        </p>
+      )}
+
       {/* ── Гравировка ─────────────────────────────────────── */}
       {product.engraving && (
         <section>
           <div className="flex items-baseline justify-between">
             <h2 id={engravingLabelId} className="label text-muted">
-              {product.engraving.label ?? "Гравировка на бирке"}
+              {product.engraving.label ?? "Гравировка"}
               {product.engraving.price > 0 && (
                 <span className="ml-3 text-forest">
                   +{formatPrice(product.engraving.price)}
@@ -327,7 +395,7 @@ export function Configurator({
           <p className="text-right text-sm text-muted">
             Изготовление
             <br />
-            {productionTerm(product)}
+            {productionTerm(product, extraDays)}
           </p>
         </div>
 

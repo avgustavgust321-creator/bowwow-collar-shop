@@ -38,6 +38,7 @@ export function lineKey(slug: string, config: Configuration): string {
     ),
     hardware: config.hardware ?? "",
     engraving: config.engraving?.trim() ?? "",
+    extraLength: config.extraLength ?? 0,
   };
   return `${slug}|${JSON.stringify(normalized)}`;
 }

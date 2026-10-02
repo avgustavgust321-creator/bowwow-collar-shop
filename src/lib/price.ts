@@ -2,6 +2,7 @@ import { z } from "zod";
 import { measurements } from "@/content/categories";
 import type { MeasurementId } from "@/content/categories";
 import { hardwareById } from "@/content/leather";
+import { formatLength } from "@/lib/catalog";
 import { colorOf } from "@/lib/palette";
 import type { Product } from "@/lib/product-schema";
 
@@ -18,6 +19,8 @@ export const configurationSchema = z.object({
   leather: z.record(z.string(), z.string()),
   hardware: z.string().optional(),
   engraving: z.string().optional(),
+  /** Сколько шагов удлинения добавлено к базовой длине поводка */
+  extraLength: z.number().int().min(0).max(20).optional(),
 });
 
 export type Configuration = z.infer<typeof configurationSchema>;
@@ -26,8 +29,10 @@ export type PriceBreakdown = {
   base: number;
   customFit: number;
   engraving: number;
-  /** Доплата за фурнитуру: латунь бесплатно, серебро дороже */
+  /** Доплата за фурнитуру: латунь бесплатно, серебристая дороже */
   hardware: number;
+  /** Доплата за удлинение поводка */
+  length: number;
   total: number;
   /** Цена предварительная: размер «от» или индивидуальные замеры */
   approximate: boolean;
@@ -78,14 +83,28 @@ export function calcPrice(
       ? hardwareById.get(config.hardware)?.priceDelta
       : 0) ?? 0;
 
+  const length = product.length
+    ? (config.extraLength ?? 0) * product.length.pricePerStep
+    : 0;
+
   return {
     base,
     customFit,
     engraving,
     hardware,
-    total: base + customFit + engraving + hardware,
+    length,
+    total: base + customFit + engraving + hardware + length,
     approximate,
   };
+}
+
+/** На сколько дней дольше шьётся изделие из-за выбранных опций */
+export function extraProductionDays(
+  product: Product,
+  config: Configuration,
+): number {
+  if (!product.hardware || !config.hardware) return 0;
+  return hardwareById.get(config.hardware)?.extraDays ?? 0;
 }
 
 /**
@@ -101,8 +120,16 @@ export function validateConfiguration(
 
   if (product.sizes) {
     if (config.fit === "grid") {
-      const known = product.sizes.some((s) => s.code === config.sizeCode);
-      if (!known) errors.push("Выберите размер");
+      const size = product.sizes.find((s) => s.code === config.sizeCode);
+      if (!size) errors.push("Выберите размер");
+      for (const field of size?.measure ?? []) {
+        const value = config.measurements?.[field];
+        if (typeof value !== "number" || Number.isNaN(value)) {
+          errors.push(
+            `Укажите для размера ${size!.code}: ${measurements[field as MeasurementId].label.toLowerCase()}`,
+          );
+        }
+      }
     } else if (!product.customFit) {
       errors.push("Для этого изделия нет индивидуальных замеров");
     }
@@ -126,6 +153,13 @@ export function validateConfiguration(
 
   if (product.hardware && (!config.hardware || !hardwareById.has(config.hardware))) {
     errors.push("Выберите фурнитуру");
+  }
+
+  if (product.length) {
+    const steps = config.extraLength ?? 0;
+    if (steps > product.length.maxSteps) errors.push("Такой длины нет");
+  } else if (config.extraLength) {
+    errors.push("Для этого изделия длина не выбирается");
   }
 
   const engraving = config.engraving?.trim();
@@ -152,6 +186,7 @@ export function defaultConfiguration(product: Product): Configuration {
     ),
     hardware: product.hardware ? "brass" : undefined,
     engraving: "",
+    extraLength: product.length ? 0 : undefined,
   };
 }
 
@@ -168,6 +203,16 @@ export function describeConfiguration(
         ? "Размер: по индивидуальным замерам"
         : `Размер: ${config.sizeCode}`,
     );
+    // Мерки, которые просит сам размер, — у Big Boss это обхват шеи
+    if (config.fit === "grid") {
+      const size = product.sizes.find((s) => s.code === config.sizeCode);
+      for (const field of size?.measure ?? []) {
+        const value = config.measurements?.[field];
+        if (value) {
+          parts.push(`${measurements[field as MeasurementId].label}: ${value} см`);
+        }
+      }
+    }
   }
 
   if (config.fit === "custom" && product.customFit) {
@@ -186,7 +231,17 @@ export function describeConfiguration(
 
   if (product.hardware && config.hardware) {
     const hw = hardwareById.get(config.hardware);
-    if (hw) parts.push(`Фурнитура: ${hw.name}`);
+    if (hw) {
+      parts.push(
+        `Фурнитура: ${hw.name.toLowerCase()}` +
+          (hw.extraDays ? ` (+${hw.extraDays} дня к сроку)` : ""),
+      );
+    }
+  }
+
+  if (product.length) {
+    const { base, step } = product.length;
+    parts.push(`Длина: ${formatLength(base + (config.extraLength ?? 0) * step)}`);
   }
 
   const engraving = config.engraving?.trim();

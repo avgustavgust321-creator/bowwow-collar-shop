@@ -52,6 +52,8 @@ const catalog = [
         price: 150,
         from: true,
         note: "от 50 см, усиленная фурнитура",
+        // Размер открыт сверху — шьём по обхвату шеи конкретной собаки
+        measure: ["neck"],
       },
     ],
     price: null,
@@ -61,8 +63,8 @@ const catalog = [
       { id: "lining", label: "Цвет подклада", defaultColor: "tiffani" },
     ],
     hardware: true,
-    engraving: { maxChars: 14, price: 10 },
-    customFit: { price: 0, fields: ["neck"] }, // ЗАПОЛНИТЬ цену
+    engraving: { maxChars: 25, price: 10, label: "Гравировка на ремне" },
+    customFit: null,
     productionDays: 7,
     productionDaysMax: 10,
   },
@@ -91,8 +93,8 @@ const catalog = [
     price: null,
     leatherSlots: [{ id: "outer", label: "Цвет кожи", defaultColor: "amster" }],
     hardware: true,
-    engraving: { maxChars: 14, price: 10 },
-    customFit: { price: 0, fields: ["neck"] }, // ЗАПОЛНИТЬ цену
+    engraving: { maxChars: 25, price: 10, label: "Гравировка на ремне" },
+    customFit: null,
     productionDays: 7,
     productionDaysMax: 10,
   },
@@ -112,7 +114,7 @@ const catalog = [
     description: [
       "Каталог — это то, что мы шьём чаще всего. Но кожа позволяет больше: широкий ошейник для борзой, замша с фигурной вставкой, два цвета встык, клетчатый подклад, тиснение имени.",
       "Пришлите нам в инстаграм фото-референс или опишите идею словами — там обсудим материал, цвета, размер и назовём точную цену.",
-      "Размер — по сетке или по вашим замерам, фурнитура — латунь или серебро. Шьём из той же итальянской кожи, что и всю линейку.",
+      "Размер — по сетке или по вашим замерам, фурнитура — латунная или серебряного цвета. Шьём из той же итальянской кожи, что и всю линейку.",
     ],
     photos: "1-oshejniki/na-zakaz",
     placeholder: "taxi",
@@ -155,7 +157,7 @@ const catalog = [
     sizes: [
       { code: "Small", note: "до 2,5 кг", price: 150 },
       { code: "Medium", note: "до 12 кг", price: 175 },
-      { code: "Large", price: 229 }, // ЗАПОЛНИТЬ note: до скольки кг
+      { code: "Large", note: "без ограничения по весу", price: 229 },
     ],
     price: null,
     leatherSlots: [
@@ -189,8 +191,13 @@ const catalog = [
     sizes: null,
     price: 99,
     leatherSlots: [
-      { id: "outer", label: "Цвет кожаных вставок", defaultColor: "nordik" },
+      // Обмотка — из той же кожи, что ошейники
+      { id: "outer", label: "Цвет кожаной обмотки", defaultColor: "nordik" },
     ],
+    length: { base: 1.3, step: 1, pricePerStep: 5, maxSteps: 3 },
+    // ЗАПОЛНИТЬ: цвета шнура — владелец пришлёт, тогда это станет выбором
+    configNote:
+      "Цвета шнура скоро появятся здесь. Пока напишите желаемый цвет в комментарии к заказу — или посмотрите варианты в инстаграме в актуальном.",
     hardware: true,
     engraving: null,
     customFit: null,
@@ -215,9 +222,12 @@ const catalog = [
     placeholder: "titanik",
     sizes: null,
     price: 80,
-    leatherSlots: [
-      { id: "outer", label: "Цвет кожаных вставок", defaultColor: "titanik" },
-    ],
+    // ЗАПОЛНИТЬ: цвета шнура и обмотки — владелец пришлёт, тогда
+    // они станут выбором вместо пояснения ниже
+    leatherSlots: [],
+    length: { base: 2.7, step: 1, pricePerStep: 5, maxSteps: 3 },
+    configNote:
+      "Цвета шнура и обмотки скоро появятся здесь. Пока напишите желаемые в комментарии к заказу — или посмотрите варианты в инстаграме в актуальном.",
     hardware: true,
     engraving: null,
     customFit: null,
@@ -242,8 +252,14 @@ const catalog = [
     sizes: null,
     price: 95,
     leatherSlots: [
-      { id: "outer", label: "Цвет кожи", defaultColor: "nordik" },
+      // Снаружи ручка всегда шоколадная, выбирается кожа внутри
+      { id: "outer", label: "Кожа снаружи", defaultColor: "chocolate", fixed: true },
+      { id: "inner", label: "Цвет кожи внутри ручки", defaultColor: "matrica" },
     ],
+    length: { base: 1.3, step: 1, pricePerStep: 5, maxSteps: 3 },
+    // ЗАПОЛНИТЬ: коричневый шнур — когда владелец пришлёт фото, добавить выбор
+    configNote:
+      "Шнур бежевый, скоро добавим коричневый. Хотите другой цвет из наличия — обсудим в инстаграме.",
     hardware: true,
     engraving: null,
     customFit: null,
@@ -260,14 +276,17 @@ const catalog = [
     summary: "Кожаный холдер для пакетов, который крепится прямо на поводок.",
     description: [
       "Компактный холдер для гигиенических пакетов — пристёгивается к поводку или к сумке и не болтается на ходу.",
-      "Из тех же обрезков кожи, что и основная линейка: каждый холдер получается в своём цвете.",
+      "Шьётся из коричневой кожи — той же, что и основная линейка.",
       "Приятный маленький подарок владельцу собаки.",
     ],
     photos: "4-aksessuary/holder-kruassan",
     placeholder: "taxi",
     sizes: null,
     price: 70,
-    leatherSlots: [{ id: "outer", label: "Цвет кожи", defaultColor: "taxi" }],
+    // Холдер шьётся только в одном цвете — коричневом
+    leatherSlots: [
+      { id: "outer", label: "Цвет кожи", defaultColor: "chocolate", fixed: true },
+    ],
     hardware: true,
     engraving: null,
     customFit: null,

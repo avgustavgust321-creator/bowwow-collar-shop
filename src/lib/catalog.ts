@@ -98,8 +98,19 @@ export function formatPrice(value: number): string {
   return `${value.toLocaleString("ru-BY")} р.`;
 }
 
-/** Срок изготовления: «7–10 дней», если задана верхняя граница, иначе «7 дней». */
-export function productionTerm(product: Product): string {
-  const { productionDays: min, productionDaysMax: max } = product;
+/**
+ * Срок изготовления: «7–10 дней», если задана верхняя граница, иначе
+ * «7 дней». extraDays — добавка за выбранные опции (фурнитура под заказ).
+ */
+export function productionTerm(product: Product, extraDays = 0): string {
+  const min = product.productionDays + extraDays;
+  const max = product.productionDaysMax
+    ? product.productionDaysMax + extraDays
+    : undefined;
   return max && max > min ? `${min}–${max} дней` : `${min} дней`;
+}
+
+/** Длина поводка по-русски: «2,7 м» */
+export function formatLength(meters: number): string {
+  return `${meters.toLocaleString("ru-BY", { maximumFractionDigits: 1 })} м`;
 }

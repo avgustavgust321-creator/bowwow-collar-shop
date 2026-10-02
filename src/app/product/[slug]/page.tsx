@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { ProductView } from "@/components/product/ProductView";
 import { categoryById } from "@/content/categories";
 import { site } from "@/content/site";
-import { selectableColors } from "@/lib/palette";
+import { colorOf, selectableColors } from "@/lib/palette";
 import {
   formatPrice,
   getProduct,
@@ -52,7 +52,17 @@ export default async function ProductPage({
   // Кожаное изделие или печатное — от этого зависят материал, число
   // цветов, ссылка на уход и обещание перешить по размеру
   const leather = (mainSlot(product)?.palette ?? "leather") === "leather";
-  const colorCount = selectableColors(mainSlot(product)?.palette).length;
+  const slot = mainSlot(product);
+  const colorCount = selectableColors(slot?.palette).length;
+  // Что писать в строке «Цвета»: число вариантов, единственный цвет
+  // модели или ничего, если цвет пока не выбирается на сайте
+  const colorsText = product.viaInstagram
+    ? "Любые — обсудим"
+    : !slot
+      ? null
+      : slot.fixed
+        ? (colorOf(slot.palette, slot.defaultColor)?.name ?? null)
+        : `${colorCount} вариантов`;
   const related = listedProducts
     .filter((p) => p.slug !== product.slug && p.category === product.category)
     .slice(0, 4);
@@ -197,14 +207,18 @@ export default async function ProductPage({
                 <dt className="label text-muted">Изготовление</dt>
                 <dd className="mt-1">{productionTerm(product)}</dd>
               </div>
-              <div>
-                <dt className="label text-muted">
-                  {leather ? "Цвета кожи" : "Цвета"}
-                </dt>
-                <dd className="mt-1">
-                  {product.viaInstagram ? "Любые — обсудим" : `${colorCount} вариантов`}
-                </dd>
-              </div>
+              {colorsText && (
+                <div>
+                  <dt className="label text-muted">
+                    {slot?.fixed
+                      ? "Цвет кожи"
+                      : leather
+                        ? "Цвета кожи"
+                        : "Цвета"}
+                  </dt>
+                  <dd className="mt-1">{colorsText}</dd>
+                </div>
+              )}
               {leather && (
                 <div>
                   <dt className="label text-muted">Уход</dt>
