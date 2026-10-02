@@ -3,19 +3,37 @@
 import Link from "next/link";
 import { useId, useMemo, useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
-import { measurements } from "@/content/categories";
+import { categoryById, measurements } from "@/content/categories";
 import type { MeasurementId } from "@/content/categories";
 import { hardwareOptions } from "@/content/leather";
+import { site } from "@/content/site";
 import { colorOf, selectableColors } from "@/lib/palette";
 import { formatPrice, productionTerm } from "@/lib/catalog";
 import { cn } from "@/lib/cn";
 import {
   calcPrice,
+  describeConfiguration,
   IDEA_MIN_CHARS,
   validateConfiguration,
   type Configuration,
 } from "@/lib/price";
 import type { Product } from "@/lib/product-schema";
+
+/**
+ * Текст для личных сообщений инстаграма. Подставить его в переписку
+ * ссылкой инстаграм не даёт, поэтому кнопка кладёт его в буфер обмена.
+ */
+function briefMessage(product: Product, config: Configuration): string {
+  return [
+    `Здравствуйте! Хочу заказать ${
+      categoryById.get(product.category)?.single.toLowerCase() ?? "изделие"
+    } по своей идее:`,
+    "",
+    ...describeConfiguration(product, config).map((line) => `• ${line}`),
+    "",
+    `(с сайта ${site.name})`,
+  ].join("\n");
+}
 
 export function Configurator({
   product,
@@ -29,6 +47,11 @@ export function Configurator({
   const { add } = useCart();
   const [added, setAdded] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
+  // Удалось ли положить описание в буфер: если нет, показываем текст,
+  // чтобы его можно было скопировать руками
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "manual">(
+    "idle",
+  );
 
   const price = useMemo(() => calcPrice(product, config), [product, config]);
   const errors = useMemo(
@@ -39,6 +62,27 @@ export function Configurator({
   const patch = (next: Partial<Configuration>) => {
     onChange({ ...config, ...next });
     setAdded(false);
+    setCopyState("idle");
+  };
+
+  const message = product.brief ? briefMessage(product, config) : "";
+
+  const handleInstagram = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (errors.length > 0) {
+      event.preventDefault();
+      setShowErrors(true);
+      return;
+    }
+    // Ссылка открывается сразу, не дожидаясь буфера: иначе браузер
+    // на телефоне посчитает новую вкладку всплывающим окном и заблокирует
+    if (!navigator.clipboard) {
+      setCopyState("manual");
+      return;
+    }
+    navigator.clipboard
+      .writeText(message)
+      .then(() => setCopyState("copied"))
+      .catch(() => setCopyState("manual"));
   };
 
   const handleAdd = () => {
@@ -283,9 +327,9 @@ export function Configurator({
               className="field mt-3"
             />
             <p className="mt-3 border-l-2 border-gold bg-shell px-4 py-3 text-sm">
-              После заказа мастер свяжется с вами, обсудит детали и назовёт
-              точную цену. Платить ничего не нужно, пока вы не договоритесь
-              о деталях.
+              Обсуждаем в инстаграме {site.contacts.instagramHandle}: мастер
+              уточнит детали и назовёт точную цену. Платить ничего не нужно,
+              пока вы не договоритесь.
             </p>
           </section>
         </>
@@ -428,7 +472,9 @@ export function Configurator({
       <section className="border-t border-line pt-6">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="label text-muted">Итого</p>
+            <p className="label text-muted">
+              {product.brief ? "Ориентир по цене" : "Итого"}
+            </p>
             <p className="display mt-1 text-4xl">
               {product.draft ? (
                 <span className="text-muted">скоро</span>
@@ -457,7 +503,37 @@ export function Configurator({
           </ul>
         )}
 
-        {product.draft ? (
+        {product.brief ? (
+          <>
+            <a
+              href={site.contacts.instagramDirect}
+              target="_blank"
+              rel="noreferrer"
+              onClick={handleInstagram}
+              className="label mt-6 flex w-full items-center justify-center gap-3 bg-forest px-8 py-5 text-cream transition-colors hover:bg-forest-lift"
+            >
+              Обсудить в инстаграме
+              <span aria-hidden>→</span>
+            </a>
+            <p className="mt-3 text-center text-sm text-muted" aria-live="polite">
+              {copyState === "copied"
+                ? "Описание скопировано — вставьте его в сообщение."
+                : copyState === "manual"
+                  ? "Не получилось скопировать само — скопируйте текст ниже."
+                  : "Описание скопируется само, останется вставить его в сообщение."}
+            </p>
+            {copyState === "manual" && (
+              <textarea
+                readOnly
+                rows={8}
+                value={message}
+                aria-label="Описание идеи для сообщения"
+                onFocus={(e) => e.currentTarget.select()}
+                className="field mt-3 text-sm"
+              />
+            )}
+          </>
+        ) : product.draft ? (
           <p className="label mt-6 w-full border border-line px-8 py-5 text-center text-muted">
             Скоро в продаже
           </p>

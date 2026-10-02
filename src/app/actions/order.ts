@@ -52,6 +52,13 @@ export async function submitOrder(input: unknown): Promise<CheckoutResult> {
       continue;
     }
 
+    // Ошейник по идее покупателя обсуждается в инстаграме, а не
+    // оформляется корзиной: цену мастер называет после разговора
+    if (product.brief) {
+      errors.push(`${product.title}: обсуждается в инстаграме, через корзину не оформляется`);
+      continue;
+    }
+
     const configErrors = validateConfiguration(product, line.config);
     if (configErrors.length > 0) {
       errors.push(`${product.title}: ${configErrors.join(", ")}`);

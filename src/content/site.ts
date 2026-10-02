@@ -16,6 +16,8 @@ export const site = {
   contacts: {
     instagram: "https://www.instagram.com/bow_wow_collar/",
     instagramHandle: "@bow_wow_collar",
+    /** Прямая ссылка в личные сообщения — открывает переписку с брендом */
+    instagramDirect: "https://ig.me/m/bow_wow_collar",
     telegram: "https://t.me/bowwow", // ЗАПОЛНИТЬ
     phone: "+375 (__) ___-__-__", // ЗАПОЛНИТЬ
     email: "hello@bowwow.by", // ЗАПОЛНИТЬ

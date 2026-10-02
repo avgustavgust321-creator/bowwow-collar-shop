@@ -220,8 +220,8 @@ export default function HomePage() {
                 </h3>
                 <p className="mt-4 max-w-md text-cream-muted">
                   Замша, два цвета, фигурные вставки, клетка, тиснение имени —
-                  в одном экземпляре. Опишите идею, мастер свяжется и назовёт
-                  цену.
+                  в одном экземпляре. Опишите идею — обсудим её в инстаграме
+                  и назовём цену.
                 </p>
                 <p className="label mt-7 inline-flex items-center gap-3 text-rose">
                   Описать идею
