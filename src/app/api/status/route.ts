@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { telegramConfigured } from "@/lib/notify";
-import { storageMode } from "@/lib/orders/store";
+import { storageEnvNames, storageMode } from "@/lib/orders/store";
 
 /**
  * Проверка настроек: подключены ли хранилище заказов и Telegram.
@@ -14,6 +14,8 @@ export function GET() {
       ready: storage === "redis" && telegram,
       orders: storage === "redis" ? "сохраняются в базе" : "НЕ сохраняются (нет базы)",
       telegram: telegram ? "подключён" : "не подключён",
+      // Только имена настроек — значения никогда не показываем
+      storageSettingsFound: storageEnvNames(),
     },
     { headers: { "Cache-Control": "no-store" } },
   );

@@ -13,11 +13,34 @@ import type { Order, OrderStatus } from "@/lib/orders/types";
 // Если базу подключить через вкладку Storage на Vercel, он сам кладёт
 // адрес и ключ под именами KV_REST_API_*. Принимаем оба варианта, чтобы
 // ничего не переписывать руками.
-const REDIS_URL =
-  process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
-const REDIS_TOKEN =
-  process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+// При подключении Vercel разрешает добавить к именам свою приставку
+// (например STORAGE_KV_REST_API_URL), поэтому ищем и по окончанию имени.
+function envBySuffix(...suffixes: string[]): string | undefined {
+  for (const suffix of suffixes) {
+    if (process.env[suffix]) return process.env[suffix];
+  }
+  for (const suffix of suffixes) {
+    const name = Object.keys(process.env).find(
+      (n) => n.endsWith(`_${suffix}`) && process.env[n],
+    );
+    if (name) return process.env[name];
+  }
+  return undefined;
+}
+
+const REDIS_URL = envBySuffix("UPSTASH_REDIS_REST_URL", "KV_REST_API_URL");
+const REDIS_TOKEN = envBySuffix("UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN");
 const hasRedis = Boolean(REDIS_URL && REDIS_TOKEN);
+
+/**
+ * Имена (не значения!) настроек, похожих на базу, — чтобы по странице
+ * проверки было видно, что Vercel подключил, если сайт базу не нашёл.
+ */
+export function storageEnvNames(): string[] {
+  return Object.keys(process.env)
+    .filter((n) => /REDIS|KV_|UPSTASH/.test(n))
+    .sort();
+}
 
 /** Где сейчас живут заказы — для страницы проверки настроек */
 export function storageMode(): "redis" | "memory" {
