@@ -20,7 +20,8 @@ export const customerSchema = z.object({
       /^\+?[\d\s()-]{7,20}$/,
       "Телефон в формате +375 XX XXX-XX-XX",
     ),
-  email: z.email("Проверьте адрес почты"),
+  // Почта по желанию: для отправки мастеру нужны ФИО, телефон и адрес
+  email: z.union([z.literal(""), z.email("Проверьте адрес почты")]).optional(),
   delivery: z.enum(deliveryIds),
   address: z.string().trim().max(300).optional(),
   comment: z.string().trim().max(1000).optional(),

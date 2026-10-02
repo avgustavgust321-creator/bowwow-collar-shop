@@ -14,6 +14,7 @@ import {
   PawPrint,
   Ruler,
   Shield,
+  Soup,
   Sparkles,
   Truck,
 } from "lucide-react";
@@ -175,10 +176,10 @@ export function Header() {
 
               <NavigationMenuLink asChild>
                 <Link
-                  href="/collections"
+                  href="/dogs"
                   className="label rounded-xs px-4 py-2 hover:bg-accent"
                 >
-                  Коллекции
+                  Собаки
                 </Link>
               </NavigationMenuLink>
             </NavigationMenuList>
@@ -355,16 +356,16 @@ const catalogLinks: LinkItem[] = [
     icon: Sparkles,
   },
   {
+    title: "Миски",
+    href: "/catalog?category=bowls",
+    description: "3D-печать, ваш цвет и надпись",
+    icon: Soup,
+  },
+  {
     title: "Весь каталог",
     href: "/catalog",
     description: "Все изделия сразу",
     icon: BookOpen,
-  },
-  {
-    title: "Коллекции",
-    href: "/collections",
-    description: "Изделия, собранные по линейкам",
-    icon: Droplets,
   },
 ];
 

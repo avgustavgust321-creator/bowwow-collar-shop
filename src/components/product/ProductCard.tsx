@@ -32,23 +32,27 @@ export function ProductCard({
           className="transition-transform duration-[1200ms] group-hover:scale-[1.04]"
         />
         {product.badge && (
-          <span className="label absolute top-6 left-6 z-10 -rotate-3 bg-rose px-3 py-1.5 text-forest shadow-card">
+          <span className="label absolute top-3 left-3 z-10 max-w-[calc(100%-1.5rem)] -rotate-3 bg-rose px-2 py-1 text-forest shadow-card sm:top-6 sm:left-6 sm:px-3 sm:py-1.5">
             {product.badge}
           </span>
         )}
       </div>
 
-      <div className="flex flex-1 flex-col p-5 md:p-6">
+      {/* На телефоне карточки идут в две колонки: описание прячем,
+          заголовок и цену делаем мельче, чтобы карточка не вытягивалась */}
+      <div className="flex flex-1 flex-col p-3 sm:p-5 md:p-6">
         {product.collection && (
           <p className="label text-muted">{product.collection}</p>
         )}
-        <h3 className="display mt-2 text-2xl text-ink">{product.title}</h3>
-        <p className="mt-2 line-clamp-2 text-sm text-muted">
+        <h3 className="display mt-1.5 text-lg leading-snug text-ink sm:mt-2 sm:text-2xl">
+          {product.title}
+        </h3>
+        <p className="mt-2 hidden text-sm text-muted sm:line-clamp-2">
           {product.summary}
         </p>
-        <div className="mt-auto flex items-baseline justify-between gap-3 pt-5">
-          <p className="display text-2xl text-ink">
-            {price.from && <span className="text-base text-muted">от </span>}
+        <div className="mt-auto flex items-baseline justify-between gap-3 pt-3 sm:pt-5">
+          <p className="display text-xl text-ink sm:text-2xl">
+            {price.from && <span className="text-sm text-muted sm:text-base">от </span>}
             {formatPrice(price.value)}
           </p>
           <span

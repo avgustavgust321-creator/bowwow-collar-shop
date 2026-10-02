@@ -5,7 +5,6 @@ import { listedProducts as products } from "@/lib/catalog";
 const staticPaths = [
   "",
   "/catalog",
-  "/collections",
   "/sizing",
   "/care",
   "/delivery",

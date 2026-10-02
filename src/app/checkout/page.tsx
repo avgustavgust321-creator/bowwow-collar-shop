@@ -82,7 +82,8 @@ export default function CheckoutPage() {
     <section className="wrap px-5 py-10 md:px-10">
       <h1 className="display text-4xl md:text-6xl">Оформление</h1>
       <p className="mt-3 text-sm text-muted">
-        Все поля, кроме комментария, обязательные.
+        Для отправки нужны ФИО, телефон и адрес отделения Европочты. Почта и
+        комментарий — по желанию.
       </p>
 
       {errors.length > 0 && (
@@ -117,11 +118,15 @@ export default function CheckoutPage() {
                 />
               </label>
               <label className="flex flex-col gap-1">
-                <span className="label">Почта</span>
+                <span className="label">
+                  Почта{" "}
+                  <span className="normal-case tracking-normal text-muted">
+                    (необязательно)
+                  </span>
+                </span>
                 <input
                   name="email"
                   type="email"
-                  required
                   autoComplete="email"
                   className={fieldClass}
                 />

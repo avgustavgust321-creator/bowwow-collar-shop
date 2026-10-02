@@ -62,7 +62,6 @@ export function sellerLine(): string {
 
 export const mainNav = [
   { href: "/catalog", label: "Каталог" },
-  { href: "/collections", label: "Коллекции" },
   { href: "/sizing", label: "Как замерить" },
   { href: "/dogs", label: "Собаки" },
   { href: "/about", label: "О бренде" },
@@ -77,6 +76,7 @@ export const footerNav = [
       { href: "/catalog?category=harnesses", label: "Шлейки" },
       { href: "/catalog?category=leashes", label: "Поводки" },
       { href: "/catalog?category=accessories", label: "Аксессуары" },
+      { href: "/catalog?category=bowls", label: "Миски" },
     ],
   },
   {
@@ -93,7 +93,6 @@ export const footerNav = [
     links: [
       { href: "/about", label: "О мастерской" },
       { href: "/dogs", label: "Собаки" },
-      { href: "/collections", label: "Коллекции" },
       { href: "/offer", label: "Публичная оферта" },
       { href: "/policy", label: "Обработка данных" },
     ],

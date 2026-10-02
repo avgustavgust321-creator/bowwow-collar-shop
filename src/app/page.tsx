@@ -80,7 +80,7 @@ function PriceTag({ product, className }: { product: Product; className?: string
       <span className="display text-2xl leading-none md:text-3xl">
         {formatPrice(price.value).replace(" р.", "")}
       </span>
-      <span className="label">руб.</span>
+      <span className="label">р.</span>
     </span>
   );
 }
@@ -303,7 +303,7 @@ export default function HomePage() {
           </h2>
           <p className="mt-6 max-w-md text-cream-muted">
             Имена придуманы в мастерской и прижились — клиенты так и заказывают:
-            «Слизерин с подкладом Тиффани».
+            «однотонный Слизерин» или «подклад Тиффани».
           </p>
         </div>
 

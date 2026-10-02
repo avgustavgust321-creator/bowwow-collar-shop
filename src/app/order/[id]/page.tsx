@@ -48,9 +48,8 @@ export default async function OrderPage({
         <p className="label text-forest">Спасибо за заказ</p>
         <h1 className="display mt-3 text-4xl md:text-6xl">Заказ {order.id}</h1>
         <p className="mt-4 text-muted">
-          {statusText[order.status]}. Мы напишем вам на{" "}
-          {order.customer.email} и позвоним на {order.customer.phone}, чтобы
-          подтвердить детали.
+          {statusText[order.status]}. Мастер свяжется с вами по телефону{" "}
+          {order.customer.phone}, чтобы подтвердить детали.
         </p>
 
         {notice && (

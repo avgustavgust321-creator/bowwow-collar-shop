@@ -32,7 +32,7 @@ function orderText(order: Order): string {
     "",
     `Имя: ${order.customer.name}`,
     `Телефон: ${order.customer.phone}`,
-    `Почта: ${order.customer.email}`,
+    order.customer.email ? `Почта: ${order.customer.email}` : null,
     order.customer.comment ? `Комментарий: ${order.customer.comment}` : null,
     order.approximate
       ? "\n⚠ В заказе есть позиции с предварительной ценой — подтвердите сумму клиенту."
@@ -74,7 +74,7 @@ async function sendTelegram(order: Order): Promise<void> {
 async function sendEmail(order: Order): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.ORDER_EMAIL_FROM;
-  if (!apiKey || !from) return;
+  if (!apiKey || !from || !order.customer.email) return;
 
   const html = `
     <div style="font-family:system-ui,sans-serif;max-width:560px">

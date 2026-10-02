@@ -73,7 +73,7 @@ export default function DogsPage() {
         </ul>
       </section>
 
-      <section className="leather-texture -mb-20 px-5 py-16 text-cream md:px-10 md:py-20">
+      <section className="leather-texture -mb-20 bg-forest px-5 py-16 text-cream on-dark md:px-10 md:py-20">
         <div className="wrap flex flex-col items-start gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="hand -rotate-3 text-3xl text-gold-light md:text-4xl">
