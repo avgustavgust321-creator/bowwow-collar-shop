@@ -240,11 +240,16 @@ dd {
     0 22px 44px -22px rgba(20, 41, 29, 0.38);
 }
 
-/** Фактура кожи на тёмно-зелёных блоках */
+/**
+ * Изумрудная замша на тёмно-зелёных блоках — фото, которое прислал
+ * владелец. Цвет блока остаётся запасным, пока картинка грузится.
+ * Контраст проверен по самым светлым пятнам замши: кремовый текст
+ * 7,9:1, приглушённый 5,0:1 — затемнять фото не нужно.
+ */
 @utility leather-texture {
-  background-image: url(/images/sajt/faktury/leather-grain.png);
-  background-size: 260px 260px;
-  background-blend-mode: soft-light;
+  background-image: url(/images/sajt/faktury/kozha-fon.jpg);
+  background-size: cover;
+  background-position: center;
 }
 
 /** Медленное вращение кольца печати */
