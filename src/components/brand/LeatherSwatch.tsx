@@ -30,8 +30,12 @@ export function LeatherSwatch({
         aria-hidden
         className="absolute inset-0 mix-blend-overlay opacity-70"
         style={{
-          backgroundImage: "url(/images/sajt/faktury/leather-grain.png)",
-          backgroundSize: "150px 150px",
+          // Бесшовная плитка: исходное зерно, отражённое в квадрат 2×2.
+          // Прежняя плитка повторялась каждые 150 px, и на высоких полосах
+          // веера образцов её края складывались в горизонтальные стыки.
+          // Масштаб зерна тот же: плитка вдвое больше и рисуется вдвое крупнее.
+          backgroundImage: "url(/images/sajt/faktury/leather-grain-seamless.webp)",
+          backgroundSize: "300px 300px",
         }}
       />
       {/* Мягкий блик сверху — кожа отражает свет, плоская заливка нет */}
