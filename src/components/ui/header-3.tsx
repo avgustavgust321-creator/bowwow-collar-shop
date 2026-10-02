@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
+  Dog,
   Droplets,
   FileText,
   HelpCircle,
@@ -377,7 +378,7 @@ const helpLinks: LinkItem[] = [
   {
     title: "Доставка и оплата",
     href: "/delivery",
-    description: "Европочта, курьер, самовывоз",
+    description: "Европочта и курьер по Бресту",
     icon: Truck,
   },
   {
@@ -390,6 +391,7 @@ const helpLinks: LinkItem[] = [
 
 const aboutLinks: LinkItem[] = [
   { title: "О мастерской", href: "/about", icon: PawPrint },
+  { title: "Собаки в наших вещах", href: "/dogs", icon: Dog },
   { title: "Частые вопросы", href: "/faq", icon: HelpCircle },
   { title: "Публичная оферта", href: "/offer", icon: FileText },
   { title: "Обработка данных", href: "/policy", icon: Shield },

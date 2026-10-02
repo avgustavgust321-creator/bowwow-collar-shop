@@ -36,6 +36,7 @@ export const mainNav = [
   { href: "/catalog", label: "Каталог" },
   { href: "/collections", label: "Коллекции" },
   { href: "/sizing", label: "Как замерить" },
+  { href: "/dogs", label: "Собаки" },
   { href: "/about", label: "О бренде" },
   { href: "/faq", label: "Вопросы" },
 ] as const;
@@ -63,6 +64,7 @@ export const footerNav = [
     title: "Бренд",
     links: [
       { href: "/about", label: "О мастерской" },
+      { href: "/dogs", label: "Собаки" },
       { href: "/collections", label: "Коллекции" },
       { href: "/offer", label: "Публичная оферта" },
       { href: "/policy", label: "Обработка данных" },

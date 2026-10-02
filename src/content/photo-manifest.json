@@ -6,6 +6,11 @@
     "4-tisnenie.jpg",
     "5-na-sobake.jpg",
     "6-dva-cveta.jpg",
+    "7-studiya.jpg",
+    "8-s-adresnikom.jpg",
+    "9-bigl.jpg",
+    "10-na-snegu.jpg",
+    "11-shchenok.jpg",
     "amster.jpg",
     "lilu.jpg",
     "matrica.jpg",
@@ -15,8 +20,6 @@
     "pepa.jpg",
     "slizerin.jpg",
     "taxi.jpg",
-    "tiffani-2.jpg",
-    "tiffani-3.jpg",
     "tiffani.jpg",
     "titanik.jpg",
     "ulun.jpg",
@@ -29,6 +32,9 @@
     "4-rozovyj-fon.jpg",
     "5-v-ruke.jpg",
     "6-podklad.jpg",
+    "7-studiya.jpg",
+    "8-sboku.jpg",
+    "9-na-mashine.jpg",
     "amster.jpg",
     "lilu.jpg",
     "matrica.jpg",
@@ -38,10 +44,7 @@
     "pepa.jpg",
     "slizerin.jpg",
     "taxi.jpg",
-    "tiffani-2.jpg",
-    "tiffani-3.jpg",
     "tiffani.jpg",
-    "titanik-2.jpg",
     "titanik.jpg",
     "ulun.jpg"
   ],
@@ -52,10 +55,36 @@
     "4-pryazhka.jpg",
     "5-seraya.jpg",
     "6-zelenaya.jpg",
-    "7-chihuahua.jpg"
+    "7-chihuahua.jpg",
+    "8-v-ruke.jpg",
+    "9-s-povodkom.jpg",
+    "10-spina.jpg",
+    "11-szadi.jpg"
   ],
-  "3-povodki/lap": [],
-  "3-povodki/perestezhka": [],
+  "3-povodki/lap": [
+    "1-ruchka.jpg",
+    "2-svetlyj-shnur.jpg",
+    "3-vstavki.jpg",
+    "4-v-lesu.jpg",
+    "5-kistochka.jpg",
+    "6-na-pudele.jpg",
+    "7-na-bulli.jpg",
+    "8-karabin.jpg"
+  ],
+  "3-povodki/perestezhka": [
+    "1-sinij.jpg",
+    "2-korallovyj.jpg",
+    "3-zheltyj.jpg",
+    "4-molochnyj.jpg",
+    "5-s-oshejnikom.jpg",
+    "6-malinovyj.jpg",
+    "7-v-ruke.jpg",
+    "8-obmotka.jpg",
+    "9-temnyj.jpg",
+    "10-zelenyj.jpg",
+    "11-konyushnya.jpg",
+    "12-na-bulli.jpg"
+  ],
   "3-povodki/s-ploskoj-ruchkoj": [
     "1-na-bagazhnike.jpg",
     "2-cveta.jpg",
@@ -75,8 +104,8 @@
     "5-belyj.jpg"
   ],
   "5-miski/miska": [
+    "0-miska.jpg",
     "1-nadpis.jpg",
-    "2-dva-cveta.jpg",
-    "rozovyj.jpg"
+    "2-dva-cveta.jpg"
   ]
 }

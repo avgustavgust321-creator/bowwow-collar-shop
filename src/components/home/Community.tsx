@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { communityPhotos } from "@/content/community";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
@@ -51,15 +52,27 @@ export function Community() {
             Их <em className="text-gold-ink">собаки</em>
           </h2>
         </div>
-        <a
-          href={site.contacts.instagram}
-          target="_blank"
-          rel="noreferrer"
-          className="label inline-flex min-h-11 items-center gap-2 border-b border-gold transition-colors hover:border-forest hover:text-forest"
-        >
-          <InstagramMark className="size-4" />
-          {site.contacts.instagramHandle}
-        </a>
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
+          <a
+            href={site.contacts.instagram}
+            target="_blank"
+            rel="noreferrer"
+            className="label inline-flex min-h-11 items-center gap-2 border-b border-gold transition-colors hover:border-forest hover:text-forest"
+          >
+            <InstagramMark className="size-4" />
+            {site.contacts.instagramHandle}
+          </a>
+          {/* Здесь только четыре кадра — остальные собаки на своей странице */}
+          <Link
+            href="/dogs"
+            className="label group inline-flex min-h-11 items-center gap-2 border-b border-gold transition-colors hover:border-forest hover:text-forest"
+          >
+            Все собаки
+            <span aria-hidden className="transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </Link>
+        </div>
       </div>
 
       <ul className="wrap mt-14 grid grid-cols-2 gap-5 md:grid-cols-4 md:gap-8">
