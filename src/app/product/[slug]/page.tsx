@@ -186,7 +186,7 @@ export default async function ProductPage({
               <div>
                 <dt className="label text-muted">Материал</dt>
                 <dd className="mt-1">
-                  {product.brief
+                  {product.viaInstagram
                     ? "Итальянская кожа, замша"
                     : leather
                       ? "Итальянская кожа"
@@ -202,7 +202,7 @@ export default async function ProductPage({
                   {leather ? "Цвета кожи" : "Цвета"}
                 </dt>
                 <dd className="mt-1">
-                  {product.brief ? "Любые — обсудим" : `${colorCount} вариантов`}
+                  {product.viaInstagram ? "Любые — обсудим" : `${colorCount} вариантов`}
                 </dd>
               </div>
               {leather && (
@@ -223,7 +223,7 @@ export default async function ProductPage({
         </div>
       </section>
 
-      {product.brief && (
+      {product.viaInstagram && (
         <section className="border-t border-line px-5 py-16 md:px-10 md:py-24">
           <div className="wrap">
             <p className="hand -rotate-3 text-3xl text-gold-ink md:text-4xl">
@@ -240,8 +240,8 @@ export default async function ProductPage({
 
             <ol className="mt-16 grid gap-px border border-line bg-line md:grid-cols-3">
               {[
-                ["Идея", "Опишите, каким видите ошейник: цвета, материал, настроение. Хватит пары предложений или ссылки на картинку."],
-                ["Инстаграм", `Нажмите «Обсудить в инстаграме» — описание скопируется, откроется переписка с ${site.contacts.instagramHandle}. Там уточним детали и назовём цену.`],
+                ["Референс", `Пришлите в инстаграм ${site.contacts.instagramHandle} фото ошейника, который нравится, или опишите идею словами.`],
+                ["Обсуждение", "В переписке уточним материал, цвета, размер и назовём точную цену. До этого платить ничего не нужно."],
                 ["Шьём", `Раскрой, строчка, ручная доводка — ${productionTerm(product)}. Потом отправляем европочтой или курьером по Бресту.`],
               ].map(([title, text], i) => (
                 <li key={title} className="bg-cream p-6 md:p-8">

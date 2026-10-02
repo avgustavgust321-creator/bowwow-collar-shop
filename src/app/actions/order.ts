@@ -54,7 +54,7 @@ export async function submitOrder(input: unknown): Promise<CheckoutResult> {
 
     // Ошейник по идее покупателя обсуждается в инстаграме, а не
     // оформляется корзиной: цену мастер называет после разговора
-    if (product.brief) {
+    if (product.viaInstagram) {
       errors.push(`${product.title}: обсуждается в инстаграме, через корзину не оформляется`);
       continue;
     }

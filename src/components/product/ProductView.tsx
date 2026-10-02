@@ -4,7 +4,8 @@ import { useState } from "react";
 import { BowlPreview } from "@/components/product/BowlPreview";
 import { Configurator } from "@/components/product/Configurator";
 import { ProductGallery } from "@/components/product/ProductGallery";
-import { formatPrice, mainSlot, priceFrom } from "@/lib/catalog";
+import { site } from "@/content/site";
+import { formatPrice, mainSlot, priceFrom, productionTerm } from "@/lib/catalog";
 import { colorOf } from "@/lib/palette";
 import { defaultConfiguration, type Configuration } from "@/lib/price";
 import type { Product } from "@/lib/product-schema";
@@ -77,13 +78,40 @@ export function ProductView({ product }: { product: Product }) {
           </p>
         )}
 
-        <div className="mt-10">
-          <Configurator
-            product={product}
-            config={config}
-            onChange={setConfig}
-          />
-        </div>
+        {product.viaInstagram ? (
+          // Заказное изделие: ни опций, ни корзины — всё решается в переписке
+          <div className="mt-10 border-t border-line pt-8">
+            <p className="text-ink">
+              Пришлите нам в инстаграм фото-референс — ошейник, который
+              понравился, или картинку с цветами и настроением. Можно просто
+              описать идею словами.
+            </p>
+            <p className="mt-3 text-muted">
+              В переписке обсудим материал, цвета, размер и назовём точную
+              цену. Платить ничего не нужно, пока вы не договоритесь.
+            </p>
+            <a
+              href={site.contacts.instagramDirect}
+              target="_blank"
+              rel="noreferrer"
+              className="label mt-8 flex w-full items-center justify-center gap-3 bg-forest px-8 py-5 text-cream transition-colors hover:bg-forest-lift"
+            >
+              Написать в инстаграм
+              <span aria-hidden>→</span>
+            </a>
+            <p className="mt-3 text-center text-sm text-muted">
+              {site.contacts.instagramHandle} · изготовление {productionTerm(product)}
+            </p>
+          </div>
+        ) : (
+          <div className="mt-10">
+            <Configurator
+              product={product}
+              config={config}
+              onChange={setConfig}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

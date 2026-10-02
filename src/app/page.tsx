@@ -220,11 +220,11 @@ export default function HomePage() {
                 </h3>
                 <p className="mt-4 max-w-md text-cream-muted">
                   Замша, два цвета, фигурные вставки, клетка, тиснение имени —
-                  в одном экземпляре. Опишите идею — обсудим её в инстаграме
-                  и назовём цену.
+                  в одном экземпляре. Пришлите фото-референс в инстаграм —
+                  обсудим детали и назовём цену.
                 </p>
                 <p className="label mt-7 inline-flex items-center gap-3 text-rose">
-                  Описать идею
+                  Как заказать
                   <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
                 </p>
               </div>

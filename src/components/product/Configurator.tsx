@@ -3,37 +3,18 @@
 import Link from "next/link";
 import { useId, useMemo, useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
-import { categoryById, measurements } from "@/content/categories";
+import { measurements } from "@/content/categories";
 import type { MeasurementId } from "@/content/categories";
 import { hardwareOptions } from "@/content/leather";
-import { site } from "@/content/site";
 import { colorOf, selectableColors } from "@/lib/palette";
 import { formatPrice, productionTerm } from "@/lib/catalog";
 import { cn } from "@/lib/cn";
 import {
   calcPrice,
-  describeConfiguration,
-  IDEA_MIN_CHARS,
   validateConfiguration,
   type Configuration,
 } from "@/lib/price";
 import type { Product } from "@/lib/product-schema";
-
-/**
- * Текст для личных сообщений инстаграма. Подставить его в переписку
- * ссылкой инстаграм не даёт, поэтому кнопка кладёт его в буфер обмена.
- */
-function briefMessage(product: Product, config: Configuration): string {
-  return [
-    `Здравствуйте! Хочу заказать ${
-      categoryById.get(product.category)?.single.toLowerCase() ?? "изделие"
-    } по своей идее:`,
-    "",
-    ...describeConfiguration(product, config).map((line) => `• ${line}`),
-    "",
-    `(с сайта ${site.name})`,
-  ].join("\n");
-}
 
 export function Configurator({
   product,
@@ -47,11 +28,6 @@ export function Configurator({
   const { add } = useCart();
   const [added, setAdded] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
-  // Удалось ли положить описание в буфер: если нет, показываем текст,
-  // чтобы его можно было скопировать руками
-  const [copyState, setCopyState] = useState<"idle" | "copied" | "manual">(
-    "idle",
-  );
 
   const price = useMemo(() => calcPrice(product, config), [product, config]);
   const errors = useMemo(
@@ -62,27 +38,6 @@ export function Configurator({
   const patch = (next: Partial<Configuration>) => {
     onChange({ ...config, ...next });
     setAdded(false);
-    setCopyState("idle");
-  };
-
-  const message = product.brief ? briefMessage(product, config) : "";
-
-  const handleInstagram = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (errors.length > 0) {
-      event.preventDefault();
-      setShowErrors(true);
-      return;
-    }
-    // Ссылка открывается сразу, не дожидаясь буфера: иначе браузер
-    // на телефоне посчитает новую вкладку всплывающим окном и заблокирует
-    if (!navigator.clipboard) {
-      setCopyState("manual");
-      return;
-    }
-    navigator.clipboard
-      .writeText(message)
-      .then(() => setCopyState("copied"))
-      .catch(() => setCopyState("manual"));
   };
 
   const handleAdd = () => {
@@ -98,21 +53,6 @@ export function Configurator({
   // Подпись поля гравировки — заголовок над ним, а не плейсхолдер:
   // плейсхолдер исчезает при вводе, и скринридер его как подпись не читает
   const engravingLabelId = useId();
-  const ideaLabelId = useId();
-  const ideaHintId = useId();
-
-  const brief = config.brief ?? {};
-  const ideaLength = brief.idea?.trim().length ?? 0;
-  const patchBrief = (next: Partial<NonNullable<Configuration["brief"]>>) =>
-    patch({ brief: { ...brief, ...next } });
-  const toggleDetail = (detail: string) => {
-    const current = brief.details ?? [];
-    patchBrief({
-      details: current.includes(detail)
-        ? current.filter((d) => d !== detail)
-        : [...current, detail],
-    });
-  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -231,108 +171,6 @@ export function Configurator({
             </div>
           )}
         </section>
-      )}
-
-      {/* ── Идея ───────────────────────────────────────────── */}
-      {product.brief && (
-        <>
-          <section>
-            <h2 className="label text-muted">Форма</h2>
-            <div className="mt-3 grid gap-2 sm:grid-cols-3">
-              {product.brief.shapes.map((shape) => {
-                const active = brief.shape === shape.id;
-                return (
-                  <button
-                    key={shape.id}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => patchBrief({ shape: shape.id })}
-                    className={cn(
-                      "flex min-h-11 flex-col items-start border px-3 py-2 text-left transition-colors",
-                      active
-                        ? "border-forest bg-forest text-cream"
-                        : "border-line hover:border-forest",
-                    )}
-                  >
-                    <span className="label">{shape.title}</span>
-                    {shape.note && (
-                      <span
-                        className={cn(
-                          "mt-0.5 text-xs",
-                          active ? "text-cream-muted" : "text-muted",
-                        )}
-                      >
-                        {shape.note}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          <section>
-            <h2 className="label text-muted">
-              Что добавить{" "}
-              <span className="normal-case tracking-normal">
-                (можно несколько или ничего)
-              </span>
-            </h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {product.brief.details.map((detail) => {
-                const active = brief.details?.includes(detail) ?? false;
-                return (
-                  <button
-                    key={detail}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => toggleDetail(detail)}
-                    className={cn(
-                      "min-h-11 rounded-full border px-4 text-sm transition-colors",
-                      active
-                        ? "border-forest bg-forest text-cream"
-                        : "border-line hover:border-forest",
-                    )}
-                  >
-                    {active && <span aria-hidden>✓ </span>}
-                    {detail}
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          <section>
-            <div className="flex items-baseline justify-between gap-3">
-              <h2 id={ideaLabelId} className="label text-muted">
-                Ваша идея
-              </h2>
-              <span className="text-xs text-muted">
-                {ideaLength}/{product.brief.ideaMaxChars}
-              </span>
-            </div>
-            <p id={ideaHintId} className="mt-1 text-sm text-muted">
-              Цвета, материал, настроение, для кого ошейник. Можно приложить
-              ссылку на фото-референс.
-            </p>
-            <textarea
-              rows={5}
-              value={brief.idea ?? ""}
-              maxLength={product.brief.ideaMaxChars}
-              onChange={(e) => patchBrief({ idea: e.target.value })}
-              aria-labelledby={ideaLabelId}
-              aria-describedby={ideaHintId}
-              aria-invalid={showErrors && ideaLength < IDEA_MIN_CHARS}
-              placeholder="Например: рыжая замша с бирюзовой вставкой, как на фото, только с серебряной пряжкой — для нашей борзой Луны"
-              className="field mt-3"
-            />
-            <p className="mt-3 border-l-2 border-gold bg-shell px-4 py-3 text-sm">
-              Обсуждаем в инстаграме {site.contacts.instagramHandle}: мастер
-              уточнит детали и назовёт точную цену. Платить ничего не нужно,
-              пока вы не договоритесь.
-            </p>
-          </section>
-        </>
       )}
 
       {/* ── Кожа ───────────────────────────────────────────── */}
@@ -472,9 +310,7 @@ export function Configurator({
       <section className="border-t border-line pt-6">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="label text-muted">
-              {product.brief ? "Ориентир по цене" : "Итого"}
-            </p>
+            <p className="label text-muted">Итого</p>
             <p className="display mt-1 text-4xl">
               {product.draft ? (
                 <span className="text-muted">скоро</span>
@@ -503,37 +339,7 @@ export function Configurator({
           </ul>
         )}
 
-        {product.brief ? (
-          <>
-            <a
-              href={site.contacts.instagramDirect}
-              target="_blank"
-              rel="noreferrer"
-              onClick={handleInstagram}
-              className="label mt-6 flex w-full items-center justify-center gap-3 bg-forest px-8 py-5 text-cream transition-colors hover:bg-forest-lift"
-            >
-              Обсудить в инстаграме
-              <span aria-hidden>→</span>
-            </a>
-            <p className="mt-3 text-center text-sm text-muted" aria-live="polite">
-              {copyState === "copied"
-                ? "Описание скопировано — вставьте его в сообщение."
-                : copyState === "manual"
-                  ? "Не получилось скопировать само — скопируйте текст ниже."
-                  : "Описание скопируется само, останется вставить его в сообщение."}
-            </p>
-            {copyState === "manual" && (
-              <textarea
-                readOnly
-                rows={8}
-                value={message}
-                aria-label="Описание идеи для сообщения"
-                onFocus={(e) => e.currentTarget.select()}
-                className="field mt-3 text-sm"
-              />
-            )}
-          </>
-        ) : product.draft ? (
+        {product.draft ? (
           <p className="label mt-6 w-full border border-line px-8 py-5 text-center text-muted">
             Скоро в продаже
           </p>

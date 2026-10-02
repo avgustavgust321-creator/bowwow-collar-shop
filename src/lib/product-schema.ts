@@ -107,25 +107,10 @@ export const productSchema = z
     collection: z.string().optional(),
     badge: z.string().optional(),
     /**
-     * Заказ по идее покупателя: вместо палитры — форма, детали и описание
-     * своими словами. Цена у такого товара всегда предварительная,
-     * точную мастер называет после разговора с клиентом.
+     * Изделие обсуждается и заказывается в инстаграме: на карточке нет
+     * конструктора и корзины, только ссылка в личные сообщения.
      */
-    brief: z
-      .object({
-        shapes: z
-          .array(
-            z.object({
-              id: z.string().min(1),
-              title: z.string().min(1),
-              note: z.string().optional(),
-            }),
-          )
-          .min(1),
-        details: z.array(z.string().min(1)),
-        ideaMaxChars: z.number().int().positive(),
-      })
-      .optional(),
+    viaInstagram: z.boolean().optional(),
     /** Живое превью изделия в выбранных цветах вместо заглушки */
     livePreview: z.enum(["bowl"]).optional(),
     /**
