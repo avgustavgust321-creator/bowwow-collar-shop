@@ -42,6 +42,15 @@ export function photosIn(folder: string, palette: PaletteId): ProductPhotos {
     else images.push(url);
   }
 
+  // «tiffani.jpg» раньше «tiffani-2.jpg»: при сортировке с расширением
+  // дефис обгонял точку, и главным снимком цвета становился дубль
+  const stem = (url: string) => url.replace(/\.[^.]+$/, "");
+  for (const list of Object.values(colorPhotos)) {
+    list.sort((a, b) =>
+      stem(a).localeCompare(stem(b), "ru", { numeric: true }),
+    );
+  }
+
   return { images, colorPhotos };
 }
 

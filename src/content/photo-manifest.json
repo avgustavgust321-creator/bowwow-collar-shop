@@ -1,5 +1,11 @@
 {
   "1-oshejniki/odnotonnye": [
+    "1-chetyre-cveta.jpg",
+    "2-para.jpg",
+    "3-zelenyj.jpg",
+    "4-tisnenie.jpg",
+    "5-na-sobake.jpg",
+    "6-dva-cveta.jpg",
     "amster.jpg",
     "lilu.jpg",
     "matrica.jpg",
@@ -9,12 +15,20 @@
     "pepa.jpg",
     "slizerin.jpg",
     "taxi.jpg",
+    "tiffani-2.jpg",
+    "tiffani-3.jpg",
     "tiffani.jpg",
     "titanik.jpg",
     "ulun.jpg",
     "vse-cveta.png"
   ],
   "1-oshejniki/s-podkladom": [
+    "1-pryazhka.jpg",
+    "2-tri-cveta.jpg",
+    "3-stopka.jpg",
+    "4-rozovyj-fon.jpg",
+    "5-v-ruke.jpg",
+    "6-podklad.jpg",
     "amster.jpg",
     "lilu.jpg",
     "matrica.jpg",
@@ -24,11 +38,22 @@
     "pepa.jpg",
     "slizerin.jpg",
     "taxi.jpg",
+    "tiffani-2.jpg",
+    "tiffani-3.jpg",
     "tiffani.jpg",
+    "titanik-2.jpg",
     "titanik.jpg",
     "ulun.jpg"
   ],
-  "2-shlejki/na-chetyre-pryazhki": [],
+  "2-shlejki/na-chetyre-pryazhki": [
+    "1-krasnaya.jpg",
+    "2-na-sibe.jpg",
+    "3-sboku.jpg",
+    "4-pryazhka.jpg",
+    "5-seraya.jpg",
+    "6-zelenaya.jpg",
+    "7-chihuahua.jpg"
+  ],
   "3-povodki/lap": [],
   "3-povodki/perestezhka": [],
   "3-povodki/s-ploskoj-ruchkoj": [
@@ -36,8 +61,22 @@
     "2-cveta.jpg",
     "3-ruchka.jpg",
     "4-salon.jpg",
-    "5-na-sobake.jpg"
+    "5-na-sobake.jpg",
+    "6-krasnaya-ruchka.jpg",
+    "7-ruchka-krupno.jpg",
+    "8-belyj-shnur.jpg",
+    "9-seryj.jpg"
   ],
-  "4-aksessuary/holder-kruassan": [],
-  "5-miski/miska": []
+  "4-aksessuary/holder-kruassan": [
+    "1-na-povodke.jpg",
+    "2-krupno.jpg",
+    "3-komplekt.jpg",
+    "4-v-ruke.jpg",
+    "5-belyj.jpg"
+  ],
+  "5-miski/miska": [
+    "1-nadpis.jpg",
+    "2-dva-cveta.jpg",
+    "rozovyj.jpg"
+  ]
 }
