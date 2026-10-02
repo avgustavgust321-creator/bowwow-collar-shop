@@ -10,9 +10,19 @@ import type { Order, OrderStatus } from "@/lib/orders/types";
  * при старте пишем предупреждение.
  */
 
-const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
-const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+// Если базу подключить через вкладку Storage на Vercel, он сам кладёт
+// адрес и ключ под именами KV_REST_API_*. Принимаем оба варианта, чтобы
+// ничего не переписывать руками.
+const REDIS_URL =
+  process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
+const REDIS_TOKEN =
+  process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
 const hasRedis = Boolean(REDIS_URL && REDIS_TOKEN);
+
+/** Где сейчас живут заказы — для страницы проверки настроек */
+export function storageMode(): "redis" | "memory" {
+  return hasRedis ? "redis" : "memory";
+}
 
 const memory = new Map<string, Order>();
 let warned = false;
@@ -55,14 +65,22 @@ export function generateOrderId(): string {
   return `BW-${tail}`;
 }
 
-export async function saveOrder(order: Order): Promise<void> {
+/** Записать заказ целиком — и новый, и обновлённый */
+async function putOrder(order: Order): Promise<void> {
   warnOnce();
   if (hasRedis) {
     await redis(["SET", key(order.id), JSON.stringify(order)]);
-    await redis(["LPUSH", "orders:index", order.id]);
     return;
   }
   memory.set(order.id, order);
+}
+
+/** Новый заказ: записываем и ставим в начало списка заказов */
+export async function saveOrder(order: Order): Promise<void> {
+  await putOrder(order);
+  // В список — только при создании. Раньше смена статуса заново
+  // добавляла номер, и один заказ появлялся в списке дважды
+  if (hasRedis) await redis(["LPUSH", "orders:index", order.id]);
 }
 
 export async function getOrder(id: string): Promise<Order | null> {
@@ -82,6 +100,6 @@ export async function updateOrderStatus(
   const order = await getOrder(id);
   if (!order) return null;
   const next: Order = { ...order, ...patch, status };
-  await saveOrder(next);
+  await putOrder(next);
   return next;
 }

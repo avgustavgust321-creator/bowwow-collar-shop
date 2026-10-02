@@ -42,10 +42,20 @@ function orderText(order: Order): string {
     .join("\n");
 }
 
+/** Настроены ли уведомления — для страницы проверки, без самих ключей */
+export function telegramConfigured(): boolean {
+  return Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID);
+}
+
 async function sendTelegram(order: Order): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return;
+  if (!token || !chatId) {
+    console.warn(
+      `[notify] Telegram не настроен — заказ ${order.id} сохранён без уведомления`,
+    );
+    return;
+  }
 
   const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
