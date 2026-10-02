@@ -18,7 +18,18 @@ export const configurationSchema = z.object({
   leather: z.record(z.string(), z.string()),
   hardware: z.string().optional(),
   engraving: z.string().optional(),
+  /** Заказ по идее: форма, отмеченные детали и описание своими словами */
+  brief: z
+    .object({
+      shape: z.string().optional(),
+      details: z.array(z.string()).max(20).optional(),
+      idea: z.string().max(2000).optional(),
+    })
+    .optional(),
 });
+
+/** Короче этого описание идеи не принимаем — мастеру не с чего начать */
+export const IDEA_MIN_CHARS = 10;
 
 export type Configuration = z.infer<typeof configurationSchema>;
 
@@ -77,6 +88,9 @@ export function calcPrice(
     (product.hardware && config.hardware
       ? hardwareById.get(config.hardware)?.priceDelta
       : 0) ?? 0;
+
+  // Изделие по идее покупателя оценивается только после разговора
+  if (product.brief) approximate = true;
 
   return {
     base,
@@ -139,6 +153,23 @@ export function validateConfiguration(
     }
   }
 
+  if (product.brief) {
+    const { shapes, details, ideaMaxChars } = product.brief;
+    const brief = config.brief;
+    if (!shapes.some((s) => s.id === brief?.shape)) {
+      errors.push("Выберите форму");
+    }
+    if (brief?.details?.some((d) => !details.includes(d))) {
+      errors.push("Неизвестная деталь в списке");
+    }
+    const idea = brief?.idea?.trim() ?? "";
+    if (idea.length < IDEA_MIN_CHARS) {
+      errors.push("Опишите идею — хотя бы пару слов о цветах и материале");
+    } else if (idea.length > ideaMaxChars) {
+      errors.push(`Описание идеи: не длиннее ${ideaMaxChars} символов`);
+    }
+  }
+
   return errors;
 }
 
@@ -152,6 +183,9 @@ export function defaultConfiguration(product: Product): Configuration {
     ),
     hardware: product.hardware ? "brass" : undefined,
     engraving: "",
+    brief: product.brief
+      ? { shape: product.brief.shapes[0].id, details: [], idea: "" }
+      : undefined,
   };
 }
 
@@ -187,6 +221,16 @@ export function describeConfiguration(
   if (product.hardware && config.hardware) {
     const hw = hardwareById.get(config.hardware);
     if (hw) parts.push(`Фурнитура: ${hw.name}`);
+  }
+
+  if (product.brief && config.brief) {
+    const shape = product.brief.shapes.find((s) => s.id === config.brief?.shape);
+    if (shape) parts.push(`Форма: ${shape.title}`);
+    if (config.brief.details?.length) {
+      parts.push(`Детали: ${config.brief.details.join(", ")}`);
+    }
+    const idea = config.brief.idea?.trim();
+    if (idea) parts.push(`Идея: «${idea}»`);
   }
 
   const engraving = config.engraving?.trim();

@@ -32,14 +32,17 @@ export function getProduct(slug: string): Product | undefined {
 /** Минимальная цена товара — то, что показываем на карточке в каталоге. */
 export function priceFrom(product: Product): { value: number; from: boolean } {
   if (product.price !== null) {
-    return { value: product.price, from: false };
+    return { value: product.price, from: Boolean(product.brief) };
   }
   const sizes = product.sizes ?? [];
   const min = sizes.reduce(
     (acc, s) => (s.price < acc.price ? s : acc),
     sizes[0]!,
   );
-  return { value: min.price, from: sizes.length > 1 || Boolean(min.from) };
+  return {
+    value: min.price,
+    from: sizes.length > 1 || Boolean(min.from) || Boolean(product.brief),
+  };
 }
 
 export const sortOptions = [

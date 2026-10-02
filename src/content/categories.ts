@@ -4,7 +4,7 @@ export const categories = [
     title: "Ошейники",
     single: "Ошейник",
     description:
-      "Однотонные и с цветным подкладом. От XS для мелких пород до Big Boss.",
+      "Однотонные, с цветным подкладом и по вашей идее. От XS для мелких пород до Big Boss.",
   },
   {
     id: "harnesses",

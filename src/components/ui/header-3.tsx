@@ -333,7 +333,7 @@ const catalogLinks: LinkItem[] = [
   {
     title: "Ошейники",
     href: "/catalog?category=collars",
-    description: "Однотонные и с цветным подкладом",
+    description: "Однотонные, с подкладом и на заказ",
     icon: PawPrint,
   },
   {

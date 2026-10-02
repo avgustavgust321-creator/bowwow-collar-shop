@@ -11,6 +11,7 @@ import { formatPrice, productionTerm } from "@/lib/catalog";
 import { cn } from "@/lib/cn";
 import {
   calcPrice,
+  IDEA_MIN_CHARS,
   validateConfiguration,
   type Configuration,
 } from "@/lib/price";
@@ -53,6 +54,21 @@ export function Configurator({
   // Подпись поля гравировки — заголовок над ним, а не плейсхолдер:
   // плейсхолдер исчезает при вводе, и скринридер его как подпись не читает
   const engravingLabelId = useId();
+  const ideaLabelId = useId();
+  const ideaHintId = useId();
+
+  const brief = config.brief ?? {};
+  const ideaLength = brief.idea?.trim().length ?? 0;
+  const patchBrief = (next: Partial<NonNullable<Configuration["brief"]>>) =>
+    patch({ brief: { ...brief, ...next } });
+  const toggleDetail = (detail: string) => {
+    const current = brief.details ?? [];
+    patchBrief({
+      details: current.includes(detail)
+        ? current.filter((d) => d !== detail)
+        : [...current, detail],
+    });
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -171,6 +187,108 @@ export function Configurator({
             </div>
           )}
         </section>
+      )}
+
+      {/* ── Идея ───────────────────────────────────────────── */}
+      {product.brief && (
+        <>
+          <section>
+            <h2 className="label text-muted">Форма</h2>
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              {product.brief.shapes.map((shape) => {
+                const active = brief.shape === shape.id;
+                return (
+                  <button
+                    key={shape.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => patchBrief({ shape: shape.id })}
+                    className={cn(
+                      "flex min-h-11 flex-col items-start border px-3 py-2 text-left transition-colors",
+                      active
+                        ? "border-forest bg-forest text-cream"
+                        : "border-line hover:border-forest",
+                    )}
+                  >
+                    <span className="label">{shape.title}</span>
+                    {shape.note && (
+                      <span
+                        className={cn(
+                          "mt-0.5 text-xs",
+                          active ? "text-cream-muted" : "text-muted",
+                        )}
+                      >
+                        {shape.note}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          <section>
+            <h2 className="label text-muted">
+              Что добавить{" "}
+              <span className="normal-case tracking-normal">
+                (можно несколько или ничего)
+              </span>
+            </h2>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {product.brief.details.map((detail) => {
+                const active = brief.details?.includes(detail) ?? false;
+                return (
+                  <button
+                    key={detail}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => toggleDetail(detail)}
+                    className={cn(
+                      "min-h-11 rounded-full border px-4 text-sm transition-colors",
+                      active
+                        ? "border-forest bg-forest text-cream"
+                        : "border-line hover:border-forest",
+                    )}
+                  >
+                    {active && <span aria-hidden>✓ </span>}
+                    {detail}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          <section>
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 id={ideaLabelId} className="label text-muted">
+                Ваша идея
+              </h2>
+              <span className="text-xs text-muted">
+                {ideaLength}/{product.brief.ideaMaxChars}
+              </span>
+            </div>
+            <p id={ideaHintId} className="mt-1 text-sm text-muted">
+              Цвета, материал, настроение, для кого ошейник. Можно приложить
+              ссылку на фото-референс.
+            </p>
+            <textarea
+              rows={5}
+              value={brief.idea ?? ""}
+              maxLength={product.brief.ideaMaxChars}
+              onChange={(e) => patchBrief({ idea: e.target.value })}
+              aria-labelledby={ideaLabelId}
+              aria-describedby={ideaHintId}
+              aria-invalid={showErrors && ideaLength < IDEA_MIN_CHARS}
+              placeholder="Например: рыжая замша с бирюзовой вставкой, как на фото, только с серебряной пряжкой — для нашей борзой Луны"
+              className="field mt-3"
+            />
+            <p className="mt-3 border-l-2 border-gold bg-shell px-4 py-3 text-sm">
+              После заказа мастер свяжется с вами, обсудит детали и назовёт
+              точную цену. Платить ничего не нужно, пока вы не договоритесь
+              о деталях.
+            </p>
+          </section>
+        </>
       )}
 
       {/* ── Кожа ───────────────────────────────────────────── */}

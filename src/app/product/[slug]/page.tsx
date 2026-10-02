@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CustomArchive } from "@/components/product/CustomArchive";
 import { ProductCard } from "@/components/product/ProductCard";
 import { ProductView } from "@/components/product/ProductView";
 import { categoryById } from "@/content/categories";
@@ -185,9 +186,11 @@ export default async function ProductPage({
               <div>
                 <dt className="label text-muted">Материал</dt>
                 <dd className="mt-1">
-                  {leather
-                    ? "Итальянская кожа"
-                    : "Пластик, 3D-печать; чаша — нержавеющая сталь"}
+                  {product.brief
+                    ? "Итальянская кожа, замша"
+                    : leather
+                      ? "Итальянская кожа"
+                      : "Пластик, 3D-печать; чаша — нержавеющая сталь"}
                 </dd>
               </div>
               <div>
@@ -198,7 +201,9 @@ export default async function ProductPage({
                 <dt className="label text-muted">
                   {leather ? "Цвета кожи" : "Цвета"}
                 </dt>
-                <dd className="mt-1">{colorCount} вариантов</dd>
+                <dd className="mt-1">
+                  {product.brief ? "Любые — обсудим" : `${colorCount} вариантов`}
+                </dd>
               </div>
               {leather && (
                 <div>
@@ -217,6 +222,38 @@ export default async function ProductPage({
           </div>
         </div>
       </section>
+
+      {product.brief && (
+        <section className="border-t border-line px-5 py-16 md:px-10 md:py-24">
+          <div className="wrap">
+            <p className="hand -rotate-3 text-3xl text-gold-ink md:text-4xl">
+              архив мастерской
+            </p>
+            <h2 className="display-xl mt-1 text-ink">
+              Сделано <em className="text-gold-ink">однажды</em>
+            </h2>
+            <p className="mt-5 max-w-xl text-muted">
+              Ошейники, которые мы уже шили по индивидуальным заказам. С них
+              удобно начать разговор о вашем.
+            </p>
+            <CustomArchive className="mt-12" />
+
+            <ol className="mt-16 grid gap-px border border-line bg-line md:grid-cols-3">
+              {[
+                ["Идея", "Опишите, каким видите ошейник: цвета, материал, настроение. Хватит пары предложений или ссылки на картинку."],
+                ["Разговор", "Мастер свяжется с вами, уточнит размер и детали и назовёт точную цену. До этого платить ничего не нужно."],
+                ["Шьём", `Раскрой, строчка, ручная доводка — ${productionTerm(product)}. Потом отправляем европочтой или курьером по Бресту.`],
+              ].map(([title, text], i) => (
+                <li key={title} className="bg-cream p-6 md:p-8">
+                  <p className="display text-5xl text-gold-ink">{i + 1}</p>
+                  <p className="label mt-4 text-ink">{title}</p>
+                  <p className="mt-2 text-sm text-muted">{text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="wrap px-5 pb-8 md:px-10">

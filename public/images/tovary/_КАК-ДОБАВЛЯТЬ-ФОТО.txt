@@ -6,6 +6,7 @@
 
   1-oshejniki/s-podkladom          Ошейник с цветным подкладом
   1-oshejniki/odnotonnye           Ошейник однотонный
+  1-oshejniki/na-zakaz             Ошейник по вашей идее
   2-shlejki/na-chetyre-pryazhki    Шлейка на четыре пряжки
   3-povodki/lap                    Поводок Lap
   3-povodki/perestezhka            Поводок-перестёжка
@@ -91,3 +92,10 @@
 Список и подписи — в файле src/content/dogs.ts.
 Проще всего — скинуть фото в папку и написать мне, какая модель
 на собаке: я добавлю и подпишу.
+
+
+ЗАКАЗНЫЕ ОШЕЙНИКИ
+  1-oshejniki/na-zakaz             Ошейник по вашей идее (галерея товара)
+  public/images/sajt/na-zakaz/     Архив «Сделано однажды» — карточки
+                                   с номером и описанием, список в
+                                   src/content/custom-archive.ts

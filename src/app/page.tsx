@@ -6,6 +6,7 @@ import { Community } from "@/components/home/Community";
 import { Workshop } from "@/components/home/Workshop";
 import { LeatherDeck } from "@/components/home/LeatherDeck";
 import { Reveal } from "@/components/ui/Reveal";
+import { archivePieces } from "@/content/custom-archive";
 import { site } from "@/content/site";
 import { formatPrice, priceFrom, products } from "@/lib/catalog";
 import type { Product } from "@/lib/product-schema";
@@ -87,6 +88,7 @@ function PriceTag({ product, className }: { product: Product; className?: string
 export default function HomePage() {
   const lined = products.find((p) => p.slug === "collar-lined");
   const solid = products.find((p) => p.slug === "collar-solid");
+  const custom = products.find((p) => p.slug === "collar-custom");
 
   return (
     <>
@@ -200,6 +202,56 @@ export default function HomePage() {
             </Reveal>
           )}
         </div>
+
+        {/* ТРЕТИЙ ПУТЬ — ошейник по идее покупателя. Три заказных снимка
+            веером: видно, что «на заказ» — это не абстракция, а уже сшитые вещи */}
+        {custom && (
+          <Reveal className="wrap mt-14">
+            <Link
+              href={`/product/${custom.slug}`}
+              className="group grid items-center gap-10 overflow-hidden bg-forest p-7 text-cream shadow-card md:grid-cols-[1fr_1.1fr] md:p-12"
+            >
+              <div>
+                <p className="hand -rotate-3 text-3xl text-gold-light md:text-4xl">
+                  не нашли свой?
+                </p>
+                <h3 className="display mt-2 text-4xl md:text-5xl">
+                  Сошьём по <em className="text-rose">вашей идее</em>
+                </h3>
+                <p className="mt-4 max-w-md text-cream-muted">
+                  Замша, два цвета, фигурные вставки, клетка, тиснение имени —
+                  в одном экземпляре. Опишите идею, мастер свяжется и назовёт
+                  цену.
+                </p>
+                <p className="label mt-7 inline-flex items-center gap-3 text-rose">
+                  Описать идею
+                  <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+                </p>
+              </div>
+              <div aria-hidden className="relative mx-auto h-64 w-full max-w-md md:h-80">
+                {archivePieces.slice(0, 3).map((piece, i) => (
+                  <div
+                    key={piece.src}
+                    className={[
+                      "absolute top-1/2 w-[42%] bg-cream p-1.5 pb-5 shadow-card transition-transform duration-500",
+                      ["left-0 -translate-y-1/2 -rotate-6 group-hover:-rotate-9", "left-[29%] z-10 -translate-y-[55%] rotate-1 group-hover:-translate-y-[60%]", "right-0 -translate-y-1/2 rotate-6 group-hover:rotate-9"][i],
+                    ].join(" ")}
+                  >
+                    <div className="relative aspect-[4/5]">
+                      <Image
+                        src={piece.src}
+                        alt=""
+                        fill
+                        sizes="(min-width: 768px) 18vw, 40vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Link>
+          </Reveal>
+        )}
 
         <div className="wrap mt-12 flex justify-center">
           <Link

@@ -38,6 +38,15 @@ export function lineKey(slug: string, config: Configuration): string {
     ),
     hardware: config.hardware ?? "",
     engraving: config.engraving?.trim() ?? "",
+    // Без идеи в ключе два разных заказных ошейника склеились бы в одну
+    // строку корзины, и второе описание потерялось бы
+    brief: config.brief
+      ? {
+          shape: config.brief.shape ?? "",
+          details: [...(config.brief.details ?? [])].sort(),
+          idea: config.brief.idea?.trim() ?? "",
+        }
+      : null,
   };
   return `${slug}|${JSON.stringify(normalized)}`;
 }
