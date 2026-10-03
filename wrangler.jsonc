@@ -1,0 +1,30 @@
+/**
+ * Настройки Cloudflare Workers — здесь работает сайт.
+ * Ключи (Telegram, база заказов) сюда НЕ пишутся: они задаются в панели
+ * Cloudflare → Workers → bowwow-collar-shop → Settings → Variables and Secrets.
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bowwow-collar-shop",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "bowwow-collar-shop"
+    }
+  ],
+  // Сжатие фото (next/image) — через Cloudflare Images, бесплатно до 5000
+  // вариантов в месяц
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

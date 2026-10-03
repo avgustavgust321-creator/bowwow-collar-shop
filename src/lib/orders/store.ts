@@ -1,14 +1,12 @@
-import { createClient } from "redis";
 import type { Order, OrderStatus } from "@/lib/orders/types";
 
 /**
- * Хранилище заказов — Redis.
+ * Хранилище заказов — Upstash Redis по HTTP (бесплатный тариф).
  *
- * Подключается двумя способами, смотря что выбрано во вкладке Storage
- * на Vercel:
- *   • Upstash — по HTTP, настройки KV_REST_API_URL и KV_REST_API_TOKEN
- *     (или UPSTASH_REDIS_REST_*);
- *   • Redis Cloud — обычным подключением по одному адресу REDIS_URL.
+ * Только HTTP, без постоянного подключения: сайт работает на Cloudflare,
+ * а там у каждого запроса свой короткий жизненный цикл. Настройки —
+ * UPSTASH_REDIS_REST_URL и UPSTASH_REDIS_REST_TOKEN (или KV_REST_API_*,
+ * если базу подключали через Vercel).
  *
  * Если не задано ни то ни другое, заказы живут в памяти процесса: этого
  * хватает для локальной разработки, но на Vercel такой заказ пропадёт
@@ -32,9 +30,7 @@ function envBySuffix(...suffixes: string[]): string | undefined {
 
 const REST_URL = envBySuffix("UPSTASH_REDIS_REST_URL", "KV_REST_API_URL");
 const REST_TOKEN = envBySuffix("UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN");
-const hasRest = Boolean(REST_URL && REST_TOKEN);
-const TCP_URL = hasRest ? undefined : envBySuffix("REDIS_URL", "KV_URL");
-const hasRedis = hasRest || Boolean(TCP_URL);
+const hasRedis = Boolean(REST_URL && REST_TOKEN);
 
 /**
  * Имена (не значения!) настроек, похожих на базу, — чтобы по странице
@@ -80,29 +76,7 @@ async function restCommand(command: string[]): Promise<unknown> {
   return data.result;
 }
 
-// Одно подключение на весь процесс: функция на Vercel живёт какое-то
-// время между заказами, и переподключаться каждый раз незачем
-let tcpClient: Promise<ReturnType<typeof createClient>> | null = null;
-
-function getTcpClient() {
-  tcpClient ??= (async () => {
-    const client = createClient({ url: TCP_URL });
-    client.on("error", (error) => console.error("[orders] Redis:", error));
-    await client.connect();
-    return client;
-  })().catch((error) => {
-    // Не запоминаем неудачное подключение — следующий заказ попробует снова
-    tcpClient = null;
-    throw error;
-  });
-  return tcpClient;
-}
-
-async function redis(command: string[]): Promise<unknown> {
-  if (hasRest) return restCommand(command);
-  const client = await getTcpClient();
-  return client.sendCommand(command);
-}
+const redis = restCommand;
 
 /** Отвечает ли база: для страницы проверки, заказов не трогает */
 export async function pingStorage(): Promise<"ok" | "нет базы" | string> {
