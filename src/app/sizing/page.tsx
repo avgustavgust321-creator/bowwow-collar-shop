@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { site } from "@/content/site";
 import { PageHeader } from "@/components/ui/Page";
 import { measurements } from "@/content/categories";
 
@@ -46,7 +47,7 @@ export default function SizingPage() {
       />
 
       <section className="wrap px-5 py-14 md:px-10">
-        <ol className="mx-auto flex max-w-3xl flex-col">
+        <ol className="flex max-w-3xl flex-col">
           {steps.map((step) => (
             <li
               key={step.id}
@@ -62,15 +63,23 @@ export default function SizingPage() {
           ))}
         </ol>
 
-        <div className="mx-auto mt-10 max-w-3xl border-l-2 border-gold bg-shell px-5 py-4">
+        <div className="mt-10 max-w-3xl border-l-2 border-gold bg-shell px-5 py-4">
           <p className="text-sm">
-            Не уверены в замерах? Пришлите их нам в Instagram вместе с фото
+            Не уверены в замерах? Пришлите их нам{" "}
+            <a
+              href={site.contacts.instagram}
+              target="_blank"
+              rel="noreferrer"
+              className="underline hover:text-forest"
+            >
+              в инстаграм
+            </a> вместе с фото
             питомца — поможем выбрать размер. Ошибка в один сантиметр для
             ошейника некритична, а для шлейки важна.
           </p>
         </div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-12">
           <Link
             href="/catalog"
             className="label inline-block bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"

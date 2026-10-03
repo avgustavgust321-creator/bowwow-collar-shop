@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { site } from "@/content/site";
 import { PageHeader } from "@/components/ui/Page";
 
 export const metadata: Metadata = {
@@ -42,7 +43,7 @@ export default function FaqPage() {
       <PageHeader title="Вопросы" />
 
       <section className="wrap px-5 py-14 md:px-10">
-        <div className="mx-auto flex max-w-2xl flex-col border-t border-line">
+        <div className="flex max-w-2xl flex-col border-t border-line">
           {faq.map((item) => (
             <details key={item.q} className="group border-b border-line py-5">
               <summary className="display flex cursor-pointer list-none items-center justify-between gap-4 text-xl">
@@ -56,12 +57,21 @@ export default function FaqPage() {
           ))}
         </div>
 
-        <p className="mt-12 text-center text-muted">
+        <p className="mt-12 max-w-2xl text-muted">
           Не нашли ответ?{" "}
           <Link href="/sizing" className="underline hover:text-forest">
             Посмотрите, как снимать замеры
-          </Link>{" "}
-          или напишите нам в Instagram.
+          </Link>
+          , или напишите нам{" "}
+          <a
+            href={site.contacts.instagram}
+            target="_blank"
+            rel="noreferrer"
+            className="underline hover:text-forest"
+          >
+            в инстаграм
+          </a>
+          .
         </p>
       </section>
     </>

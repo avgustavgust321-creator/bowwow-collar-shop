@@ -27,7 +27,7 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.2fr_2fr]">
           <div>
             <Logo variant="light" className="h-9" />
-            <p className="hand mt-4 max-w-xs text-2xl text-rose">
+            <p className="hand mt-4 max-w-xs text-3xl text-rose">
               {site.tagline}
             </p>
             <p className="mt-3 max-w-xs text-cream-muted">
@@ -64,7 +64,7 @@ export function Footer() {
           <div className="grid gap-8 sm:grid-cols-3">
             {footerNav.map((column) => (
               <div key={column.title}>
-                <h2 className="hand text-2xl text-rose">{column.title}</h2>
+                <h2 className="label text-gold-light">{column.title}</h2>
                 <ul className="mt-3 flex flex-col md:gap-1">
                   {column.links.map((link) => (
                     <li key={link.href}>

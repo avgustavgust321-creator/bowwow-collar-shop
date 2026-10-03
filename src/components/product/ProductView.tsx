@@ -45,11 +45,12 @@ export function ProductView({ product }: { product: Product }) {
       : undefined;
 
   return (
-    <div className="grid lg:grid-cols-2">
-      {/* На телефоне фото залипает под шапкой: свотчи цвета лежат ниже,
-          и без этого выбор шёл бы вслепую — картинка уезжала бы за экран.
-          На широком экране всё видно сразу, там залипание не нужно. */}
-      <div className="sticky top-14 z-20 border-b border-line bg-cream lg:static lg:border-r lg:border-b-0">
+    <div className="grid lg:grid-cols-2 lg:items-start">
+      {/* Фото залипает под шапкой: свотчи цвета лежат ниже, и без этого
+          выбор шёл бы вслепую — картинка уезжала бы за экран. На широком
+          экране галерея едет рядом с конструктором, а не оставляет под
+          собой пустое поле, пока листаешь цвета и фурнитуру. */}
+      <div className="sticky top-14 z-20 border-b border-line bg-cream lg:z-0 lg:border-b-0">
         <ProductGallery
           product={product}
           colorId={colorId}
@@ -58,13 +59,13 @@ export function ProductView({ product }: { product: Product }) {
         />
       </div>
 
-      <div className="px-5 py-10 md:px-8">
+      <div className="px-5 py-10 md:px-8 lg:min-h-full lg:border-l lg:border-line lg:px-12 lg:py-12">
         {product.badge && (
           <span className="label bg-forest px-2 py-1 text-cream">
             {product.badge}
           </span>
         )}
-        <h1 className="display mt-4 text-4xl md:text-5xl">{product.title}</h1>
+        <h1 className="display mt-4 text-4xl text-ink md:text-5xl">{product.title}</h1>
         <p className="mt-4 text-muted">{product.summary}</p>
         {product.draft ? (
           <p className="mt-4 border-l-2 border-gold bg-shell px-4 py-3 text-sm text-ink">
@@ -72,8 +73,8 @@ export function ProductView({ product }: { product: Product }) {
             откроется, как только появятся цены.
           </p>
         ) : (
-          <p className="mt-2 text-lg font-semibold">
-            {price.from && <span className="text-muted">от </span>}
+          <p className="display mt-5 text-3xl text-ink">
+            {price.from && <span className="text-xl text-muted">от </span>}
             {formatPrice(price.value)}
           </p>
         )}

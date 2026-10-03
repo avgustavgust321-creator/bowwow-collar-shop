@@ -63,9 +63,13 @@ export default async function ProductPage({
       : slot.fixed
         ? (colorOf(slot.palette, slot.defaultColor)?.name ?? null)
         : `${colorCount} вариантов`;
-  const related = listedProducts
-    .filter((p) => p.slug !== product.slug && p.category === product.category)
-    .slice(0, 4);
+  // Сначала изделия той же категории, остальное место — другим вещам
+  // мастерской: к ошейнику обычно подбирают поводок, а не ещё ошейник
+  const others = listedProducts.filter((p) => p.slug !== product.slug);
+  const related = [
+    ...others.filter((p) => p.category === product.category),
+    ...others.filter((p) => p.category !== product.category),
+  ].slice(0, 4);
 
   // Микроразметка для поиска: цена «от» и наличие
   const jsonLd = {
@@ -271,7 +275,7 @@ export default async function ProductPage({
 
       {related.length > 0 && (
         <section className="wrap px-5 pb-8 md:px-10">
-          <h2 className="display py-8 text-2xl">Из этой же категории</h2>
+          <h2 className="display py-8 text-2xl">Ещё из мастерской</h2>
           <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
             {related.map((p) => (
               <ProductCard key={p.slug} product={p} />

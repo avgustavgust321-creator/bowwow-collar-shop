@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { LeatherSwatch } from "@/components/brand/LeatherSwatch";
 import { PageHeader, Prose } from "@/components/ui/Page";
 import { selectableLeatherColors } from "@/content/leather";
 import { site } from "@/content/site";
@@ -27,7 +28,7 @@ export default function AboutPage() {
       {/* Мастер и верстак до текста: в ручной работе человек за столом
           убеждает быстрее, чем абзац про ценности бренда. */}
       <section className="wrap px-5 pb-4 md:px-10">
-        <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
+        <div className="grid max-w-4xl gap-4 sm:grid-cols-2">
           <Image
             src="/images/sajt/masterskaya/master.jpg"
             alt="Мастер за рабочим столом собирает ошейник"
@@ -67,15 +68,12 @@ export default function AboutPage() {
       </Prose>
 
       <section className="wrap px-5 pb-16 md:px-10">
-        <div className="mx-auto max-w-4xl">
+        <div className="max-w-4xl">
           <h2 className="label text-muted">Палитра кожи</h2>
           <div className="mt-5 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
             {selectableLeatherColors.map((color) => (
-              <div key={color.id} className="bg-cream">
-                <div
-                  className="aspect-4/3"
-                  style={{ backgroundColor: color.hex }}
-                />
+              <div key={color.id} className="bg-cream shadow-card">
+                <LeatherSwatch color={color} className="aspect-4/3 rounded-none" />
                 <p className="label px-3 py-3">{color.name}</p>
               </div>
             ))}
@@ -83,7 +81,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="wrap px-5 pb-20 text-center md:px-10">
+      <section className="wrap px-5 pb-20 md:px-10">
         <Link
           href="/catalog"
           className="label inline-block bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"
@@ -98,7 +96,7 @@ export default function AboutPage() {
             rel="noreferrer"
             className="underline hover:text-forest"
           >
-            Instagram {site.contacts.instagramHandle}
+            инстаграме {site.contacts.instagramHandle}
           </a>
         </p>
       </section>

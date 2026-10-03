@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useCart } from "@/components/cart/CartProvider";
 import { deliveryOptions } from "@/content/delivery";
+import { ProductCard } from "@/components/product/ProductCard";
 import { ProductMedia } from "@/components/product/ProductMedia";
-import { formatPrice, getProduct } from "@/lib/catalog";
+import { formatPrice, getProduct, listedProducts } from "@/lib/catalog";
 import { calcPrice, describeConfiguration } from "@/lib/price";
 
 /** Цена доставки в корзине — из настроек доставки, а не вписана руками */
@@ -25,16 +26,30 @@ export default function CartPage() {
 
   if (lines.length === 0) {
     return (
-      <section className="wrap px-5 py-24 text-center md:px-10">
-        <h1 className="display text-4xl md:text-6xl">Корзина пуста</h1>
-        <p className="mt-4 text-muted">
-          Соберите ошейник или шлейку под своего питомца.
+      <section className="wrap px-5 py-16 md:px-10 md:py-20">
+        <p className="hand -rotate-3 text-3xl text-gold-ink md:text-4xl">
+          пока ничего
         </p>
+        <h1 className="display-xl text-ink">Корзина пуста</h1>
+        <p className="mt-5 max-w-md text-muted">
+          Соберите ошейник, шлейку или поводок под своего питомца — начать
+          можно с одного из этих.
+        </p>
+
+        {/* Пустая корзина — не тупик: сразу несколько изделий, чтобы было
+            куда нажать, а не только кнопка «В каталог» на пустом поле */}
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+          {listedProducts.slice(0, 4).map((product) => (
+            <ProductCard key={product.slug} product={product} />
+          ))}
+        </div>
+
         <Link
           href="/catalog"
-          className="label mt-8 inline-block bg-forest px-8 py-4 text-cream transition-colors hover:bg-forest-lift"
+          className="label mt-10 inline-flex min-h-12 items-center gap-3 border border-forest px-8 text-forest transition-colors hover:bg-forest hover:text-cream"
         >
-          В каталог
+          Весь каталог
+          <span aria-hidden>→</span>
         </Link>
       </section>
     );

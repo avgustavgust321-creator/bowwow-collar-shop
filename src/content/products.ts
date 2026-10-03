@@ -114,7 +114,7 @@ const catalog = [
     category: "collars",
     pet: ["dog", "cat"],
     collection: "На заказ",
-    badge: "В одном экземпляре",
+    badge: "Один такой",
     summary:
       "Замша, два цвета, фигурные вставки, тиснение — сошьём ошейник, которого нет в каталоге.",
     description: [

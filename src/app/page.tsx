@@ -258,7 +258,7 @@ export default function HomePage() {
             href="/catalog"
             className="label inline-flex min-h-12 items-center gap-3 border border-forest px-8 text-forest transition-colors hover:bg-forest hover:text-cream"
           >
-            Шлейки, поводки и аксессуары
+            Весь каталог: шлейки, поводки, миски
             <span aria-hidden>→</span>
           </Link>
         </div>
