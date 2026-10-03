@@ -28,9 +28,14 @@ function envBySuffix(...suffixes: string[]): string | undefined {
   return undefined;
 }
 
-const REST_URL = envBySuffix("UPSTASH_REDIS_REST_URL", "KV_REST_API_URL");
-const REST_TOKEN = envBySuffix("UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN");
-const hasRedis = Boolean(REST_URL && REST_TOKEN);
+// Читаем при каждом обращении, а не один раз при запуске: на Cloudflare
+// ключи доступны в момент запроса, и так сайт видит их сразу после
+// добавления в панели
+const restUrl = () =>
+  envBySuffix("UPSTASH_REDIS_REST_URL", "KV_REST_API_URL");
+const restToken = () =>
+  envBySuffix("UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN");
+const hasRedisNow = () => Boolean(restUrl() && restToken());
 
 /**
  * Имена (не значения!) настроек, похожих на базу, — чтобы по странице
@@ -44,14 +49,14 @@ export function storageEnvNames(): string[] {
 
 /** Где сейчас живут заказы — для страницы проверки настроек */
 export function storageMode(): "redis" | "memory" {
-  return hasRedis ? "redis" : "memory";
+  return hasRedisNow() ? "redis" : "memory";
 }
 
 const memory = new Map<string, Order>();
 let warned = false;
 
 function warnOnce() {
-  if (hasRedis || warned) return;
+  if (hasRedisNow() || warned) return;
   warned = true;
   console.warn(
     "[orders] База не подключена — заказы хранятся в памяти процесса. " +
@@ -60,10 +65,10 @@ function warnOnce() {
 }
 
 async function restCommand(command: string[]): Promise<unknown> {
-  const res = await fetch(REST_URL!, {
+  const res = await fetch(restUrl()!, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${REST_TOKEN}`,
+      Authorization: `Bearer ${restToken()}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(command),
@@ -80,7 +85,7 @@ const redis = restCommand;
 
 /** Отвечает ли база: для страницы проверки, заказов не трогает */
 export async function pingStorage(): Promise<"ok" | "нет базы" | string> {
-  if (!hasRedis) return "нет базы";
+  if (!hasRedisNow()) return "нет базы";
   try {
     const answer = await Promise.race([
       redis(["PING"]),
@@ -111,7 +116,7 @@ export function generateOrderId(): string {
 /** Записать заказ целиком — и новый, и обновлённый */
 async function putOrder(order: Order): Promise<void> {
   warnOnce();
-  if (hasRedis) {
+  if (hasRedisNow()) {
     await redis(["SET", key(order.id), JSON.stringify(order)]);
     return;
   }
@@ -123,12 +128,12 @@ export async function saveOrder(order: Order): Promise<void> {
   await putOrder(order);
   // В список — только при создании. Раньше смена статуса заново
   // добавляла номер, и один заказ появлялся в списке дважды
-  if (hasRedis) await redis(["LPUSH", "orders:index", order.id]);
+  if (hasRedisNow()) await redis(["LPUSH", "orders:index", order.id]);
 }
 
 export async function getOrder(id: string): Promise<Order | null> {
   warnOnce();
-  if (hasRedis) {
+  if (hasRedisNow()) {
     const raw = await redis(["GET", key(id)]);
     return typeof raw === "string" ? (JSON.parse(raw) as Order) : null;
   }
