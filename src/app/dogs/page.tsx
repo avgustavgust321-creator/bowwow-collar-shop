@@ -44,7 +44,7 @@ export default function DogsPage() {
                   width={photo.width}
                   height={photo.height}
                   // Первые снимки видны сразу — грузим без очереди
-                  priority={i < 4}
+                  loading={i < 4 ? "eager" : "lazy"}
                   sizes="(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 46vw"
                   className="h-auto w-full"
                 />

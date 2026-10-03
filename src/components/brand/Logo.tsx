@@ -22,7 +22,7 @@ export function Logo({
     <Image
       src={logo}
       alt="BOW WOW COLLAR"
-      priority={priority}
+      loading={priority ? "eager" : "lazy"}
       className={cn(
         "h-7 w-auto",
         variant === "light" && "brightness-0 invert",

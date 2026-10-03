@@ -99,7 +99,7 @@ export function Footer() {
         aria-hidden
         className="relative z-10 -mt-10 hidden h-64 lg:flex"
       >
-        <TextHoverEffect text="Bow Wow" duration={0.3} />
+        <TextHoverEffect text="Bow Wow" />
       </div>
     </footer>
   );

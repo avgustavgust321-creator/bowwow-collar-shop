@@ -32,6 +32,9 @@ const comforter = Comforter({
   subsets: ["cyrillic", "latin"],
   weight: ["400"],
   display: "swap",
+  // Рукописные подписи — украшение, не текст. Не грузим их в первую
+  // очередь: на медленном канале они отнимали полосу у фото и страницы
+  preload: false,
 });
 
 export const metadata: Metadata = {

@@ -288,8 +288,14 @@ dd {
     z-index: -1;
     width: 100vw;
     height: 100lvh;
-    background: url(/images/sajt/faktury/kozha-fon.jpg) center / cover
+    /* AVIF 38 КБ вместо JPG 142 КБ; WebP — для браузеров без AVIF.
+       Фон есть на каждой странице (подвал), поэтому вес здесь важен */
+    background: url(/images/sajt/faktury/kozha-fon.webp) center / cover
       no-repeat;
+    background-image: image-set(
+      url(/images/sajt/faktury/kozha-fon.avif) type("image/avif"),
+      url(/images/sajt/faktury/kozha-fon.webp) type("image/webp")
+    );
     pointer-events: none;
   }
 
@@ -307,6 +313,16 @@ dd {
 }
 
 /** Медленное вращение кольца печати */
+/* Обводка надписи в подвале прорисовывается сама — бывшая анимация motion */
+@keyframes stroke-draw {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 @keyframes seal-spin {
   to {
     transform: rotate(360deg);

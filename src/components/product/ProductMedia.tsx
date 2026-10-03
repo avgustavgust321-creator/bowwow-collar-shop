@@ -56,7 +56,7 @@ export function ProductMedia({
   index = 0,
   colorId,
   className,
-  sizes = "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw",
+  sizes = "(min-width: 1024px) 25vw, 50vw",
   priority = false,
 }: {
   product: Product;
@@ -149,7 +149,9 @@ export function ProductMedia({
         alt={product.title}
         fill
         sizes={sizes}
-        priority={priority}
+        // priority в Next 16 устарел и приоритет больше не поднимает
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "auto"}
         className="object-cover"
       />
       {mask && tintHex && (

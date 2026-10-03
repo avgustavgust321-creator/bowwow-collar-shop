@@ -147,7 +147,6 @@ export default function HomePage() {
                     src="/images/tovary/1-oshejniki/s-podkladom/tiffani.jpg"
                     alt="Ошейник с мятным подкладом на замше"
                     fill
-                    priority
                     sizes="(min-width: 1024px) 58vw, 100vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />

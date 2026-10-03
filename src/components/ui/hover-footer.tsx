@@ -1,6 +1,5 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
-import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,14 +8,16 @@ import { cn } from "@/lib/utils";
  * АДАПТАЦИЯ: цвета из примера (синий #3ca2fa и радужный градиент) заменены
  * на фирменные — латунь, изумруд и розовый. Шрифт взят из дизайн-системы
  * вместо helvetica, иначе подпись выпадала бы из типографики сайта.
+ *
+ * Без библиотеки анимаций: ради одного эффекта в подвале она добавляла
+ * около 70 КБ скриптов на каждую страницу. Пятно света двигается за
+ * курсором атрибутами градиента, обводка прорисовывается CSS-анимацией.
  */
 export const TextHoverEffect = ({
   text,
-  duration,
   className,
 }: {
   text: string;
-  duration?: number;
   automatic?: boolean;
   className?: string;
 }) => {
@@ -70,17 +71,16 @@ export const TextHoverEffect = ({
           )}
         </linearGradient>
 
-        <motion.radialGradient
+        <radialGradient
           id="revealMask"
           gradientUnits="userSpaceOnUse"
           r="20%"
-          initial={{ cx: "50%", cy: "50%" }}
-          animate={maskPosition}
-          transition={{ duration: duration ?? 0, ease: "easeOut" }}
+          cx={maskPosition.cx}
+          cy={maskPosition.cy}
         >
           <stop offset="0%" stopColor="white" />
           <stop offset="100%" stopColor="black" />
-        </motion.radialGradient>
+        </radialGradient>
         <mask id="textMask">
           <rect
             x="0"
@@ -102,25 +102,17 @@ export const TextHoverEffect = ({
       >
         {text}
       </text>
-      <motion.text
+      <text
         x="50%"
         y="50%"
         textAnchor="middle"
         dominantBaseline="middle"
         strokeWidth="0.3"
-        className="fill-transparent stroke-gold/45 font-display text-7xl font-light motion-reduce:[stroke-dashoffset:0]"
-        initial={{ strokeDashoffset: 1000, strokeDasharray: 1000 }}
-        animate={{
-          strokeDashoffset: 0,
-          strokeDasharray: 1000,
-        }}
-        transition={{
-          duration: 4,
-          ease: "easeInOut",
-        }}
+        strokeDasharray={1000}
+        className="animate-[stroke-draw_4s_ease-in-out_both] fill-transparent stroke-gold/45 font-display text-7xl font-light motion-reduce:animate-none"
       >
         {text}
-      </motion.text>
+      </text>
       <text
         x="50%"
         y="50%"

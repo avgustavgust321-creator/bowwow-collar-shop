@@ -48,7 +48,7 @@ export function ProductGallery({
 
   const render = (
     frame: number | null,
-    opts: { className?: string; sizes: string; priority?: boolean },
+    opts: { className?: string; sizes: string; main?: boolean },
   ) =>
     frame === null ? (
       renderPreview!(opts.className)
@@ -57,7 +57,7 @@ export function ProductGallery({
         product={product}
         index={frame}
         colorId={colorId}
-        priority={opts.priority}
+        priority={opts.main}
         sizes={opts.sizes}
         className={opts.className}
       />
@@ -90,10 +90,13 @@ export function ProductGallery({
         >
           {frames.map((frame, i) => (
             <div key={keyOf(frame)} className="w-full shrink-0 snap-center">
+              {/* Лента видна только на телефоне. На широком экране она
+                  скрыта, и «1px» заставляет браузер взять самый маленький
+                  вариант кадра вместо полноразмерного */}
               {render(frame, {
                 className: mediaClassName,
-                sizes: "100vw",
-                priority: i === 0,
+                sizes: "(min-width: 1024px) 1px, 100vw",
+                main: i === 0,
               })}
             </div>
           ))}
@@ -111,7 +114,7 @@ export function ProductGallery({
 
       {/* ── Широкий экран: главный кадр и миниатюры ── */}
       <div className="hidden lg:block">
-        {render(frames[current] ?? null, { sizes: "50vw", priority: true })}
+        {render(frames[current] ?? null, { sizes: "(min-width: 1024px) 50vw, 1px", main: true })}
 
         {frames.length > 1 && (
           <div className="flex gap-3 border-t border-line p-3">
