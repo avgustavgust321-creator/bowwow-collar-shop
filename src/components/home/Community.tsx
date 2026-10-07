@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { MaskReveal } from "@/components/ui/Reveal";
 import Link from "next/link";
 import { communityPhotos } from "@/content/community";
 import { site } from "@/content/site";
@@ -49,7 +50,7 @@ export function Community() {
         <div>
           <p className="hand -rotate-3 text-3xl text-gold-ink md:text-4xl">в инстаграме</p>
           <h2 className="display-xl mt-1 text-ink">
-            Их <em className="text-gold-ink">собаки</em>
+            <MaskReveal>Их <em className="text-gold-ink">собаки</em></MaskReveal>
           </h2>
         </div>
         <div className="flex flex-wrap items-center gap-x-8 gap-y-2">

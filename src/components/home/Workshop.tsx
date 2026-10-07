@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { MaskReveal } from "@/components/ui/Reveal";
 import { workshopShots } from "@/content/workshop";
 
 /**
@@ -17,7 +18,7 @@ export function Workshop() {
       <div className="wrap px-5 md:px-10">
         <p className="hand -rotate-3 text-3xl text-rose md:text-4xl">мастерская</p>
         <h2 className="display-xl mt-1 max-w-3xl">
-          Как это <em className="text-rose">шьётся</em>
+          <MaskReveal>Как это <em className="text-rose">шьётся</em></MaskReveal>
         </h2>
         <p className="mt-4 max-w-lg text-cream-muted">
           Ошейник проходит через руки от куска кожи до готовой вещи: раскрой,

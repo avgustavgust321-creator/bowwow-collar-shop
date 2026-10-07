@@ -4,9 +4,9 @@ import { Seal } from "@/components/brand/Seal";
 import { ScrollHero } from "@/components/hero/ScrollHero";
 import { Community } from "@/components/home/Community";
 import { Workshop } from "@/components/home/Workshop";
+import { CustomDeck } from "@/components/home/CustomDeck";
 import { LeatherDeck } from "@/components/home/LeatherDeck";
-import { Reveal } from "@/components/ui/Reveal";
-import { archivePieces } from "@/content/custom-archive";
+import { MaskReveal, Reveal } from "@/components/ui/Reveal";
 import { site } from "@/content/site";
 import { formatPrice, priceFrom, products } from "@/lib/catalog";
 import type { Product } from "@/lib/product-schema";
@@ -128,7 +128,7 @@ export default function HomePage() {
         <div className="wrap">
           <p className="hand -rotate-3 text-3xl text-gold-ink md:text-4xl">коллекция</p>
           <h2 className="display-xl mt-1 max-w-4xl text-ink">
-            Два ошейника, <em className="text-gold-ink">двенадцать</em> оттенков
+            <MaskReveal>Два ошейника, <em className="text-gold-ink">двенадцать</em> оттенков</MaskReveal>
           </h2>
         </div>
 
@@ -202,20 +202,23 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* ТРЕТИЙ ПУТЬ — ошейник по идее покупателя. Три заказных снимка
-            веером: видно, что «на заказ» — это не абстракция, а уже сшитые вещи */}
+        {/* ТРЕТИЙ ПУТЬ — ошейник по идее покупателя. Колода из трёх заказных
+            снимков раскрывается под курсором: видно, что «на заказ» — это
+            не абстракция, а уже сшитые вещи */}
         {custom && (
           <Reveal className="wrap mt-14">
             <Link
               href={`/product/${custom.slug}`}
-              className="group grid items-center gap-10 overflow-hidden bg-forest p-7 text-cream shadow-card md:grid-cols-[1fr_1.1fr] md:p-12"
+              className="group grid items-center gap-4 overflow-hidden bg-forest p-7 text-cream shadow-card md:grid-cols-[1fr_1.1fr] md:gap-10 md:p-12"
             >
               <div>
                 <p className="hand -rotate-3 text-3xl text-gold-light md:text-4xl">
                   не нашли свой?
                 </p>
                 <h3 className="display mt-2 text-4xl md:text-5xl">
-                  Сошьём по <em className="text-rose">вашей идее</em>
+                  <MaskReveal>
+                    Сошьём по <em className="text-rose">вашей идее</em>
+                  </MaskReveal>
                 </h3>
                 <p className="mt-4 max-w-md text-cream-muted">
                   Замша, два цвета, фигурные вставки, клетка, тиснение имени —
@@ -227,27 +230,7 @@ export default function HomePage() {
                   <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
                 </p>
               </div>
-              <div aria-hidden className="relative mx-auto h-64 w-full max-w-md md:h-80">
-                {archivePieces.slice(0, 3).map((piece, i) => (
-                  <div
-                    key={piece.src}
-                    className={[
-                      "absolute top-1/2 w-[42%] bg-cream p-1.5 pb-5 shadow-card transition-transform duration-500",
-                      ["left-0 -translate-y-1/2 -rotate-6 group-hover:-rotate-9", "left-[29%] z-10 -translate-y-[55%] rotate-1 group-hover:-translate-y-[60%]", "right-0 -translate-y-1/2 rotate-6 group-hover:rotate-9"][i],
-                    ].join(" ")}
-                  >
-                    <div className="relative aspect-[4/5]">
-                      <Image
-                        src={piece.src}
-                        alt=""
-                        fill
-                        sizes="(min-width: 768px) 18vw, 40vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <CustomDeck />
             </Link>
           </Reveal>
         )}
@@ -298,7 +281,7 @@ export default function HomePage() {
         <div className="wrap px-5 md:px-10">
           <p className="hand -rotate-3 text-3xl text-rose md:text-4xl">палитра</p>
           <h2 className="display-xl mt-1 max-w-4xl">
-            Двенадцать оттенков, у каждого <em className="text-rose">своё имя</em>
+            <MaskReveal>Двенадцать оттенков, у каждого <em className="text-rose">своё имя</em></MaskReveal>
           </h2>
           <p className="mt-6 max-w-md text-cream-muted">
             Имена придуманы в мастерской и прижились — клиенты так и заказывают:
@@ -318,7 +301,7 @@ export default function HomePage() {
         <div className="wrap px-5 py-20 md:px-10 md:py-28">
           <p className="hand -rotate-3 text-3xl md:text-4xl">три шага</p>
           <h2 className="display-xl mt-1 max-w-3xl">
-            Как собирается <em>заказ</em>
+            <MaskReveal>Как собирается <em>заказ</em></MaskReveal>
           </h2>
 
           <ol className="mt-14">
@@ -376,7 +359,7 @@ export default function HomePage() {
         <div className="leather-texture flex flex-col justify-center bg-forest px-5 py-20 text-cream on-dark md:px-16">
           <p className="hand -rotate-3 text-3xl text-rose md:text-4xl">мастерская в Бресте</p>
           <h2 className="display-xl mt-1">
-            Соберите под <em className="text-rose">свою</em> собаку
+            <MaskReveal>Соберите под <em className="text-rose">свою</em> собаку</MaskReveal>
           </h2>
           <p className="mt-6 max-w-md text-cream-muted">
             Не подбираете из готового, а собираете: размер по вашим меркам, свой
