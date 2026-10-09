@@ -6,13 +6,6 @@ import type { CategoryId, PetId } from "@/content/categories";
 import { filterProducts, sortOptions } from "@/lib/catalog";
 import type { SortId } from "@/lib/catalog";
 
-export const metadata: Metadata = {
-  title: "Каталог",
-  description:
-    "Ошейники, шлейки, поводки и аксессуары из натуральной кожи ручной работы. " +
-    "12 цветов кожи, размеры по сетке или по индивидуальным замерам.",
-};
-
 const categoryIds = new Set(categories.map((c) => c.id as string));
 const petIds = new Set(pets.map((p) => p.id as string));
 const sortIds = new Set(sortOptions.map((s) => s.id as string));
@@ -23,6 +16,66 @@ function pick(
 ): string | undefined {
   const v = Array.isArray(value) ? value[0] : value;
   return v && allowed.has(v) ? v : undefined;
+}
+
+/**
+ * Заголовки разделов для поиска — так, как их ищут: «кожаный ошейник для
+ * собаки», а не «Ошейники». Видимый заголовок на странице короче.
+ */
+const categorySeo: Record<CategoryId, { title: string; description: string }> = {
+  collars: {
+    title: "Кожаные ошейники для собак ручной работы",
+    description:
+      "Кожаные ошейники для собак из итальянской кожи: однотонные, с цветным подкладом и по вашей идее. Размеры от XS до Big Boss, гравировка имени, доставка по Беларуси.",
+  },
+  harnesses: {
+    title: "Кожаные шлейки для собак по меркам",
+    description:
+      "Шлейка на четыре пряжки из натуральной кожи: шьём по меркам собаки, не давит на горло. Изготовление 7–10 дней, доставка по Беларуси.",
+  },
+  leashes: {
+    title: "Поводки для собак с кожаными деталями",
+    description:
+      "Поводки Lap, перестёжки и с плоской кожаной ручкой ручной работы. Длина на выбор, литая фурнитура, доставка по Беларуси.",
+  },
+  accessories: {
+    title: "Кожаные аксессуары для прогулки с собакой",
+    description:
+      "Холдер для пакетов «Круассан» из натуральной кожи — пристёгивается к поводку или сумке. Ручная работа, Брест.",
+  },
+  bowls: {
+    title: "Миски для собак и кошек с надписью",
+    description:
+      "Миска на 250, 500 или 800 мл с вашей надписью по кругу: 25 цветов основы и текста, внутри чаша из нержавеющей стали.",
+  },
+};
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  const category = pick(sp.category, categoryIds) as CategoryId | undefined;
+
+  if (category) {
+    const seo = categorySeo[category];
+    return {
+      title: seo.title,
+      description: seo.description,
+      // Фильтр по питомцу и сортировка — те же товары, канонической
+      // остаётся страница раздела
+      alternates: { canonical: `/catalog?category=${category}` },
+    };
+  }
+
+  return {
+    title: "Каталог кожаной амуниции для собак",
+    description:
+      "Ошейники, шлейки, поводки, аксессуары и миски ручной работы из Бреста. " +
+      "Итальянская кожа, 12 цветов, размер по меркам, доставка по Беларуси.",
+    alternates: { canonical: "/catalog" },
+  };
 }
 
 export default async function CatalogPage({
@@ -45,7 +98,9 @@ export default async function CatalogPage({
           <p className="hand -rotate-3 text-3xl text-gold-ink md:text-4xl">
             сшито в Бресте
           </p>
-          <h1 className="display-xl mt-1 text-ink">Каталог</h1>
+          <h1 className="display-xl mt-1 text-ink">
+            {activeCategory ? activeCategory.title : "Каталог"}
+          </h1>
           {activeCategory && (
             <p className="mt-6 max-w-xl text-muted">
               {activeCategory.description}

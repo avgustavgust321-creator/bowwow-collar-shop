@@ -7,9 +7,11 @@ import { selectableLeatherColors } from "@/content/leather";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
-  title: "О бренде",
+  title: "О мастерской — кожаная амуниция ручной работы из Бреста",
   description:
-    "BOW WOW COLLAR — мастерская кожаной амуниции для собак и кошек в Бресте.",
+    "BOW WOW COLLAR — мастерская в Бресте: шьём ошейники, шлейки и поводки " +
+    "для собак и кошек из итальянской кожи, поштучно и под мерки питомца.",
+  alternates: { canonical: "/about" },
 };
 
 /**

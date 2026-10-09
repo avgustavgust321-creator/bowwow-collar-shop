@@ -5,6 +5,7 @@ import { sellerLine, site } from "@/content/site";
 export const metadata: Metadata = {
   title: "Обработка персональных данных",
   description: `Какие данные собирает ${site.name}, зачем, кому передаёт и как их удалить.`,
+  alternates: { canonical: "/policy" },
 };
 
 /**

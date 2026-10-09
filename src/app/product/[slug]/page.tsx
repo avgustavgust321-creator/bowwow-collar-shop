@@ -9,6 +9,7 @@ import { site } from "@/content/site";
 import { colorOf, selectableColors } from "@/lib/palette";
 import {
   formatPrice,
+  framesFor,
   getProduct,
   priceFrom,
   listedProducts,
@@ -29,10 +30,37 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = getProduct(slug);
   if (!product) return {};
+  const price = priceFrom(product);
+  const photo = framesFor(product).frames[0];
+  // В описании для поиска — то, что решает клик: цена, срок, доставка
+  const description =
+    `${product.summary} ${price.from ? "От " : ""}${formatPrice(price.value)}, ` +
+    `изготовление ${productionTerm(product)}, доставка по Беларуси.`;
+  const category = categoryById.get(product.category);
+
   return {
-    title: product.title,
-    description: product.summary,
-    openGraph: { title: product.title, description: product.summary },
+    // «Ошейник однотонный — кожаный, ручная работа» ищут чаще, чем
+    // просто название модели
+    title: `${product.title} — ${
+      category?.id === "bowls" ? "печать на заказ" : "кожа, ручная работа"
+    }`,
+    description,
+    alternates: { canonical: `/product/${product.slug}` },
+    openGraph: {
+      type: "website",
+      title: product.title,
+      description,
+      url: `/product/${product.slug}`,
+      ...(photo
+        ? { images: [{ url: photo, width: 1200, height: 1200, alt: product.title }] }
+        : {}),
+    },
+    twitter: {
+      card: photo ? "summary_large_image" : "summary",
+      title: product.title,
+      description,
+      ...(photo ? { images: [photo] } : {}),
+    },
     // Черновик с ценой-заглушкой поисковикам не показываем
     ...(product.draft ? { robots: { index: false, follow: false } } : {}),
   };
@@ -71,19 +99,58 @@ export default async function ProductPage({
     ...others.filter((p) => p.category !== product.category),
   ].slice(0, 4);
 
-  // Микроразметка для поиска: цена «от» и наличие
+  // Микроразметка для поиска: товар с фото, диапазоном цен и сроком
+  // изготовления, плюс «хлебные крошки» — из них поисковик строит
+  // путь «Каталог › Ошейники» прямо в выдаче
+  const url = `${site.url}/product/${product.slug}`;
+  const sizePrices = (product.sizes ?? []).map((size) => size.price);
+  const lowPrice = sizePrices.length ? Math.min(...sizePrices) : price.value;
+  const highPrice = sizePrices.length ? Math.max(...sizePrices) : price.value;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.title,
-    description: product.summary,
-    brand: { "@type": "Brand", name: site.name },
-    offers: {
-      "@type": "AggregateOffer",
-      priceCurrency: site.currency,
-      lowPrice: price.value,
-      availability: "https://schema.org/MadeToOrder",
-    },
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": `${url}#product`,
+        name: product.title,
+        description: product.description.join(" "),
+        sku: product.slug,
+        url,
+        image: framesFor(product)
+          .frames.slice(0, 6)
+          .map((frame) => `${site.url}${frame}`),
+        category: category?.title,
+        material: leather ? "Итальянская кожа" : "Пластик (3D-печать), нержавеющая сталь",
+        brand: { "@type": "Brand", name: site.name },
+        offers: {
+          "@type": "AggregateOffer",
+          url,
+          priceCurrency: site.currency,
+          lowPrice,
+          highPrice,
+          offerCount: Math.max(sizePrices.length, 1),
+          availability: "https://schema.org/MadeToOrder",
+          seller: { "@type": "Organization", name: site.name },
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Каталог", item: `${site.url}/catalog` },
+          ...(category
+            ? [
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: category.title,
+                  item: `${site.url}/catalog?category=${category.id}`,
+                },
+              ]
+            : []),
+          { "@type": "ListItem", position: category ? 3 : 2, name: product.title, item: url },
+        ],
+      },
+    ],
   };
 
   return (

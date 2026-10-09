@@ -15,6 +15,17 @@ const nextConfig: NextConfig = {
       // Коллекции объединены с каталогом: почти в каждой было по одному
       // изделию, и страница выглядела пустой копией каталога
       { source: "/collections", destination: "/catalog", permanent: true },
+      // Старая копия сайта на Vercel: сайт переехал на Cloudflare. Дубль
+      // по второму адресу поисковики считали бы копией, а старые ссылки
+      // вели бы на медленный сервер. На самом Cloudflare адрес другой,
+      // и правило там не срабатывает
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "(?<sub>.*)\\.vercel\\.app" }],
+        destination:
+          "https://bowwow-collar-shop.avgustavgust321.workers.dev/:path*",
+        permanent: true,
+      },
     ];
   },
 };

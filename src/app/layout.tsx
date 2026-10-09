@@ -40,16 +40,41 @@ const comforter = Comforter({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — ${site.tagline}`,
+    // Главная — с тем, что ищут: «кожаные ошейники для собак ручной работы»
+    default: `Кожаные ошейники и шлейки для собак ручной работы — ${site.name}`,
     template: `%s — ${site.name}`,
   },
   description: site.description,
+  applicationName: site.name,
+  // Канонический адрес задаёт каждая страница сама: здесь он унаследовался
+  // бы всеми страницами, и поисковик счёл бы их копиями главной
   openGraph: {
     type: "website",
     locale: "ru_BY",
     siteName: site.name,
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
+    images: [
+      {
+        url: "/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Кожаные ошейники BOW WOW COLLAR четырёх цветов с латунными пряжками",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+    images: ["/og.jpg"],
+  },
+  // Коды подтверждения прав в Яндексе и Google — пустые не выводятся
+  verification: {
+    ...(site.verification.google ? { google: site.verification.google } : {}),
+    ...(site.verification.yandex
+      ? { yandex: site.verification.yandex }
+      : {}),
   },
 };
 

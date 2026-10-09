@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Частые вопросы",
   description:
     "Ответы на частые вопросы о кожаных ошейниках, шлейках и поводках BOW WOW COLLAR.",
+  alternates: { canonical: "/faq" },
 };
 
 /** ЗАПОЛНИТЬ: добавьте вопросы, которые чаще всего приходят в директ. */
@@ -37,9 +38,24 @@ const faq = [
   },
 ];
 
+/** Разметка вопросов-ответов: поисковик может показать их прямо в выдаче */
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
+
 export default function FaqPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
       <PageHeader title="Вопросы" />
 
       <section className="wrap px-5 py-14 md:px-10">

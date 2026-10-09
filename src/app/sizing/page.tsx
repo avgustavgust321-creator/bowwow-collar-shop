@@ -5,10 +5,11 @@ import { PageHeader } from "@/components/ui/Page";
 import { measurements } from "@/content/categories";
 
 export const metadata: Metadata = {
-  title: "Как замерить питомца",
+  title: "Как измерить собаку для ошейника и шлейки",
   description:
-    "Четыре замера, по которым шьётся ошейник и шлейка BOW WOW COLLAR: " +
-    "обхват грудной клетки, длина спинки, обхват шеи и длина грудки.",
+    "Как правильно снять мерки собаки: обхват шеи для ошейника, обхват груди, " +
+    "длина спинки и грудки для шлейки — с пояснениями, куда прикладывать сантиметр.",
+  alternates: { canonical: "/sizing" },
 };
 
 const steps = [

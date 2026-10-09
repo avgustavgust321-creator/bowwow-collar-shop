@@ -9,6 +9,7 @@ import { formatPrice } from "@/lib/catalog";
 export const metadata: Metadata = {
   title: "Публичная оферта",
   description: `Условия заказа изделий ${site.name}: оформление, оплата, сроки, доставка и возврат.`,
+  alternates: { canonical: "/offer" },
 };
 
 /**

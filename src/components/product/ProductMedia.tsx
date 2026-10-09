@@ -146,7 +146,7 @@ export function ProductMedia({
     >
       <Image
         src={photo}
-        alt={product.title}
+        alt={index > 0 ? `${product.title} — фото ${index + 1}` : product.title}
         fill
         sizes={sizes}
         // priority в Next 16 устарел и приоритет больше не поднимает

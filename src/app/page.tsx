@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Seal } from "@/components/brand/Seal";
@@ -85,6 +86,44 @@ function PriceTag({ product, className }: { product: Product; className?: string
   );
 }
 
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+/**
+ * Разметка для поисковиков: кто мы, где и как нас найти. Из неё Яндекс
+ * и Google собирают карточку организации и связывают сайт с инстаграмом.
+ */
+const organizationLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${site.url}/#organization`,
+      name: site.name,
+      url: site.url,
+      logo: `${site.url}/brand/logo.png`,
+      image: `${site.url}/og.jpg`,
+      description: site.description,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: site.city,
+        addressCountry: "BY",
+      },
+      areaServed: { "@type": "Country", name: "Беларусь" },
+      sameAs: [site.contacts.instagram],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${site.url}/#website`,
+      url: site.url,
+      name: site.name,
+      inLanguage: "ru",
+      publisher: { "@id": `${site.url}/#organization` },
+    },
+  ],
+};
+
 export default function HomePage() {
   const lined = products.find((p) => p.slug === "collar-lined");
   const solid = products.find((p) => p.slug === "collar-solid");
@@ -98,6 +137,10 @@ export default function HomePage() {
         заголовка не годятся. Поэтому H1 есть в разметке, но скрыт от
         глаза — поисковику и скринридеру он нужен, макету мешает.
       */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+      />
       <h1 className="sr-only">
         {site.name} — {site.tagline}: ошейники, шлейки и поводки из
         итальянской кожи на заказ, {site.city}

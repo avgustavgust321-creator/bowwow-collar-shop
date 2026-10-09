@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { PageHeader, Prose } from "@/components/ui/Page";
 
 export const metadata: Metadata = {
-  title: "Уход за кожей",
+  title: "Уход за кожаным ошейником и поводком",
   description:
     "Как ухаживать за кожаным ошейником, шлейкой и поводком, чтобы они служили годами.",
+  alternates: { canonical: "/care" },
 };
 
 const rules = [

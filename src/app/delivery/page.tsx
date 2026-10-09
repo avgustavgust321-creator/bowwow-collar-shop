@@ -6,7 +6,9 @@ import { formatPrice } from "@/lib/catalog";
 export const metadata: Metadata = {
   title: "Доставка и оплата",
   description:
-    "Способы доставки по Беларуси и порядок оплаты заказа BOW WOW COLLAR.",
+    "Доставка Европочтой по всей Беларуси и курьером по Бресту — 6 р. " +
+    "Изготовление 7–10 дней. Не подошёл размер — перешьём бесплатно.",
+  alternates: { canonical: "/delivery" },
 };
 
 export default function DeliveryPage() {

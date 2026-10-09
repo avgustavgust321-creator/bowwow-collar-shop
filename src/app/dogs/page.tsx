@@ -7,10 +7,11 @@ import { site } from "@/content/site";
 import { getProduct } from "@/lib/catalog";
 
 export const metadata: Metadata = {
-  title: "Собаки в BOW WOW COLLAR",
+  title: "Собаки в наших ошейниках, шлейках и поводках",
   description:
     "Ошейники, шлейки и поводки BOW WOW COLLAR на собаках: на прогулке, " +
     "в городе и дома. Под снимком — модель, если захотите такую же.",
+  alternates: { canonical: "/dogs" },
 };
 
 /**
